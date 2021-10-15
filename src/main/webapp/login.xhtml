@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <f:metadata>
+        <f:viewParam name="id" value="#{loginbean.username}"/>
+        <f:viewParam name="pass" value="#{loginbean.password}"/>
+    </f:metadata>
+
+    <h:head>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
+        <h:outputScript name="charts/charts.js" library="primefaces" />
+        
+        <link rel="stylesheet" href="../resources/bower_components/bootstrap/dist/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/font-awesome/css/font-awesome.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/Ionicons/css/ionicons.min.css"></link>
+        <link href="../resources/bower_components/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../resources/bower_components/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
+        
+        <title>Utility-SYNC</title>
+         
+    </h:head>
+    <h:body class="hold-transition skin-blue sidebar-mini">
+        <style>
+            body{
+                background: url('resources/images/Artboard-1@2x.png') no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover auto;
+                background-size: 100% 100%;
+            }
+
+            #bg{
+     
+                height: 500px;
+            }
+            
+           .form-signin {
+                                margin: 0 auto;
+                                margin-top: 20%;
+                                max-width: 430px;
+                                padding: 15px;
+
+                            }
+           
+        </style>
+        <div class="container">
+            
+            <div class="ui-g">
+                
+                <div class="ui-g-6" style="margin-top:5%">
+                    <center>
+                        <img src="resources/images/Logo-UtilitySync.png" alt="" class="img-responsive"/>
+                    </center>
+                    
+                </div>
+                <div class="ui-g-2" style="margin-top:5%"></div>
+                <div class="ui-g-4 bg-navy" style="margin-top:23%; border-style: inset; border-color: grey;">
+                    
+                    <h:form styleClass="form-signin" prependId="false">
+                        
+
+                        <b:inputText id="email" placeholder="User Name" value="#{loginbean.username}" required="true">
+                            <f:facet name="prepend">
+                                <b:icon name="user" />
+                            </f:facet>
+                        </b:inputText>
+                        <b:inputText id="password" placeholder="Password" type="password" value="#{loginbean.password}" required="true" validator-message="invalid login">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="key" />
+                            </f:facet>
+                        </b:inputText>
+                        
+                        <p:commandButton id = "submit" ajax="false" value="Sign In" icon="log-in" action="#{loginbean.validateLogin211()}" class="btn btn-block btn-primary"/>
+                    </h:form>
+               
+                </div>
+                
+            </div>
+        </div>
+           
+    </h:body>
+
+</html>

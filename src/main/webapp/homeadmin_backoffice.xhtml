@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+>
+    <h:head>
+        <link href="resources/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <title>MMS Back-office</title>
+    </h:head>
+    <h:body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="../Home.xhtml">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="installtionwizard.xhtml">
+                        <img style="height: 95px;display: inline-block;" src="resources/images/etdig.png"/>
+                        <span style="color: white; display: inline-block;font-style: normal;font-size: 30px">Mobility Sync | Back-Office</span>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                    <ul class="nav navbar-nav navbar-right">
+                        <b:form>
+                            <p:commandLink action="#{loginbean.logout()}" >
+                                <img src="../resources/images/ic-logout.png" style="width: 40px; padding-right: 5px; padding-top: 6px;"/>
+                            </p:commandLink>
+                        </b:form>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container container-table">
+            <center style="vertical-align: middle;display: table-cell;">
+                <div class="row vertical-center-row">
+                    <a class="thumbnail" href="DCD/orderhandling.xhtml" style="width: 300px;border: none">
+                        <img src="resources/images/Icons_ic-order-handling.png" alt="Admin" class="img-fluid" style="width: 300px"/>
+                    </a>
+                </div>
+                <div class="row vertical-center-row">
+                    <a class="thumbnail" href="DCD/preconfigurationwizard.xhtml" style="width: 300px;border: none">
+                        <img src="resources/images/Icons_ic-pre-config.png" alt="Admin" class="img-fluid" style="width: 300px"/>
+                    </a>
+                </div>
+                                <div class="row vertical-center-row">
+                    <a class="thumbnail" href="DCD/activationmanagement.xhtml" style="width: 300px;border: none">
+                        <img src="resources/images/Icons_ic-dashboard.png" alt="Admin" class="img-fluid" style="width: 300px"/>
+                    </a>
+                </div>
+
+            </center>
+        </div>
+        <div class="footer">
+            <p>Etisalat Digital, Copyright &copy; 2020 All Rights Reserved.</p>
+        </div>
+    </h:body>
+
+    <style type="text/css">
+
+        .red{
+            background-color:#ff0000;
+            background-image:none;
+        }
+        .orange{
+            background-color:orange;
+            background-image:none;
+        }
+        .yellow{
+            background-color:yellow;
+            background-image:none;
+        }
+        .className td {
+            text-align: right;
+        }
+        .txt {
+            padding-left: 8px;
+            font-size: 16px;
+        }
+
+        .txtwrap {
+            word-wrap: break-word;
+        }
+
+        .navbar-brand
+        {
+            margin: 0;
+            padding: 0;
+
+        }
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #0D525A;
+            color: #E8E8E8;
+            text-align: center;
+            
+        }
+
+        .ui-widget, .ui-widget .ui-widget {
+            font-size: 90% !important;
+        }
+        .navbar-brand img
+        {
+            max-height: 100%;
+        }
+        cen {
+            position: absolute;
+            right: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+        #wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        html, body, .container-table {
+            height: 100%;
+        }
+        .container-table {
+            display: table;
+        }
+        .vertical-center-row {
+            display: table-cell;
+            vertical-align: middle;
+
+        }
+                .navbar-default .navbar-collapse {
+            background: transparent linear-gradient(90deg, #1D7079 0%, #0F383D 100%) 0% 0% no-repeat padding-box;
+            opacity: 1;
+            width: 100%;
+        }
+
+
+
+    </style>
+</html>
+

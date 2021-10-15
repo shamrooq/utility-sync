@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:metadata>
+        <f:viewAction  action="#{workorderViewController.initiateAll()}"/>
+        <f:viewAction  action="#{workorderViewController.findOneBaseline()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllVendors()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllPremiseTypes()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllCustomers()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllEmirates()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllEmirateRegions()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllStatuses()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllMeterTypes()}"/>
+        <f:viewAction  action="#{workorderViewController.findAllStaff()}"/>
+    </f:metadata>
+    <h:head>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
+        
+        <link rel="stylesheet" href="../resources/bower_components/bootstrap/dist/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/font-awesome/css/font-awesome.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/Ionicons/css/ionicons.min.css"></link>
+        
+        <link href="resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../resources/bower_components/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
+        
+        <title>.:UtilitySync :Work Order</title>
+    </h:head>
+    
+    <h:body class="skin-blue">
+        
+        <nav class="navbar navbar-default">
+            
+                    <div class="content">
+                        <div class="container-fluid bg-primary" >
+                            <section class="content-header">
+                                <h1>
+                                    New  - <b>Work Order Form</b>
+                                </h1>
+                                <large>Welcome Mr. / Ms. #{loginbean.fullname}</large>
+                                <p:separator></p:separator>
+                                <ol class="breadcrumb">
+                                    <li><a href="../../"><i class="fa fa-futbol-o"></i> <b>Home</b></a></li>
+                                    <li><a href="#"><i class="fa fa-bookmark-o"></i> <b>Order Manager</b></a></li>
+                                    <li><a href="#"><i class="fa fa-calendar-check-o"></i> <b>New Work Order</b></a></li>
+                                    <li><a href="ordermanagementedit.xhtml"><i class="fa fa-calendar-plus-o"></i> Edit Work Order</a></li>
+                                </ol>
+
+                            </section>
+                        </div>
+                        
+                        
+                        <br/>
+                        <div class="container-fluid" >
+                            <h:form id="mainform">
+                                <p:growl id="growl" showDetail="true"/>
+                                
+                                <div class="row">
+                                <div class="col-md-12">
+                                    <p:panel id="pnlSurveyInitialDetails" header="Work Order Details" >
+                                    
+                                    <br/>
+                                   
+                                    <p:panelGrid columns="6" >
+                                            
+                                            <p:outputLabel for="somemirate"  style="width: 160px;text-align: right" indicateRequired="true"   value="Emirate:"/>
+                                            <b:selectOneMenu id="somemirate" value="#{workorderViewController.emirateName}" required="true"  immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Emirate " itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{workorderViewController.emirates}" var="varEmirate" itemLabel="#{varEmirate.emirateName}" itemValue="#{varEmirate.emirateName}"/>
+                                            </b:selectOneMenu>
+                                            
+                                            <p:outputLabel  style="width: 160px;text-align: right"   value="Premise Primary Contact:"/>
+                                            <b:inputText id="otContactPrimary" value="#{workorderViewController.contactPrimary}" placeholder="e.g 971566619591" style="width: 400px"/>
+                                            
+                                            <p:outputLabel  style="width: 160px;text-align: right" value="Sub Station Number:"/>
+                                            <b:inputText id="itSubstationNumber" value="#{workorderViewController.substationNumber}" title="" style="width: 400px"/>
+                                            
+                                            
+                                            <p:outputLabel for="otRegion" style="width: 160px;text-align: right" indicateRequired="true"  value="Region:"/>
+                                           
+                                            <b:selectOneMenu id="otRegion" value="#{workorderViewController.emirateRegion}" required="true"  immediate="false" style="width: 400px">
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Region " itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{workorderViewController.emirateRegions}" var="varEmirateRegion" itemLabel="#{varEmirateRegion.emirateRegionCode}" itemValue="#{varEmirateRegion.emirateRegionCode}"/>
+                                            </b:selectOneMenu>
+                                            
+                                            <p:outputLabel  style="width: 160px;text-align: right"  value="Additional Contact:"/>
+                                            <b:inputText id="otContactAdditional" value="#{workorderViewController.contactAdditional}" placeholder="e.g 971566619591" style="width: 400px"/>
+                                            
+                                            
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="6">
+                                                <p:outputLabel style="width: 160px;text-align: right" value="Premise / Building Name:"/>
+                                                <b:inputText id="itBuildingName" value="#{workorderViewController.premiseBuildingName}" style="width: 400px"/>
+
+                                                <p:outputLabel  style="width: 160px;text-align: right" value="Premise ID:"/>
+                                                <b:inputText id="itPremiseID" value="#{workorderViewController.premiseId}" style="width: 400px"/>
+                                                
+                                                <p:outputLabel for="somCustomer" style="width: 160px;text-align: right" indicateRequired="true"   value="Customer / Business:"/>
+                                                <b:selectOneMenu id="somCustomer" value="#{workorderViewController.customerCode}" required="true" immediate="false" style="width: 400px">
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Customer " itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{workorderViewController.businessTypes}" var="varBusinessType" itemLabel="#{varBusinessType.businessCode}" itemValue="#{varBusinessType.businessCode}"/>
+                                                </b:selectOneMenu>
+                                                
+                                                <p:outputLabel  style="width: 160px;text-align: right" value="Plot Number:"/>
+                                                <b:inputText id="itPlotsNumber" value="#{workorderViewController.plotNumber}" style="width: 400px"/>
+
+                                                <p:outputLabel  style="width: 160px;text-align: right" value="Premise Type:"/>
+                                                
+                                                <b:selectOneMenu id="somPremiseType" value="#{workorderViewController.premiseType}"  immediate="false" style="width: 400px">
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Premise Type" itemValue="#{workorderViewController.premiseType}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{workorderViewController.premiseTypes}" var="varPremiseType" itemLabel="#{varPremiseType.premiseTypeName}" itemValue="#{varPremiseType.premiseTypeName}"/>
+                                                </b:selectOneMenu> 
+                                                
+                                                <p:outputLabel style="width: 160px;text-align: right"  value="Vendor:"/>
+                                                <b:selectOneMenu id="otVendor" value="#{workorderViewController.vendorName}"  immediate="false" style="width: 400px">
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Vendor" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{workorderViewController.vendors}" var="varVendor" itemLabel="#{varVendor.vendorTitle}" itemValue="#{varVendor.vendorTitle}"/>
+                                                </b:selectOneMenu> 
+                                                
+                                                
+                                                 <p:outputLabel  style="width: 160px;text-align: right" value="Location Coordinates:"/>
+                                                <p:panelGrid columns="2">
+                                                    <b:inputText id="itLongitude" placeholder="Longitude" title="Longitude:"  value="#{workorderViewController.longitude}" style="width: 170px"/>
+                                                    <b:inputText id="itLatitude" placeholder="Latitude" title="Latitude:" value="#{workorderViewController.latitude}" style="width: 170px"/>
+                                                </p:panelGrid>
+                                                
+                                                <p:outputLabel  style="width: 160px;text-align: right" value="Address:"/>
+                                                <b:inputTextarea id="itAddress" value="#{workorderViewController.address}" rows="2" style="width: 400px"/>
+                                                
+                                                
+                                                
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="3" >
+                                            <b:commandButton id="btnInitiateWorkOrder" look="info" icon="pi pi-check"  styleClass="ui-button-flat p-ml-2" value="Initiate New Work Order" style="width: 250px" update="mainform:pnlSurveyInitialDetails"  >
+                                                <f:actionListener binding="#{workorderViewController.createWorkOrder()}"/>
+                                                
+                                            </b:commandButton>
+                                            
+                                            <p:outputLabel  style="width: 160px;text-align: right" value="*** New Utility Number:"/>
+                                            <p:outputLabel  style="width: 160px;text-align: right;font-size: x-large;color: blue" value="#{workorderViewController.utilityNumber}"/>
+                                        </p:panelGrid>
+                                        
+                                    </p:panel>
+                                </div>
+                                </div>    
+                                
+                                <!-- -->
+                                
+                                
+                                <!-- -->
+                                
+                                <!--  -->
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p:panel id="pnlEstimation" toggleable="true" header ="BOM Meters ">
+                                            
+                                            <br/>
+                                            <p:panelGrid columns="3">
+                                                <b:commandButton id="btnInitiateBOM" look="info"   styleClass="ui-button-flat p-ml-2" value="Initiate New BOM" style="width: 250px" update="mainform"  >
+                                                    <f:actionListener binding="#{workorderViewController.initiateBOM()}"/>
+                                                </b:commandButton>
+                                                <p:outputLabel  style="width: 160px;text-align: right" value="*** New BOM ID:"/>
+                                                <p:outputLabel  style="width: 160px;text-align: right;font-size: x-large;color: blue" value="#{workorderViewController.bomDTO.id}"/>
+                                                
+                                            </p:panelGrid>
+                                            <br/>
+                                            
+                                            <p:dataTable value="#{workorderViewController.meters}"
+                                                                             var="bomMeter"
+                                                                             id="tblMeters" 
+                                                                             rowKey="#{bomMeter.id}"
+                                                                             selectionMode="single"
+                                                                             >
+
+
+                                                    <p:column headerText="VehicleID" style="width: 160px">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Meter #"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{bomMeter.bomId}_#{bomMeter.id}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="VehicleID" >
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Floor"/>
+                                                        </f:facet>
+                                                        <h:inputText value="#{bomMeter.meterFloor}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Type">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Meter Room"/>
+                                                        </f:facet>
+                                                        <h:inputText value="#{bomMeter.meterRoom}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Tracking">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Meter Manufacturer"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{bomMeter.meterManufacturer}"/>
+                                                    </p:column>
+                                                
+                                                    <p:column headerText="Tracking">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Meter Serial"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{bomMeter.meterSerial}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Tracking">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Meter Model"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{bomMeter.meterModel}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Tracking">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Meter Type"/>
+                                                        </f:facet>
+                                                        <h:outputText value="#{bomMeter.meterType}"/>
+                                                    </p:column>
+                                                    
+                                                    <p:column headerText="Action(s)" style="width: 160px">
+                                                        <b:row>
+                                                            <b:commandButton value="Delete" id="btnDeleteRowTblWMs" action="#{workorderViewController.deleteBOMMeter(bomMeter.id)}" onclick="PF('statusDialogdelete').show()" onsuccess="PF('statusDialogdelete').hide()" update="tblMeters" look="danger" immediate="true" process="@this" styleClass="ui-button-flat p-ml-2"  style="margin-left: 15px"  />
+                                                        </b:row>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            
+                                            <br/>
+                                            <p:panelGrid columns="5">
+                                                    <b:selectOneMenu id="otBOMType" value="#{workorderViewController.meterBomType}"  immediate="false"  style="width: 200px">
+                                                        <p:ajax event="change" update="@this"/>
+                                                        <f:selectItem itemLabel="Select Type " itemValue="" noSelectionOption="true"/>
+                                                        <f:selectItems value="#{workorderViewController.meterTypes}" var="varMeterType" itemLabel="#{varMeterType.meterTypeCode}" itemValue="#{varMeterType.meterTypeCode}"/>
+                                                    </b:selectOneMenu>
+
+                                                    <b:inputText id="itWMManufacturer" value="#{workorderViewController.meterManufacturer}"  placeholder="Meter Manufacturer" />
+                                                    <b:inputText id="itWMSerial" value="#{workorderViewController.meterSerial}"  placeholder="Meter Serial" />
+                                                    <b:inputText id="itWMModel" value="#{workorderViewController.meterModel}"  placeholder="Meter Model" />
+                                                    <b:inputText id="itWMType" value="#{workorderViewController.meterType}"  placeholder="Meter Type" />
+                                                    <b:commandButton id="btnAddWM" icon="pi pi-check"  styleClass="ui-button-flat p-ml-2" look="info" value="Add New Meter" update="mainform:tblMeters"  style="width: 250px" >
+                                                        <f:actionListener binding="#{workorderViewController.addNewBOMMeter()}"/>
+                                                    </b:commandButton>
+                                                </p:panelGrid>
+                                                <p:dialog widgetVar="statusDialogdelete" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" width="Auto">
+                                                    <center>
+                                                        Deleting Meter ....
+                                                    </center>
+                                                    <img src="../resources/images/loading-bar.gif"/>
+
+                                                </p:dialog>
+                                            </p:panel>
+                                        
+                                    </div>
+                                </div>
+                                <!-- -->
+                                
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p:panel id="pnlActions" header = "" >
+                                            <br/>
+                                            
+                                            <p:panelGrid columns="2">
+                                                <p:panelGrid columns="2" >
+                                                    <p:outputLabel  style="width: 150px;text-align: right" value="Survey Schedule Date:"/>
+                                                    <b:datepicker id="itSurveyDate"  style="width:150px"/>
+
+                                                    <p:outputLabel  style="width: 150px;text-align: right"  value="Surveyor Name:"/>
+                                                    <b:selectOneMenu id="itSurveyorName" value="#{workorderViewController.surveyorName}"  immediate="false" style="width: 300px">
+                                                        <p:ajax event="change" update="@this"/>
+                                                        <f:selectItem itemLabel="Select Staff" itemValue="" noSelectionOption="true"/>
+                                                        <f:selectItems value="#{workorderViewController.staffs}" var="varStaff" itemLabel="#{varStaff.userName}" itemValue="#{varStaff.userName}"/>
+                                                    </b:selectOneMenu> 
+                                                </p:panelGrid>
+                                                <p:panelGrid columns="2" >
+                                                    <p:outputLabel  style="width: 150px;text-align: right" value="Work Order Status:"/>
+                                                    <b:selectOneMenu id="somStatus" value="#{workorderViewController.workorderStatus}"  immediate="false" style="width: 400px">
+                                                        <p:ajax event="change" update="@this"/>
+                                                        <f:selectItem itemLabel="Select Status " itemValue="" noSelectionOption="true"/>
+                                                        <f:selectItems value="#{workorderViewController.ststuses}" var="varStatus" itemLabel="#{varStatus.statusCode}" itemValue="#{varStatus.statusCode}"/>
+                                                    </b:selectOneMenu>
+                                                    
+                                                    <p:outputLabel  style="width: 160px;text-align: right" value="Survey Permit Number:"/>
+                                                    <b:inputText id="itSurveyPermit" value="#{workorderViewController.premiseBuildingName}" style="width: 400px"/>
+                                                    
+                                                </p:panelGrid>
+                                                
+                                            </p:panelGrid>
+                                            <br/>
+                                        <p:panelGrid columns="8">
+                                                <b:commandButton id="btnStartOver"   value="Startover" styleClass="ui-button-flat p-ml-2" look="danger" >
+                                                    <f:actionListener binding="#{workorderViewController.startover()}"/>
+                                                </b:commandButton>
+                                                
+                                                <b:commandButton id="btnSubmitWO" icon="pi pi-check"  styleClass="ui-button-flat p-ml-2" look="success" value="Submit Work Order" update="mainform" >
+                                                    <f:actionListener binding="#{workorderViewController.submitWorkOrder()}"/>
+                                                </b:commandButton>
+
+                                        </p:panelGrid>
+
+                                </p:panel>
+                                    </div>
+                                    
+                                </div>
+                            </h:form>
+                        </div>
+                        
+                        
+                    </div>
+           </nav>
+        
+    </h:body>
+    
+    <style type="text/css">
+        .ui-panelgrid.showcase-text-align-center .ui-grid-responsive .ui-panelgrid-cell {
+            text-align: center;
+        }
+
+        .customPanelGrid .ui-panelgrid-content {
+            align-items: center;
+        }
+        
+        .className td {
+            text-align: right;
+        }
+        .txt {
+            padding-left: 8px;
+            font-size: 26px;
+        }
+
+        .txtwrap {
+            word-wrap: break-word;
+        }
+
+        .navbar-brand
+        {
+            margin: 0;
+            padding: 0;
+
+        }
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #0D525A;
+            color: #E8E8E8;
+            text-align: center;
+          
+        }
+        .navbar-default .navbar-collapse {
+            background: transparent linear-gradient(90deg, #1D7079 0%, #0F383D 100%) 0% 0% no-repeat padding-box;
+            opacity: 1;
+            width: 100%;
+        }
+        .ui-widget, .ui-widget .ui-widget {
+            font-size: 100% !important;
+        }
+        .navbar-brand img
+        {
+            max-height: 100%;
+        }
+        cen {
+            position: absolute;
+            right: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+        #wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        html, body, .container-table {
+            height: 100%;
+        }
+        .container-table {
+            display: table;
+        }
+        .vertical-center-row {
+            display: table-cell;
+            vertical-align: top;
+            align-content: flex-start;
+        }
+
+
+    </style>
+     
+</html>
+
