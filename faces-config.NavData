@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="login.xhtml?faces-redirect=true" x="400" y="1050" zoom="true"/>
+        <Node id="login.xhtml" x="650" y="1050" zoom="true"/>
+        <Node id="index.html" x="2900" y="150" zoom="true"/>
+        <Node id="composite/footer.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="DCD/installtionwizard.xhtml" x="400" y="150" zoom="false"/>
+        <Node id="sessionto.xhtml" x="2150" y="150" zoom="true"/>
+        <Node id="composite/footer_1.xhtml" x="1150" y="150" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>
