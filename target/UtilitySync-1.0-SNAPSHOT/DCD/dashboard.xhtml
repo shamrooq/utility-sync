@@ -1,0 +1,828 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
+        <h:outputScript name="charts/charts.js" library="primefaces" />
+        <script 
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANqx84UOnTW30bpnw5EZXTK5t0VdM9QvE&amp;callback=initMap">
+        </script>
+        <link rel="stylesheet" href="../resources/bower_components/bootstrap/dist/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/font-awesome/css/font-awesome.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/Ionicons/css/ionicons.min.css"></link>
+        <link href="../resources/bower_components/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../resources/bower_components/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"></link>
+        <title>Admin Dashboard</title>
+    </h:head>
+    <body class="hold-transition skin-green sidebar-mini">
+        <div class="wrapper">
+            <header class="main-header">
+                <!-- Logo -->
+                
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                    </a>
+                    <!-- Navbar Right Menu -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                    <ul class="nav navbar-nav navbar-right">
+                        <b:form>
+                            
+                            <p:commandLink action="#{loginbean.logout()}" styleClass="ui-button-flat p-ml-2" >
+                                <i class="fa fa-power-off" style="color: white;font-size:3rem;margin-right: 32px;margin-top: 10px"></i>
+                            </p:commandLink>
+                            
+                        </b:form>
+                    </ul>
+                </div>
+                </nav>
+            </header>
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="main-sidebar"  >
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar" >
+                    <!-- Sidebar user panel -->
+
+                    <!-- search form -->
+                    <form action="#" method="get" class="sidebar-form" >
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search..."/>
+                            <span class="input-group-btn">
+                                <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                                
+                            </span>
+                        </div>
+                    </form>
+                    <!-- /.search form -->
+                    <!-- sidebar menu: : style can be found in sidebar.less -->
+                    <ul class="sidebar-menu" data-widget="tree">
+                        <li class="header">MAIN NAVIGATION</li>
+
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-clone"></i>
+                                <span>UTILITYSYNC Dashboard</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="dashboardreports.xhtml"><i class="fa fa-file-o"></i>Reports</a></li>
+                                <li><a href="dashboardschema.xhtml"><i class="fa fa-sitemap"></i>Metadata</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                </section>
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Content Wrapper. Contains page content -->
+            <div id="PgOne" class="content-wrapper" >
+                <!-- Content Header (Page header) -->
+                <section class="nav navbar-nav navbar-right">
+                    <b:form>
+                        <p:toolbar style="margin-right: 23px;margin-top: 5px">
+                            <p:toolbarGroup>
+                                
+                                
+                                <p:clock />
+                                
+                                <b:commandButton  look="warning" style="margin-right: 2px" styleClass="ui-button-flat p-ml-2" >
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                          <p:printer target="PgOne"/>  
+                                </b:commandButton>
+                                
+                                <b:commandButton  look="warning" style="margin-right: 2px" styleClass="ui-button-flat p-ml-2" >
+                                        <i class="fa fa-external-link"></i>
+                                </b:commandButton>
+                                    
+                                
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                    </b:form>
+                </section>
+                
+                <section class="content-header">
+                    
+                    <h1>
+                        UTILITYSYNC | IOT <b>Operations</b>
+                    </h1>
+                    
+                    <small>UTILITYSYNC Dashboard   </small>
+                    
+                </section>
+                               
+                
+                <!-- Main content -->
+                <section class="content">
+                    <!-- Info boxes -->
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box bg-green-active">
+                                <span class="info-box-icon "><i class="ion  ion-pull-request"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-number">SITES/METERS - #{dashboardViewController.getnTotalSites()}/#{dashboardViewController.getnTotalMeters()}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small><u>AUH</u> (<b>#{dashboardViewController.getnTotalSitesAUH()}</b> Sites, <b>#{dashboardViewController.getnTotalMetersWaterAUH()}</b> WMTR, <b>#{dashboardViewController.getnTotalMetersElecAUH()}</b> EMTR)</small><br/>
+                                    <small><u>AAN</u> (<b>#{dashboardViewController.getnTotalSitesAAN()}</b> Sites, <b>#{dashboardViewController.getnTotalMetersWaterAAN()}</b> WMTR, <b>#{dashboardViewController.getnTotalMetersElecAAN()}</b> EMTR)</small>
+                                    
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                        
+                        <!-- /.col -->
+
+                        <!-- fix for small devices only -->
+                        <div class="clearfix visible-sm-block"></div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box bg-green-active">
+                                <span class="info-box-icon "><i class="ion  ion-checkmark-round"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-number">SITES VISITED - #{dashboardViewController.getnCompletedSites()} / #{dashboardViewController.getnTotalSites()}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small><u>AUH</u> (<b>#{dashboardViewController.getnCompletedSitesAUH()}</b> Surveyed, <b>#{dashboardViewController.getnFailedSitesAUH()}</b> Not-Ready)</small><br/>
+                                    <small><u>AAN</u> (<b>#{dashboardViewController.getnCompletedSitesAAN()}</b> Surveyed, <b>#{dashboardViewController.getnFailedSitesAAN()}</b> Not-Ready)</small>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box bg-green-active">
+                                <span class="info-box-icon "><i class="ion  ion-android-done-all"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-number">METERS CHECKED - #{dashboardViewController.getnCompletedMeters()}/#{dashboardViewController.getnTotalMeters()}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small><u>AUH</u> (<b>#{dashboardViewController.getnCompletedMetersWaterAUH()} </b>WMTR, <b>#{dashboardViewController.getnCompletedMetersElecAUH()} </b>EMTR) (<b>#{dashboardViewController.getnFailedMetersAUH()} </b>Rejected)</small><br/>
+                                    <small><u>AAN</u> (<b>#{dashboardViewController.getnCompletedMetersWaterAAN()} </b>WMTR, <b>#{dashboardViewController.getnCompletedMetersElecAAN()} </b>EMTR) (<b>#{dashboardViewController.getnFailedMetersAAN()} </b>Rejected)</small>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                        
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        
+                        <!-- /.col -->
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box bg-green-active">
+                                <span class="info-box-icon "><i class="ion-aperture"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-number">GATEWAYS ALLOTTED - 384</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <!--span class="info-box-number">#{dashboardViewController.metersTotal}</span-->
+                                    <span class="info-box-text">Telephony (<b>168</b> AUH,<b>200</b> AAN)</span>
+                                    <small>ARC (<b>16</b> AUH,<b>0</b> AAN) </small>
+                                </div>
+                                <!--  /.info-box-content -->
+                            </div>
+                            <!--/.info-box--> 
+                        </div>
+                        
+                        <!-- /.col -->
+                        
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box bg-green-active">
+                                <span class="info-box-icon "><i class="ion-aperture"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-number">GATEWAYS CONFIRMED - 384</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small><u>AUH</u> (<b>368</b>  GW, <b>368</b> Confirmed, <b>0</b> TBD)</small><br/>
+                                    <small><u>AAN</u> (<b>16</b>  GW, <b>16</b> Confirmed, <b>0</b> TBD)</small>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>  
+                        
+                         <!-- /.col -->
+                        
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box bg-green-active">
+                                <span class="info-box-icon "><i class="ion-aperture"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-number">GATEWAYS Types - 384</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small><u>AUH</u> (<b>80</b>  WGW, <b>104</b> EGW, <b>0</b> HYB-GW)</small><br/>
+                                    <small><u>AAN</u> (<b>79</b>  WGW, <b>114</b> EGW, <b>7</b> HYB-GW)</small>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div> 
+
+                        <!-- fix for small devices only -->
+                        <div class="clearfix visible-sm-block"></div>
+
+
+                        <!-- /.col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Field Completion Trends</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="row">
+                                                <p:chart type="line" model="#{dashboardViewController.dateModelMeters}" style="height:400px;"/>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <p:chart type="line" model="#{dashboardViewController.dateModel}" style="height:400px;"/>
+                                            </div>
+                                           
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            <p class="text-center">
+                                                <strong>Goal Completion</strong>
+                                            </p>
+                                            
+                                            <div class="info-box bg-green-active">
+                                                <span class="info-box-icon"><i class="ion ion-checkmark"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">POC Meter Qualification Scope</span>
+                                                    <span class="info-box-number">#{dashboardViewController.getnCompletedMeters()}/1000</span>
+                                                    <!--<span class="info-box-number">10</span>-->
+
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 99%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        100% Completion Rate in 07 Weeks
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                            
+                                            <div class="info-box bg-yellow">
+                                                <span class="info-box-icon"><i class="ion ion-android-done-all"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Completed Sites</span>
+                                                    <span class="info-box-number">#{dashboardViewController.getnCompletedSites()}/#{dashboardViewController.getnTotalSites()}</span>
+                                                    
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 82%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        80.1% Progress  in 07 Weeks
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="info-box bg-red">
+                                                <span class="info-box-icon"><i class="ion ion-android-done-all"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Installed Sites</span>
+                                                    <span class="info-box-number">0/#{dashboardViewController.getnTotalSites()}</span>
+                                                    
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 2.3%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        % Progress  in 07 Weeks
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- ./box-body -->
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header"> </h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                    </div>
+                                    <!--/.row--> 
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Abu Dhabi Regions - (<b>815 Meters</b>)</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <center>
+                                                <Large>
+                                                    NBIOT - Coverage Feasibility – Region wise
+                                                </Large>
+                                                    
+                                                </center>
+                                            <p:gmap center="25.231475, 55.291472" zoom="7" type="HYBRID" style="width:107%;height:280px" model="#{dashboardViewController.simpleModelFeasibilityADDC}" />
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-6">
+                                            <p:chart type="donut"   model="#{dashboardViewController.pieModel1FeasibilityADDC}" style="height:300px;width: 500px; margin-left: 20px"/>
+                                        </div>
+                                        <!-- /.col -->
+                                        
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- ./box-body -->
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">495</h5>
+                                                <span class="description-text">AUH ADI</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">150</h5>
+                                                <span class="description-text">Eastern Region (AUH ER)</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">170</h5>
+                                                <span class="description-text">Al Dhafra Region (AUH WR)</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        
+                                    </div>
+                                    <!--/.row--> 
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Al Ain Regions - (<b>295 Meters</b>)</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <center>
+                                                <Large>
+                                                    NBIOT - Coverage Feasibility – Region wise
+                                                </Large>
+                                            </center>
+                                            <p:gmap  center="25.231475, 55.291472" zoom="7" type="HYBRID" style="width:107%;height:280px" model="#{dashboardViewController.simpleModelFeasibilityAADC}" />
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-6">
+                                            <p:chart type="donut" model="#{dashboardViewController.pieModel1FeasibilityAADC}" style="height:300px;width: 500px; margin-left: 20px "/>
+                                        </div>
+                                        <!-- /.col -->
+                                        
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- ./box-body -->
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">253</h5>
+                                                <span class="description-text">Center of Al Ain</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">28</h5>
+                                                <span class="description-text">Northern Region (AAN NR)</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">3</h5>
+                                                <span class="description-text">Southern Region (AAN SR)</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block">
+
+                                                <h5 class="description-header">11</h5>
+                                                <span class="description-text">Western Region (AAN WR)</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                    </div>
+                                    <!--/.row--> 
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Sites/Meters Rejection Trends</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            
+                                            <p:chart type="donut" model="#{dashboardViewController.donutModelMetersAADC}" style="height:600px "/>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            
+                                            <p:chart type="donut" model="#{dashboardViewController.donutModelMetersADDC}" style="height:600px "/>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            <p class="text-center">
+                                                <strong>Goal Completion</strong>
+                                            </p>
+                                            
+                                            <div class="info-box bg-green-active">
+                                                <span class="info-box-icon"><i class="ion ion-checkmark"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Telephony Meter Qualification Scope</span>
+                                                    <span class="info-box-number">104/400</span>
+                                                    <!--<span class="info-box-number">10</span>-->
+
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 26.0%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        ** Covering ADDC as well as AADC Meters
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                            
+                                            <div class="info-box bg-yellow">
+                                                <span class="info-box-icon"><i class="ion ion-android-done-all"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">ARC Meter Qualification Scope</span>
+                                                    <span class="info-box-number">181/600</span>
+                                                    
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 30.1%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        146 out of 177 gateways are Unknown type
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                            
+                                            
+                                            <!-- /.progress-group -->
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- ./box-body -->
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                    </div>
+                                    <!--/.row--> 
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Gateways Allocation Trends</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            
+                                            <p:chart type="donut" model="#{dashboardViewController.donutModelGateways}" style="height:600px "/>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            
+                                            <p:chart type="donut" model="#{dashboardViewController.donutModelGatewaysVendor}" style="height:600px "/>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            <p class="text-center">
+                                                <strong>Goal Completion</strong>
+                                            </p>
+                                            
+                                            <div class="info-box bg-green-active">
+                                                <span class="info-box-icon"><i class="ion ion-checkmark"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Telephony Meter Qualification Scope</span>
+                                                    <span class="info-box-number">104/400</span>
+                                                    <!--<span class="info-box-number">10</span>-->
+
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 26.0%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        ** Covering ADDC as well as AADC Meters
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                                            
+                                            <div class="info-box bg-yellow">
+                                                <span class="info-box-icon"><i class="ion ion-android-done-all"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">ARC Meter Qualification Scope</span>
+                                                    <span class="info-box-number">181/600</span>
+                                                    
+                                                    <div class="progress">
+                                                        <div class="progress-bar" style="width: 30.1%"></div>
+                                                    </div>
+                                                    <span class="progress-description">
+                                                        146 out of 177 gateways are Unknown type
+                                                    </span>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+                      
+                                            
+                                            <!-- /.progress-group -->
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- ./box-body -->
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">104</h5>
+                                                <span class="description-text">Telephony</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">177</h5>
+                                                <span class="description-text">ARC</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block border-right">
+
+                                                <h5 class="description-header">11</h5>
+                                                <span class="description-text">Not Confirmed</span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                        <!--/.col--> 
+                                        <div class="col-sm-3 col-xs-6">
+                                            <div class="description-block">
+
+                                                <h5 class="description-header"></h5>
+                                                <span class="description-text"></span>
+                                            </div>
+                                            <!--/.description-block--> 
+                                        </div>
+                                    </div>
+                                    <!--/.row--> 
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Main row -->
+                    
+                    <!-- /.row -->
+                </section>
+                <!-- /.content -->
+                
+                
+            </div>
+            <!-- /.content-wrapper -->
+
+
+
+            <!-- Control Sidebar -->
+
+            <!-- /.control-sidebar -->
+            <!-- Add the sidebar's background. This div must be placed
+                 immediately after the control sidebar -->
+            <div class="control-sidebar-bg"></div>
+
+        </div>
+        <!-- ./wrapper -->
+
+        <!-- jQuery 3 -->
+        <!-- Bootstrap 3.3.7 -->
+        <script src="../resources/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- FastClick -->
+        <script src="../resources/bower_components/fastclick/lib/fastclick.js"></script>
+        <!-- AdminLTE App -->
+        <script src="dist/js/adminlte.min.js"></script>
+        <!-- Sparkline -->
+        <script src="../resources/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+        <!-- jvectormap  -->
+        <script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+        <script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+        <!-- SlimScroll -->
+        <script src="../resources/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <!-- ChartJS -->
+        <script src="../resources/bower_components/chart.js/Chart.js"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="dist/js/pages/dashboard2.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="dist/js/demo.js"></script>
+    </body>
+    
+    <style type="text/css">
+        .ui-clock{
+            border-radius: 0px !important; 
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+    </style>
+</html>
+

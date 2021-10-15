@@ -1,0 +1,297 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:metadata>
+        <f:viewAction  action="#{installationViewController.initiateAll()}"/>
+        <f:viewAction  action="#{installationViewController.findAllVendors()}"/>
+        <f:viewAction  action="#{installationViewController.findAllPremiseTypes()}"/>
+        <f:viewAction  action="#{installationViewController.findAllCustomers()}"/>
+    </f:metadata>
+    <h:head>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
+        
+        <link rel="stylesheet" href="../resources/bower_components/bootstrap/dist/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/font-awesome/css/font-awesome.min.css"></link>
+        <link rel="stylesheet" href="../resources/bower_components/Ionicons/css/ionicons.min.css"></link>
+        
+        <link href="resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../resources/bower_components/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
+        
+        <title>.:UtilitySync :Installation</title>
+    </h:head>
+    
+    <h:body class="skin-white">
+        
+        <nav class="navbar navbar-default">
+            
+                    <div class="content">
+                        <div class="container-fluid bg-primary" >
+                            <section class="content-header">
+                                <h1>
+                                    New Installation - <b>Configuration</b>
+                                </h1>
+                                <large>Welcome #{loginbean.fullname}</large>
+                                <p:separator></p:separator>
+                                <ol class="breadcrumb">
+                                    <li><a href="../../"><i class="fa fa-futbol-o"></i> <b>Home</b></a></li>
+                                    <li><a href="#"><i class="fa fa-bookmark-o"></i> <b>Installation Manager</b></a></li>
+                                    <li><a href="#"><i class="fa fa-bookmark-o"></i> <b>Request Details</b></a></li>
+                                    <li><a href="#"><i class="fa fa-bookmark-o"></i> <b>Configurations</b></a></li>
+                                    <li><a href="#" style="color: brown"><i class="fa fa-bookmark-o"></i> <b style="color: brown">BOM Validation</b></a></li>
+                                    <li><a href="#"><i class="fa fa-bookmark-o"></i> <b>Acceptance</b></a></li>
+                                    <li><a href="#"><i class="fa fa-bookmark-o"></i> <b>Confirmation</b></a></li>
+                                </ol>
+                            </section>
+                        </div>
+                        
+                        
+                        <br/>
+                        <div class="container-fluid" >
+                            <h:form id="mainform">
+                                <p:growl id="growl" showDetail="true"/>
+                                
+                                <div class="row">
+                                <div class="col-md-12">
+                                    <b:panel id="pnlGatewaysSkelton" look="primary" >
+                                        <b:panel id="pnlGateways" look="info" collapsible="false" >
+                                            <f:facet name="heading" class="panel">
+                                                <b:row>
+                                                    <h:outputText value="Gateways"  style="padding-left: 10px;font-weight: bold;font-size: 20px"/>
+
+                                                </b:row>
+                                            </f:facet>
+                                            <br/>
+
+                                            <b:dataTable value="#{bOMATEsController.items}"
+                                                 var="item"
+                                                 id="Gateways"                                                 
+                                                 save-state="true"
+                                                 striped="true"
+                                                 responsive="true"
+                                                 paginated="false"
+                                                 >
+                                                <b:dataTableColumn value="#{item.ateId}" style="width: 150px"/>
+                                                <b:dataTableColumn value="#{item.ATEName}" style="width: 150px"/>
+                                                <b:dataTableColumn value="#{mOIRequestController.vendor}" style="width: 150px"/>
+                                                <b:dataTableColumn value="#{bOMATEsController.fetchATEModel(item)}" label="DeviceModel" style="width:10%"/>
+                                                <b:dataTableColumn  data-type="text" style="width: 150px">
+                                                    <f:facet name="header">
+                                                        <h:outputText value="SN"/>
+                                                    </f:facet>
+                                                    <h:inputText  value="#{item.serialNumber}" required="true" requiredMessage="please fill all the below fields"/>
+                                                </b:dataTableColumn>
+                                                <b:dataTableColumn label="Status" style="width: 150px">
+                                                    <b:commandButton value="Defined" look="success" rendered="#{(installationController.checkPanelDefDB(item.serialNumber))}" disabled="true" style="width: min-content"/>
+                                                    <b:commandButton value="NOT Defined" look="danger" rendered="#{not(installationController.checkPanelDefDB(bOMATEsController.ATESN))}" action="#{installationController.definePanel(item.serialNumber)}" onclick="PF('statusDialogdef').show()" onsuccess="PF('statusDialogdef').hide()" update="wizardform:ATEs"/>
+                                                    <b:commandButton value="Wrong Serial" look="danger" rendered="#{((installationController.wrongPanelSerial))}" style="width: min-content"/>
+                                                </b:dataTableColumn>
+                                            </b:dataTable>
+                                        </b:panel>
+                                    </b:panel>
+                                    
+                                </div>
+                                </div>    
+                                
+                                <!-- -->
+                                
+                                
+                                <!-- -->
+                                
+                                <!--  -->
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <b:panel id="pnlEstimation" look="primary" >
+                                            
+                                            <br/>
+                                            
+                                            <b:panel id="pnlWaterMeters" look="info" collapsible="false"  >
+                                                <f:facet name="heading" class="panel">
+                                                    <b:row>
+                                                        <h:outputText value="Water Meters"  style="padding-left: 10px;font-weight: bold;font-size: 20px"/>
+
+                                                    </b:row>
+                                                </f:facet>
+                                                <br/>
+                                                <b:dataTable value="#{bOMATEsController.items}"
+                                                    var="item"
+                                                    id="metersWater"                                                 
+                                                    save-state="true"
+                                                    striped="true"
+                                                    responsive="true"
+                                                    paginated="false"
+                                                    >
+                                                    <b:dataTableColumn value="#{item.ateId}" style="width: 150px"/>
+                                                    <b:dataTableColumn value="#{item.ATEName}" style="width: 150px"/>
+                                                    <b:dataTableColumn value="#{mOIRequestController.vendor}" style="width: 150px"/>
+                                                    <b:dataTableColumn value="#{bOMATEsController.fetchATEModel(item)}" label="DeviceModel" style="width:10%"/>
+                                                    <b:dataTableColumn  data-type="text" style="width: 150px">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="SN"/>
+                                                        </f:facet>
+                                                        <h:inputText  value="#{item.serialNumber}" required="true" requiredMessage="please fill all the below fields"/>
+                                                    </b:dataTableColumn>
+                                                    <b:dataTableColumn label="Status" style="width: 150px">
+                                                        <b:commandButton value="Defined" look="success" rendered="#{(installationController.checkPanelDefDB(item.serialNumber))}" disabled="true" style="width: min-content"/>
+                                                        <b:commandButton value="NOT Defined" look="danger" rendered="#{not(installationController.checkPanelDefDB(bOMATEsController.ATESN))}" action="#{installationController.definePanel(item.serialNumber)}" onclick="PF('statusDialogdef').show()" onsuccess="PF('statusDialogdef').hide()" update="wizardform:ATEs"/>
+                                                        <b:commandButton value="Wrong Serial" look="danger" rendered="#{((installationController.wrongPanelSerial))}" style="width: min-content"/>
+                                                    </b:dataTableColumn>
+                                                </b:dataTable>
+                                            </b:panel>
+                                            
+                                            <br/>
+                                            
+                                            <b:panel id="pnlElectricMeters" look="info" collapsible="false"  >
+                                                <f:facet name="heading" class="panel">
+                                                    <b:row>
+                                                        <h:outputText value="Electricity Meters"  style="padding-left: 10px;font-weight: bold;font-size: 20px"/>
+
+                                                    </b:row>
+                                                </f:facet>
+                                                <br/>
+                                                <b:dataTable value="#{bOMATEsController.items}"
+                                                    var="item"
+                                                    id="meterselEctric"                                                 
+                                                    save-state="true"
+                                                    striped="true"
+                                                    responsive="true"
+                                                    paginated="false"
+                                                    >
+                                                    <b:dataTableColumn value="#{item.ateId}" style="width: 150px"/>
+                                                    <b:dataTableColumn value="#{item.ATEName}" style="width: 150px"/>
+                                                    <b:dataTableColumn value="#{mOIRequestController.vendor}" style="width: 150px"/>
+                                                    <b:dataTableColumn value="#{bOMATEsController.fetchATEModel(item)}" label="DeviceModel" style="width:10%"/>
+                                                    <b:dataTableColumn  data-type="text" style="width: 150px">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="SN"/>
+                                                        </f:facet>
+                                                        <h:inputText  value="#{item.serialNumber}" required="true" requiredMessage="please fill all the below fields"/>
+                                                    </b:dataTableColumn>
+                                                    <b:dataTableColumn label="Status" style="width: 150px">
+                                                        <b:commandButton value="Defined" look="success" rendered="#{(installationController.checkPanelDefDB(item.serialNumber))}" disabled="true" style="width: min-content"/>
+                                                        <b:commandButton value="NOT Defined" look="danger" rendered="#{not(installationController.checkPanelDefDB(bOMATEsController.ATESN))}" action="#{installationController.definePanel(item.serialNumber)}" onclick="PF('statusDialogdef').show()" onsuccess="PF('statusDialogdef').hide()" update="wizardform:ATEs"/>
+                                                        <b:commandButton value="Wrong Serial" look="danger" rendered="#{((installationController.wrongPanelSerial))}" style="width: min-content"/>
+                                                    </b:dataTableColumn>
+                                                </b:dataTable>
+                                            </b:panel>
+                                            
+                                        </b:panel>
+                                        
+                                    </div>
+                                </div>
+                                <!-- -->
+                                
+                                
+                                <!-- -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="pull-right">
+                                            <p:panelGrid columns="6">
+                                                
+                                                <b:commandButton id="btnConfigBack" look="info"   styleClass="ui-button-flat p-ml-2" value="Back" style="width: 150px"  >
+                                                    <f:actionListener binding="#{installationViewController.btnInitiateOnClick()}"/>
+                                                    <f:actionListener binding="#{installationViewController.fetchBomMeters(installationViewController.surveyByUtilityNumber.bomId)}"/>
+                                                </b:commandButton>
+                                                
+                                                <b:commandButton id="btnNextStage" look="info"   styleClass="ui-button-flat p-ml-2" value="Next" style="width: 150px"  >
+                                                    <f:actionListener binding="#{installationViewController.btnInitiateOnClick()}"/>
+                                                    <f:actionListener binding="#{installationViewController.fetchBomMeters(installationViewController.surveyByUtilityNumber.bomId)}"/>
+                                                </b:commandButton>
+                                                
+                                                
+                                            </p:panelGrid>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                        
+                        
+                    </div>
+           </nav>
+        
+    </h:body>
+    
+    <style type="text/css">
+        .ui-panelgrid.showcase-text-align-center .ui-grid-responsive .ui-panelgrid-cell {
+            text-align: center;
+        }
+
+        .customPanelGrid .ui-panelgrid-content {
+            align-items: center;
+        }
+        
+        .className td {
+            text-align: right;
+        }
+        .txt {
+            padding-left: 8px;
+            font-size: 26px;
+        }
+
+        .txtwrap {
+            word-wrap: break-word;
+        }
+
+        .navbar-brand
+        {
+            margin: 0;
+            padding: 0;
+
+        }
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #0D525A;
+            color: #E8E8E8;
+            text-align: center;
+          
+        }
+        .navbar-default .navbar-collapse {
+            background: transparent linear-gradient(90deg, #1D7079 0%, #0F383D 100%) 0% 0% no-repeat padding-box;
+            opacity: 1;
+            width: 100%;
+        }
+        .ui-widget, .ui-widget .ui-widget {
+            font-size: 100% !important;
+        }
+        .navbar-brand img
+        {
+            max-height: 100%;
+        }
+        cen {
+            position: absolute;
+            right: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+        #wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        html, body, .container-table {
+            height: 100%;
+        }
+        .container-table {
+            display: table;
+        }
+        .vertical-center-row {
+            display: table-cell;
+            vertical-align: top;
+            align-content: flex-start;
+        }
+
+
+    </style>
+     
+</html>
+
