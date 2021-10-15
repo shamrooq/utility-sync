@@ -1,5 +1,0 @@
-/*
- * Copyright (c) from 2018 to present, Etisalat Digital and/or its affiliates. All rights reserved.
- * ETISALAT DIGITAL PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- */
