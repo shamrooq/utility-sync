@@ -9,6 +9,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMGatewayEstBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
@@ -35,6 +36,7 @@ public class BOMGatewaysController implements Serializable {
     private BOMGatewayEstDTO gatewayEstRecord;
     private String utilityNumber;
     private Long bomId;
+    private BigInteger BOMId;
     private String errorMessage;
     private String gatewaysType;
     private String gatewaysTypeProposed;
@@ -96,6 +98,14 @@ public class BOMGatewaysController implements Serializable {
             }
     }
 
+    public void updateGtwEstimation(Long bomId){
+            this.bomId = bomId;
+            estimation = gatewayEstBus.findSomeByBomId(bomId);
+            if(estimation == null){
+                List<BOMGatewayEstDTO> list = new ArrayList<>();
+                estimation = list;
+            }
+    }
     public String getUtilityNumber() {
         return utilityNumber;
     }

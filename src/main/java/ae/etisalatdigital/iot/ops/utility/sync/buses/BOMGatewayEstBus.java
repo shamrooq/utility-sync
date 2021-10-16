@@ -10,6 +10,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.daos.BOMGatewayEstDAO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 
+import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -37,7 +38,11 @@ public class BOMGatewayEstBus {
     public List<BOMGatewayEstDTO> findAllByBomId(Long bomId){
         return bomDao.findAllByBomId(bomId);
     }
-    
+
+    public List<BOMGatewayEstDTO> findSomeByBomId(Long bomId){
+        return bomDao.findSomeByBomId(bomId);
+    }
+
     public List<BOMGatewayEstDTO> addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,Double cableLength,Long gatewayRoomId, Long gatewayFloorId, Boolean powerIntruption, Long signalStrength, Boolean antenaRequired){
         if( bomDao.addNewGatewayEstByBomId(bomId, gatewayBomType, proposedGateType, noOfGateways, metersPerGateway,cableLength,gatewayRoomId,gatewayFloorId,powerIntruption,signalStrength,antenaRequired)){
            

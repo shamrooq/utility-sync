@@ -6,6 +6,7 @@
 package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.gatewayRoomId, m.gatewayFloorId, m.cableLength ) FROM BOMGatewaysEst m")
         ,@NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.gatewayRoomId, m.gatewayFloorId, m.cableLength ) FROM BOMGatewaysEst m where m.bomId = :bomId")
         , @NamedQuery(name = "BOMGatewaysEst.DELETE", query = "DELETE FROM BOMGatewaysEst m WHERE m.id = :id")
+        ,@NamedQuery(name = "BOMGatewaysEst.findSomeByBomId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simICCID,m.gatewayFloor,m.gatewayRoom) FROM BOMGatewaysEst m where m.bomId = :bomId")
  })
 public class BOMGatewaysEst implements Serializable {
 
@@ -34,8 +36,7 @@ public class BOMGatewaysEst implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "EST_GTW_ID")
-    private Long id;
-    
+    private BigInteger id;
     @Column(name = "BOM_ID")
     private Long bomId;
     
@@ -62,8 +63,7 @@ public class BOMGatewaysEst implements Serializable {
     @Column(name = "Serial_Number")
     private String serialNumber;
     @Column(name = "SIM_ICCID")
-    private String simICCID;
-    
+    private BigInteger simICCID;
     @Column(name = "Power_Intruption")
     private Boolean powerIntruption;
     @Column(name = "Signal_Strength")
@@ -80,13 +80,17 @@ public class BOMGatewaysEst implements Serializable {
     @Column(name = "GTW_Floor_Id")
     private Long gatewayFloorId;
     @Column(name = "Cable_Length")
-    private Double cableLength; 
-    
+    private Double cableLength;
+    @Column(name="Gtw_Floor")
+    private String gatewayFloor;
+    @Column(name="Gtw_Room")
+    private String gatewayRoom;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
     
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
@@ -147,10 +151,6 @@ public class BOMGatewaysEst implements Serializable {
         return serialNumber;
     }
 
-    public String getSimICCID() {
-        return simICCID;
-    }
-
     public Boolean getAntenaRequired() {
         return antenaRequired;
     }
@@ -175,8 +175,7 @@ public class BOMGatewaysEst implements Serializable {
      * 
      * @param id 
      */
-
-    public void setId(Long id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 
@@ -236,10 +235,6 @@ public class BOMGatewaysEst implements Serializable {
         this.serialNumber = serialNumber;
     }
 
-    public void setSimICCID(String simICCID) {
-        this.simICCID = simICCID;
-    }
-
     public void setAntenaRequired(Boolean antenaRequired) {
         this.antenaRequired = antenaRequired;
     }
@@ -255,12 +250,30 @@ public class BOMGatewaysEst implements Serializable {
     public void setCableLength(Double cableLength) {
         this.cableLength = cableLength;
     }
-    
-    
-    
-    
-    
-    
+
+    public BigInteger getSimICCID() {
+        return simICCID;
+    }
+
+    public void setSimICCID(BigInteger simICCID) {
+        this.simICCID = simICCID;
+    }
+
+    public String getGatewayFloor() {
+        return gatewayFloor;
+    }
+
+    public void setGatewayFloor(String gatewayFloor) {
+        this.gatewayFloor = gatewayFloor;
+    }
+
+    public String getGatewayRoom() {
+        return gatewayRoom;
+    }
+
+    public void setGatewayRoom(String gatewayRoom) {
+        this.gatewayRoom = gatewayRoom;
+    }
 
     @Override
     public int hashCode() {

@@ -8,7 +8,6 @@ package ae.etisalatdigital.iot.ops.utility.sync.daos;
 
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 import java.util.List;
 
 /**
@@ -30,4 +29,5 @@ public interface BOMGatewayEstDAO {
     abstract void updateRequestStatus(String mmsReference, Integer status);
     
     abstract Boolean delete(Long id);
+    abstract List<BOMGatewayEstDTO> findSomeByBomId(Long bomId);
 }
