@@ -54,6 +54,9 @@ public class BOMGatewaysController implements Serializable {
     private Boolean antenaRequired;
 
     private List<BOMGatewayEstDTO> estimation;
+    private Long gatewayRoomId;
+    private Long gatewayFloorId;
+
     private int rowsPerPage = 10;
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
@@ -89,7 +92,6 @@ public class BOMGatewaysController implements Serializable {
             List<BOMGatewayEstDTO> list = new ArrayList<>();
             estimation = list;
         }
-        setRowsPerPage(estimation.size());
     }
 
     public String getUtilityNumber() {
@@ -132,8 +134,10 @@ public class BOMGatewaysController implements Serializable {
         this.estimation = estimation;
     }
 
-    public void addNewGatewayEst() {
-String errormsg = "Gateway Added Successfully";
+
+     public void addNewGatewayEst(){
+
+         String errormsg = "Gateway Added Successfully";
          FacesMessage msg = null;
          gatewaysRequired = 1;
          

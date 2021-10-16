@@ -7,11 +7,14 @@ package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.context.SessionScoped;
+
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
