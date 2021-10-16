@@ -59,8 +59,7 @@ public class BOMGatewaysController implements Serializable {
 
     private Long gatewayRoomId;
     private Long gatewayFloorId;
-
-
+    private int rowsPerPage = 10;
 
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
@@ -99,12 +98,13 @@ public class BOMGatewaysController implements Serializable {
     }
 
     public void updateGtwEstimation(Long bomId){
-            this.bomId = bomId;
-            estimation = gatewayEstBus.findSomeByBomId(bomId);
-            if(estimation == null){
-                List<BOMGatewayEstDTO> list = new ArrayList<>();
-                estimation = list;
-            }
+        this.bomId = bomId;
+        estimation = gatewayEstBus.findSomeByBomId(bomId);
+        if(estimation == null){
+            List<BOMGatewayEstDTO> list = new ArrayList<>();
+            estimation = list;
+        }
+        setRowsPerPage(estimation.size());
     }
     public String getUtilityNumber() {
         return utilityNumber;
@@ -300,9 +300,10 @@ public class BOMGatewaysController implements Serializable {
     public void setGatewayFloorId(Long gatewayFloorId) {
         this.gatewayFloorId = gatewayFloorId;
     }
-
-
-
-
-
+    public int getRowsPerPage() {
+        return rowsPerPage;
+    }
+    public void setRowsPerPage(int rowsPerPage) {
+        this.rowsPerPage = rowsPerPage;
+    }
 }
