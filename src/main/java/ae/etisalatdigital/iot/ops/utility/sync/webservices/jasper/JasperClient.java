@@ -3,24 +3,30 @@
  * ETISALAT DIGITAL PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  */
-package ae.etisalatdigital.iot.ops.utility.sync.webservices.client.jasper;
+package ae.etisalatdigital.iot.ops.utility.sync.webservices.jasper;
 
 import ae.etisalatdigital.commonUtils.ws.rest.RestClient;
 import ae.etisalatdigital.commonUtils.ws.rest.RestClientFilter;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
-import javax.ejb.Stateless;
-import javax.net.ssl.*;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.ejb.Stateless;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import org.glassfish.jersey.client.ClientConfig;
+
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 
 
 /**

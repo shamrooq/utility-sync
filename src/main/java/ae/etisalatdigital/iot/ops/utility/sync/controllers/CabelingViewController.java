@@ -119,7 +119,14 @@ public class CabelingViewController implements Serializable  {
     public static Logger getLOGGER() {
         return LOGGER;
     }
-
+    
+    
+    public String onFlowProcess(FlowEvent event) {
+        
+        return event.getNewStep();
+        
+    }
+    
     public SurveyController getControllerSurvey() {
         return controllerSurvey;
     }
@@ -256,11 +263,7 @@ public class CabelingViewController implements Serializable  {
         
     }
    
-    public String onFlowProcess(FlowEvent event) {
-        
-        return event.getNewStep();
-        
-    }
+    
 
     
     

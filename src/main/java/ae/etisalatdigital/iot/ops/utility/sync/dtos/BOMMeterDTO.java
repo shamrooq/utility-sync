@@ -5,47 +5,55 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
-import java.math.BigInteger;
 import java.util.Date;
-import java.util.Objects;
+
+
 
 /**
  *
  * @author au_mobility
  */
-public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
-
+public class BOMMeterDTO {
+    
     private Long id;
-
+    
     private Long bomId;
-
+    
     private String meterStatus;
-
-    private String meterType;
-
-    private String meterCorrelationID;
-
-    private String meterFloor;
-
-    private String meterRoom;
-
-    private String meterManufacturer;
-
-    private String meterModel;
-
+    
     private String bomMeterType;
-
+    
+    private String meterCorrelationID;
+    
+    private String meterFloor;
+    
+    private String meterRoom;
+    
+    private String meterManufacturer;
+    
+    private String meterModel;
+    
+    private String meterType;
+    
     private String meterSerial;
-
+    
     private String meterLabelGTW;
     private String meterLabelCBL;
     private String meterLabelJBX;
+    
     private Date modifiedDate;
-    private BigInteger meterGtwId;
+    
+    private Long meterRoomId;
+    private Long meterFloorId;
+    
+    private String meterAmi;
+    private Long meterManufacturerId;
+    private Long meterModelId;
+    private Long meterProtocolId;
+    
+    public BOMMeterDTO(){}
 
-    public BOMMeterDTO() {
-    }
-
+    
     public BOMMeterDTO(Long id, Long bomId, String meterStatus, String bomMeterType, String meterCorrelationID, String meterFloor, String meterRoom, String meterManufacturer, String meterModel, String meterType, String meterSerial) {
         this.id = id;
         this.bomId = bomId;
@@ -77,24 +85,33 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterLabelJBX = meterLabelJBX;
     }
 
-    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID, String meterFloor, String meterRoom, String meterManufacturer, String meterModel, String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,BigInteger meterGtwId) {
+    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String bomMeterType, String meterCorrelationID, String meterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,
+                       String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId) {
         this.id = id;
         this.bomId = bomId;
         this.meterStatus = meterStatus;
         this.bomMeterType = bomMeterType;
         this.meterCorrelationID = meterCorrelationID;
-        this.meterFloor = meterFloor;
-        this.meterRoom = meterRoom;
-        this.meterManufacturer = meterManufacturer;
-        this.meterModel = meterModel;
+        
         this.meterType = meterType;
         this.meterSerial = meterSerial;
         this.meterLabelGTW = meterLabelGTW;
         this.meterLabelCBL = meterLabelCBL;
         this.meterLabelJBX = meterLabelJBX;
         this.modifiedDate = modifiedDate;
-        this.meterGtwId=meterGtwId;
+        
+        this.meterAmi = meterAmi;
+        this.meterManufacturerId = meterManufacturerId;
+        this.meterModelId = meterModelId;
+        this.meterProtocolId = meterProtocolId;
+        this.meterRoomId = meterRoomId;
+        this.meterFloorId = meterFloorId;
     }
+    
+    
+    
+    
+    
 
     public Long getId() {
         return id;
@@ -156,17 +173,37 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         return modifiedDate;
     }
 
-    public BigInteger getMeterGtwId() {
-        return meterGtwId;
+    public Long getMeterRoomId() {
+        return meterRoomId;
     }
 
-    public void setMeterGtwId(BigInteger meterGtwId) {
-        this.meterGtwId = meterGtwId;
+    public Long getMeterFloorId() {
+        return meterFloorId;
     }
 
+    public String getMeterAmi() {
+        return meterAmi;
+    }
+
+    public Long getMeterManufacturerId() {
+        return meterManufacturerId;
+    }
+
+    public Long getMeterModelId() {
+        return meterModelId;
+    }
+
+    public Long getMeterProtocolId() {
+        return meterProtocolId;
+    }
+    
+    
+    
+    
     /*
     *
-     */
+    */
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -227,33 +264,32 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.modifiedDate = modifiedDate;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        return hash;
+    public void setMeterRoomId(Long meterRoomId) {
+        this.meterRoomId = meterRoomId;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final BOMMeterDTO other = (BOMMeterDTO) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+    public void setMeterFloorId(Long meterFloorId) {
+        this.meterFloorId = meterFloorId;
     }
 
-    @Override
-    public int compareTo(BOMMeterDTO t) {
-        return this.id.compareTo(t.id);
+    public void setMeterAmi(String meterAmi) {
+        this.meterAmi = meterAmi;
     }
+
+    public void setMeterManufacturerId(Long meterManufacturerId) {
+        this.meterManufacturerId = meterManufacturerId;
+    }
+
+    public void setMeterModelId(Long meterModelId) {
+        this.meterModelId = meterModelId;
+    }
+
+    public void setMeterProtocolId(Long meterProtocolId) {
+        this.meterProtocolId = meterProtocolId;
+    }
+    
+    
+    
+    
+    
 }

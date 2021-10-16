@@ -7,7 +7,6 @@ package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
-import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -34,8 +31,8 @@ import org.primefaces.model.DualListModel;
  * @author au_mobility
  */
 @Named(value = "bomMetersController")
-@ViewScoped
-public class BOMMetersController implements Serializable {
+@SessionScoped
+public class BOMMetersController implements Serializable  {
 
     private static final Logger LOGGER = Logger.getLogger(BOMMetersController.class);
 
@@ -56,9 +53,9 @@ public class BOMMetersController implements Serializable {
     private Long meterProtocolId;
     private Long meterRoomTypeId;
     private Long meterFloorTypeId;
-    
-    
-    
+
+
+
     private String wmeterManufacturer;
     private String wmeterSerial;
     private String wmeterModel;
@@ -74,45 +71,30 @@ public class BOMMetersController implements Serializable {
     List<BOMMeterDTO> meters;
     List<BOMMeterDTO> metersElectricity;
     List<BOMMeterDTO> metersWater;
-    
+
     private Long wmeterRoomTypeId;
     private Long wmeterFloorTypeId;
-    
+
     private Long emeterRoomTypeId;
     private Long emeterFloorTypeId;
-    
+
     private Long wmeterProtocolId;
     private Long emeterProtocolId;
-    
+
     private Long wmeterModelId;
     private Long emeterModelId;
     private Long wmeterManufacturerId;
     private Long emeterManufacturerId;
-    
-    List<BOMMeterDTO> metersSource;
-    List<BOMMeterDTO> metersTarget;
-    private DualListModel<BOMMeterDTO> bomMeterModel;
 
-    public BOMMetersController() {
-        metersSource = new ArrayList<>();
-        metersTarget = new ArrayList<>();
-        this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
-    }
 
-    @PostConstruct
-    public void init() {
-        metersSource = new ArrayList<>();
-        metersTarget = new ArrayList<>();
-        this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
-    }
     @Inject
     private BOMMeterBus bomMetersBus;
 
     @Inject
     private HESClient hesClient;
-    
-    
-    
+
+
+
     public static Logger getLOGGER() {
         return LOGGER;
     }
@@ -215,7 +197,7 @@ public class BOMMetersController implements Serializable {
     }
 
     public void addNewMeter(){
-        
+
         String errormsg = "New Meter Added Successfully";
         FacesMessage msg = null;
         /*
@@ -253,22 +235,22 @@ public class BOMMetersController implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         else{
-            
+
             if(meterBOMType.equals("WATER")){
                 metersWater = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
 
             }else{
                 metersElectricity = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
-                
+
             }
-            
+
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Success",errormsg));
         }
         */
         hesClient.GetAllDevices();
     }
-    
-    public void addNewBOMWM() {
+
+    public void addNewBOMWM(){
         metersWater = bomMetersBus.addNewMeterByBomId(bomId, "WATER", wmeterManufacturer, wmeterSerial, wmeterModel, wmeterType);
 
     }
@@ -404,9 +386,9 @@ public class BOMMetersController implements Serializable {
     public Long getEmeterManufacturerId() {
         return emeterManufacturerId;
     }
-    
+
     /******/
-    
+
     public String getMeterBOMType() {
         return meterBOMType;
     }
@@ -503,17 +485,24 @@ public class BOMMetersController implements Serializable {
         bomMeterModel.setTarget(this.metersTarget);
         return bomMeterModel;
     }
-    public void setWmeterRoomTypeId(Long wmeterRoomTypeId) {
-        this.wmeterRoomTypeId = wmeterRoomTypeId;
+
+    public void setBomMeterModel(DualListModel<BOMMeterDTO> bomMeterModel) {
+        this.bomMeterModel = bomMeterModel;
     }
 
-    public void setWmeterFloorTypeId(Long wmeterFloorTypeId) {
-        this.wmeterFloorTypeId = wmeterFloorTypeId;
+    public void fetchGatewayBomMeterModel(BigInteger gatewayId) {
+        //re-initialise the source and target
+        if (null != this.meters) {
+            //source should be all meters with no association with any gateway
+            this.metersSource = this.meters.stream().filter(meter -> (null == meter.getMeterGtwId()))
+                    .collect(Collectors.toList());
+            //target should be all meters with an association with the given gateway
+            this.metersTarget = this.meters.stream().filter(meter -> (gatewayId.equals(meter.getMeterGtwId())))
+                    .collect(Collectors.toList());
+        }
+        this.getBomMeterModel();
     }
 
-    public void setEmeterRoomTypeId(Long emeterRoomTypeId) {
-        this.emeterRoomTypeId = emeterRoomTypeId;
-    }
 
     public void setEmeterFloorTypeId(Long emeterFloorTypeId) {
         this.emeterFloorTypeId = emeterFloorTypeId;
@@ -576,23 +565,12 @@ public class BOMMetersController implements Serializable {
     }
 
     public void onUtilityChange(){
-        
+
     }
-    
-    public void setBomMeterModel(DualListModel<BOMMeterDTO> bomMeterModel) {
-        this.bomMeterModel = bomMeterModel;
-    }
-    public void fetchGatewayBomMeterModel(BigInteger gatewayId) {
-        //re-initialise the source and target
-        if (null != this.meters) {
-            //source should be all meters with no association with any gateway
-            this.metersSource = this.meters.stream().filter(meter -> (null == meter.getMeterGtwId()))
-                    .collect(Collectors.toList());
-            //target should be all meters with an association with the given gateway
-            this.metersTarget = this.meters.stream().filter(meter -> (gatewayId.equals(meter.getMeterGtwId())))
-                    .collect(Collectors.toList());
-        }
-        this.getBomMeterModel();
+
+    public void connectionTest(){
+        String test = "Test";
+        hesClient.GetAllDevices();
     }
 
     public void onTransfer(TransferEvent event) {

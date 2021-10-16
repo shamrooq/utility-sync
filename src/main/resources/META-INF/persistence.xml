@@ -21,6 +21,10 @@
     <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTGatewayTypes</class>
     <class>ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst</class>
     <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTDaisychainTypes</class>
+    <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor</class>
+    <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom</class>
+    <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer</class>
+    <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.cache.shared.default" value="false"/>

@@ -40,24 +40,26 @@ public class BOMGatewaysController implements Serializable {
     private String gatewaysTypeProposed;
     private int gatewaysRequired;
     private int metersPerGateway;
-    
+
     private Double cableLength;
-    
+
     private String gatewaysVendor;
     private String gatewaysLocation;
-
     private String gatewaysDaisychain;
     private String gatewaysChainLabel;
+
     private Boolean powerIntruption;
     private Long signalStrength;
     private String signalStrengthIndicator;
     private Boolean antenaRequired;
 
-    private List<BOMGatewayEstDTO> estimation;
+    List<BOMGatewayEstDTO> estimation;
+
     private Long gatewayRoomId;
     private Long gatewayFloorId;
 
-    private int rowsPerPage = 10;
+
+
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
 
@@ -85,13 +87,13 @@ public class BOMGatewaysController implements Serializable {
         estimation = list;
     }
 
-    public void updateEstimation(Long bomId) {
-        this.bomId = bomId;
-        estimation = gatewayEstBus.findAllByBomId(bomId);
-        if (estimation == null) {
-            List<BOMGatewayEstDTO> list = new ArrayList<>();
-            estimation = list;
-        }
+    public void updateEstimation(Long bomId){
+            this.bomId = bomId;
+            estimation = gatewayEstBus.findAllByBomId(bomId);
+            if(estimation == null){
+                List<BOMGatewayEstDTO> list = new ArrayList<>();
+                estimation = list;
+            }
     }
 
     public String getUtilityNumber() {
@@ -140,7 +142,7 @@ public class BOMGatewaysController implements Serializable {
          String errormsg = "Gateway Added Successfully";
          FacesMessage msg = null;
          gatewaysRequired = 1;
-         
+
          if(gatewaysType.isEmpty()){
                 msg = new FacesMessage("Validation","Please Serlect Gateway");
                 msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -211,6 +213,8 @@ public class BOMGatewaysController implements Serializable {
         return cableLength;
     }
 
+
+
     public String getGatewaysVendor() {
         return gatewaysVendor;
     }
@@ -226,33 +230,6 @@ public class BOMGatewaysController implements Serializable {
     public String getGatewaysChainLabel() {
         return gatewaysChainLabel;
     }
-
-    public Boolean getPowerIntruption() {
-        return powerIntruption;
-    }
-
-    public Long getSignalStrength() {
-        return signalStrength;
-    }
-
-    public String getSignalStrengthIndicator() {
-        return signalStrengthIndicator;
-    }
-
-    public Boolean getAntenaRequired() {
-        return antenaRequired;
-    }
-
-    public Long getGatewayRoomId() {
-        return gatewayRoomId;
-    }
-
-    public Long getGatewayFloorId() {
-        return gatewayFloorId;
-    }
-    
-    
-    
 
     public void setGatewaysType(String gatewaysType) {
         this.gatewaysType = gatewaysType;
@@ -290,13 +267,6 @@ public class BOMGatewaysController implements Serializable {
         this.gatewaysChainLabel = gatewaysChainLabel;
     }
 
-    public int getRowsPerPage() {
-        return rowsPerPage;
-    }
-    public void setRowsPerPage(int rowsPerPage) {
-        this.rowsPerPage = rowsPerPage;
-    }
-
     public void setPowerIntruption(Boolean powerIntruption) {
         this.powerIntruption = powerIntruption;
     }
@@ -307,7 +277,7 @@ public class BOMGatewaysController implements Serializable {
 
     public void setSignalStrengthIndicator(String signalStrengthIndicator) {
         this.signalStrengthIndicator = signalStrengthIndicator;
-}
+    }
 
     public void setAntenaRequired(Boolean antenaRequired) {
         this.antenaRequired = antenaRequired;
@@ -320,9 +290,9 @@ public class BOMGatewaysController implements Serializable {
     public void setGatewayFloorId(Long gatewayFloorId) {
         this.gatewayFloorId = gatewayFloorId;
     }
-     
-     
-     
-     
-     
+
+
+
+
+
 }
