@@ -6,6 +6,7 @@
 package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -88,7 +89,9 @@ public class BOMMeters implements Serializable {
     private Long meterRoomId;
     @Column(name = "METER_Floor_Id")
     private Long meterFloorId;
-    
+    @Column(name = "METER_GTW_ID")
+    private BigInteger meterGtwId;
+
     public Long getId() {
         return id;
     }
@@ -268,10 +271,15 @@ public class BOMMeters implements Serializable {
     public void setMeterFloorId(Long meterFloorId) {
         this.meterFloorId = meterFloorId;
     }
-    
-    
-    
-    
+
+    public BigInteger getMeterGtwId() {
+        return meterGtwId;
+    }
+
+    public void setMeterGtwId(BigInteger meterGtwId) {
+        this.meterGtwId = meterGtwId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

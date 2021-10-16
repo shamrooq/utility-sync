@@ -5,24 +5,25 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import java.math.BigInteger;
 import java.util.Date;
-
+import java.util.Objects;
 
 
 /**
  *
  * @author au_mobility
  */
-public class BOMMeterDTO {
-    
+public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
+
     private Long id;
     
     private Long bomId;
     
     private String meterStatus;
-    
+
     private String bomMeterType;
-    
+
     private String meterCorrelationID;
     
     private String meterFloor;
@@ -32,9 +33,9 @@ public class BOMMeterDTO {
     private String meterManufacturer;
     
     private String meterModel;
-    
+
     private String meterType;
-    
+
     private String meterSerial;
     
     private String meterLabelGTW;
@@ -50,7 +51,8 @@ public class BOMMeterDTO {
     private Long meterManufacturerId;
     private Long meterModelId;
     private Long meterProtocolId;
-    
+    private BigInteger meterGtwId;
+
     public BOMMeterDTO(){}
 
     
@@ -107,7 +109,24 @@ public class BOMMeterDTO {
         this.meterRoomId = meterRoomId;
         this.meterFloorId = meterFloorId;
     }
-    
+    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID, String meterFloor, String meterRoom, String meterManufacturer, String meterModel, String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,BigInteger meterGtwId) {
+        this.id = id;
+        this.bomId = bomId;
+        this.meterStatus = meterStatus;
+        this.bomMeterType = bomMeterType;
+        this.meterCorrelationID = meterCorrelationID;
+        this.meterFloor = meterFloor;
+        this.meterRoom = meterRoom;
+        this.meterManufacturer = meterManufacturer;
+        this.meterModel = meterModel;
+        this.meterType = meterType;
+        this.meterSerial = meterSerial;
+        this.meterLabelGTW = meterLabelGTW;
+        this.meterLabelCBL = meterLabelCBL;
+        this.meterLabelJBX = meterLabelJBX;
+        this.modifiedDate = modifiedDate;
+        this.meterGtwId=meterGtwId;
+    }
     
     
     
@@ -196,10 +215,14 @@ public class BOMMeterDTO {
     public Long getMeterProtocolId() {
         return meterProtocolId;
     }
-    
-    
-    
-    
+    public BigInteger getMeterGtwId() {
+        return meterGtwId;
+    }
+
+    public void setMeterGtwId(BigInteger meterGtwId) {
+        this.meterGtwId = meterGtwId;
+    }
+
     /*
     *
     */
@@ -287,9 +310,33 @@ public class BOMMeterDTO {
     public void setMeterProtocolId(Long meterProtocolId) {
         this.meterProtocolId = meterProtocolId;
     }
-    
-    
-    
-    
-    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BOMMeterDTO other = (BOMMeterDTO) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(BOMMeterDTO t) {
+        return this.id.compareTo(t.id);
+    }
 }
