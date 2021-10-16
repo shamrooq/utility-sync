@@ -46,8 +46,16 @@ public class BOMGatewayEstBus {
         }
         return null;
     }
-    
-    
+
+    public List<BOMGatewayEstDTO> addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,String csbleEtimation,String gatewayLocation){
+        if( bomDao.addNewGatewayEstByBomId(bomId, gatewayBomType, proposedGateType, noOfGateways, metersPerGateway,csbleEtimation,gatewayLocation)){
+
+            return findAllByBomId(bomId);
+
+        }
+        return null;
+    }
+
     
    
     public List<BOMGatewayEstDTO> deleteGateway(Long gatewayId, Long bomId) throws BusinessException {
