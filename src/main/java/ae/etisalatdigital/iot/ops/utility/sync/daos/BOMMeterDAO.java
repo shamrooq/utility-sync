@@ -23,7 +23,8 @@ public interface BOMMeterDAO {
     abstract List<BOMMeterDTO> findAllByBomIdAndBomMeterType(Long bomId, String bomMeterType);
     
     abstract Boolean addNewMeterByBomId(Long bomId, String meterBomType, String meterManufacturer, String meterSerial, String meterModel, String meterType);
-        
+
+    abstract Boolean addNewMeterByBomId(Long bomId, String meterBomType,String meterSerial, String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId);
     
     abstract void updateMTRDetail(BOMMeterDTO dto)throws DataAccessException;
     

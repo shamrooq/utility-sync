@@ -158,7 +158,32 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         }catch(Exception exp){
             System.out.println("add New Meter Failed:"+exp.getMessage());
         }
-        
+
+        return false;
+    }
+
+    /**
+     *
+     * @param bomId
+     * @param meterBomType
+     * @param meterSerial
+     * @param meterAmi
+     * @param meterManufacturerId
+     * @param meterModelId
+     * @param meterProtocolId
+     * @param meterRoomId
+     * @param meterFloorId
+     * @return
+     */
+    @Override
+    public Boolean addNewMeterByBomId(Long bomId, String meterBomType,String meterSerial, String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId){
+        try{
+            entityManager.createNativeQuery("exec [dbo].[SP_InsertNewMeter] " + bomId + ",'"+meterBomType+"','"+meterSerial+"','"+meterAmi+"',"+meterManufacturerId+","+meterModelId+","+meterProtocolId+","+meterRoomId+","+meterFloorId+",N'ACTIVE'").executeUpdate();
+            return true;
+        }catch(Exception exp){
+            System.out.println("add New Meter Failed:"+exp.getMessage());
+        }
+
         return false;
     }
     

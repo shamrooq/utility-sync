@@ -45,6 +45,17 @@ public class BOMMetersController implements Serializable {
     private String utilityNumber;
     private String errorMessage;
 
+    private String meterBOMType;
+    private String meterSerial;
+    private String meterAmi;
+    private Long meterManufacturerId;
+    private Long meterModelId;
+    private Long meterProtocolId;
+    private Long meterRoomTypeId;
+    private Long meterFloorTypeId;
+    
+    
+    
     private String wmeterManufacturer;
     private String wmeterSerial;
     private String wmeterModel;
@@ -60,6 +71,21 @@ public class BOMMetersController implements Serializable {
     List<BOMMeterDTO> meters;
     List<BOMMeterDTO> metersElectricity;
     List<BOMMeterDTO> metersWater;
+    
+    private Long wmeterRoomTypeId;
+    private Long wmeterFloorTypeId;
+    
+    private Long emeterRoomTypeId;
+    private Long emeterFloorTypeId;
+    
+    private Long wmeterProtocolId;
+    private Long emeterProtocolId;
+    
+    private Long wmeterModelId;
+    private Long emeterModelId;
+    private Long wmeterManufacturerId;
+    private Long emeterManufacturerId;
+    
     List<BOMMeterDTO> metersSource;
     List<BOMMeterDTO> metersTarget;
     private DualListModel<BOMMeterDTO> bomMeterModel;
@@ -79,6 +105,11 @@ public class BOMMetersController implements Serializable {
     @Inject
     private BOMMeterBus bomMetersBus;
 
+    @Inject
+    private HESClient hesClient;
+    
+    
+    
     public static Logger getLOGGER() {
         return LOGGER;
     }
@@ -180,6 +211,60 @@ public class BOMMetersController implements Serializable {
         return totalMeters.toString();
     }
 
+    public void addNewMeter(){
+        
+        String errormsg = "New Meter Added Successfully";
+        FacesMessage msg = null;
+        /*
+        if(meterBOMType == null || meterBOMType.isEmpty()){
+                msg = new FacesMessage("Validation","Please Serlect Meter Medium!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage("Failure", msg);
+        }else if(meterSerial == null || meterSerial.isEmpty()){
+                msg = new FacesMessage("Validation","Please Enter Meter Serial!");
+                msg.setSeverity(FacesMessage.SEVERITY_FATAL);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }else if(meterAmi == null || meterAmi.isEmpty()){
+                msg = new FacesMessage("Validation","Please Select Valid AMI!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }else if(meterManufacturerId == null || meterManufacturerId <= 0){
+                msg = new FacesMessage("Validation","Please Select Valid Manufacturer!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }else if(meterModelId == null || meterModelId <= 0){
+                msg = new FacesMessage("Validation","Please Select Valid Meter Model!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }else if(meterProtocolId == null || meterProtocolId <= 0){
+                msg = new FacesMessage("Validation","Please Select Valid Meter Protocol!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }else if(meterRoomTypeId == null || meterRoomTypeId <= 0){
+                msg = new FacesMessage("Validation","Please Select Valid Room!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }else if(meterFloorTypeId == null || meterFloorTypeId <= 0){
+                msg = new FacesMessage("Validation","Please Select Valid Floor!");
+                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        else{
+            
+            if(meterBOMType.equals("WATER")){
+                metersWater = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
+
+            }else{
+                metersElectricity = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
+                
+            }
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Success",errormsg));
+        }
+        */
+        hesClient.GetAllDevices();
+    }
+    
     public void addNewBOMWM() {
         metersWater = bomMetersBus.addNewMeterByBomId(bomId, "WATER", wmeterManufacturer, wmeterSerial, wmeterModel, wmeterType);
 
@@ -276,6 +361,81 @@ public class BOMMetersController implements Serializable {
         return bomId;
     }
 
+    public Long getWmeterRoomTypeId() {
+        return wmeterRoomTypeId;
+    }
+
+    public Long getWmeterFloorTypeId() {
+        return wmeterFloorTypeId;
+    }
+
+    public Long getEmeterRoomTypeId() {
+        return emeterRoomTypeId;
+    }
+
+    public Long getEmeterFloorTypeId() {
+        return emeterFloorTypeId;
+    }
+
+
+    public Long getWmeterProtocolId() {
+        return wmeterProtocolId;
+    }
+
+    public Long getEmeterProtocolId() {
+        return emeterProtocolId;
+    }
+
+    public Long getWmeterModelId() {
+        return wmeterModelId;
+    }
+
+    public Long getEmeterModelId() {
+        return emeterModelId;
+    }
+
+    public Long getWmeterManufacturerId() {
+        return wmeterManufacturerId;
+    }
+
+    public Long getEmeterManufacturerId() {
+        return emeterManufacturerId;
+    }
+    
+    /******/
+    
+    public String getMeterBOMType() {
+        return meterBOMType;
+    }
+
+    public String getMeterSerial() {
+        return meterSerial;
+    }
+
+    public String getMeterAmi() {
+        return meterAmi;
+    }
+
+    public Long getMeterManufacturerId() {
+        return meterManufacturerId;
+    }
+
+    public Long getMeterModelId() {
+        return meterModelId;
+    }
+
+    public Long getMeterRoomTypeId() {
+        return meterRoomTypeId;
+    }
+
+    public Long getMeterFloorTypeId() {
+        return meterFloorTypeId;
+    }
+
+    public Long getMeterProtocolId() {
+        return meterProtocolId;
+    }
+
     /**
      *
      * @param meterRecord
@@ -340,7 +500,82 @@ public class BOMMetersController implements Serializable {
         bomMeterModel.setTarget(this.metersTarget);
         return bomMeterModel;
     }
+    public void setWmeterRoomTypeId(Long wmeterRoomTypeId) {
+        this.wmeterRoomTypeId = wmeterRoomTypeId;
+    }
 
+    public void setWmeterFloorTypeId(Long wmeterFloorTypeId) {
+        this.wmeterFloorTypeId = wmeterFloorTypeId;
+    }
+
+    public void setEmeterRoomTypeId(Long emeterRoomTypeId) {
+        this.emeterRoomTypeId = emeterRoomTypeId;
+    }
+
+    public void setEmeterFloorTypeId(Long emeterFloorTypeId) {
+        this.emeterFloorTypeId = emeterFloorTypeId;
+    }
+
+    public void setWmeterProtocolId(Long wmeterProtocolId) {
+        this.wmeterProtocolId = wmeterProtocolId;
+    }
+
+    public void setEmeterProtocolId(Long emeterProtocolId) {
+        this.emeterProtocolId = emeterProtocolId;
+    }
+
+    public void setWmeterModelId(Long wmeterModelId) {
+        this.wmeterModelId = wmeterModelId;
+    }
+
+    public void setEmeterModelId(Long emeterModelId) {
+        this.emeterModelId = emeterModelId;
+    }
+
+    public void setWmeterManufacturerId(Long wmeterManufacturerId) {
+        this.wmeterManufacturerId = wmeterManufacturerId;
+    }
+
+    public void setEmeterManufacturerId(Long emeterManufacturerId) {
+        this.emeterManufacturerId = emeterManufacturerId;
+    }
+
+    public void setMeterBOMType(String meterBOMType) {
+        this.meterBOMType = meterBOMType;
+    }
+
+    public void setMeterSerial(String meterSerial) {
+        this.meterSerial = meterSerial;
+    }
+
+    public void setMeterAmi(String meterAmi) {
+        this.meterAmi = meterAmi;
+    }
+
+    public void setMeterManufacturerId(Long meterManufacturerId) {
+        this.meterManufacturerId = meterManufacturerId;
+    }
+
+    public void setMeterModelId(Long meterModelId) {
+        this.meterModelId = meterModelId;
+    }
+
+    public void setMeterRoomTypeId(Long meterRoomTypeId) {
+        this.meterRoomTypeId = meterRoomTypeId;
+    }
+
+    public void setMeterFloorTypeId(Long meterFloorTypeId) {
+        this.meterFloorTypeId = meterFloorTypeId;
+    }
+
+    public void setMeterProtocolId(Long meterProtocolId) {
+        this.meterProtocolId = meterProtocolId;
+    }
+
+    public void onUtilityChange(){
+        
+    }
+    
     public void setBomMeterModel(DualListModel<BOMMeterDTO> bomMeterModel) {
         this.bomMeterModel = bomMeterModel;
     }
