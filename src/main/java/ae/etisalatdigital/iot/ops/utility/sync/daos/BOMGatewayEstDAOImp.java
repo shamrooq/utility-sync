@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.daos;
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
+import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -60,7 +61,7 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
         entityManager.merge(entity);
     }
     
-    private BOMGatewaysEst getEntity(Long id) {
+    private BOMGatewaysEst getEntity(BigInteger id) {
         BOMGatewaysEst entity = null;
         
         try {
@@ -122,22 +123,6 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
 
         return false;
     }
-    
-    @Override
-    public Boolean addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,Double cableLength,Long gatewayRoomId, Long gatewayFloorId, Boolean powerIntruption, Long signalStrength, Boolean antenaRequired){
-        
-        try{
-            Query query = entityManager.createNativeQuery("exec [dbo].[SP_InsertNewGateways_Est] '"+gatewayBomType+"','"+proposedGateType+"',"+bomId+","+noOfGateways+","+metersPerGateway+","+cableLength+","+gatewayRoomId+","+gatewayFloorId+","+powerIntruption+","+signalStrength+","+antenaRequired);
-            System.out.println("BOMGatewayEstDAOImp.addNewGatewayEstByBomId()-"+query);
-            query.executeUpdate();
-            return true;
-        }catch(Exception exp){
-            System.out.println("add New Gateway Failed:"+exp.getMessage());
-        }
-        
-        return false;
-    }
-    
     
     @Override
     public Boolean delete(Long id) {

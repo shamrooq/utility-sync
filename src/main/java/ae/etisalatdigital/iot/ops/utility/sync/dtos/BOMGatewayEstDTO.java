@@ -5,13 +5,17 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Objects;
+
 /**
  *
  * @author appadmin
  */
-public class BOMGatewayEstDTO {
+public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDTO>{
     
-    private Long id;
+    private BigInteger id;
     private Long bomId; 
     private String gatewaysType;
     private String gatewaysTypeProposed;
@@ -29,7 +33,7 @@ public class BOMGatewayEstDTO {
     
     
     private String serialNumber;
-    private String simICCID; 
+    private BigInteger simICCID;
     
     
    
@@ -42,13 +46,15 @@ public class BOMGatewayEstDTO {
     private Long gatewayRoomId;
     private Long gatewayFloorId;
     
-    private Double cableLength; 
-    
+    private Double cableLength;
+    private String gatewayFloor;
+    private String gatewayRoom;
+
     public BOMGatewayEstDTO() {
     }
 
     /*
-    public BOMGatewayEstDTO(Long id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength) {
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
@@ -58,7 +64,7 @@ public class BOMGatewayEstDTO {
         this.EstimatedCableLength = EstimatedCableLength;
     }
 
-    public BOMGatewayEstDTO(Long id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel) {
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
@@ -74,7 +80,7 @@ public class BOMGatewayEstDTO {
     }
     */
     
-    public BOMGatewayEstDTO(Long id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel, String serialNumber, String simICCID, Boolean powerIntruption, Long signalStrength, String signalStrengthIndicator, Boolean antenaRequired, Long gatewayRoomId, Long gatewayFloorId, Double cableLength) {
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel, String serialNumber, BigInteger simICCID, Boolean powerIntruption, Long signalStrength, String signalStrengthIndicator, Boolean antenaRequired, Long gatewayRoomId, Long gatewayFloorId, Double cableLength) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
@@ -96,13 +102,31 @@ public class BOMGatewayEstDTO {
         this.gatewayRoomId = gatewayRoomId;
         this.cableLength = cableLength; 
     }
-    
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel,
+                            String serialNumber,BigInteger simICCID,String gatewayFloor,String gatewayRoom) {
+        this.id = id;
+        this.bomId = bomId;
+        this.gatewaysType = gatewaysType;
+        this.gatewaysTypeProposed = gatewaysTypeProposed;
+        this.gatewaysRequired = gatewaysRequired;
+        this.metersPerGateway = metersPerGateway;
+        this.EstimatedCableLength = EstimatedCableLength;
+        this.gatewaysVendor = gatewaysVendor;
+        this.gatewaysLocation = gatewaysLocation;
+        this.gatewaysDaisychain = gatewaysDaisychain;
+        this.gatewaysChainLabel = gatewaysChainLabel;
+        this.serialNumber=serialNumber;
+        this.simICCID=simICCID;
+        this.gatewayFloor=gatewayFloor;
+        this.gatewayRoom=gatewayRoom;
+    }
+
     
     
     
     
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
@@ -151,7 +175,7 @@ public class BOMGatewayEstDTO {
         return serialNumber;
     }
 
-    public String getSimICCID() {
+    public BigInteger getSimICCID() {
         return simICCID;
     }
 
@@ -191,7 +215,7 @@ public class BOMGatewayEstDTO {
      * 
      * @param id 
      */
-    public void setId(Long id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 
@@ -240,7 +264,7 @@ public class BOMGatewayEstDTO {
         this.serialNumber = serialNumber;
     }
 
-    public void setSimICCID(String simICCID) {
+    public void setSimICCID(BigInteger simICCID) {
         this.simICCID = simICCID;
     }
 
@@ -271,10 +295,22 @@ public class BOMGatewayEstDTO {
     public void setCableLength(Double cableLength) {
         this.cableLength = cableLength;
     }
-    
-    
-    
-    
+    public String getGatewayFloor() {
+        return gatewayFloor;
+    }
+
+    public void setGatewayFloor(String gatewayFloor) {
+        this.gatewayFloor = gatewayFloor;
+    }
+
+    public String getGatewayRoom() {
+        return gatewayRoom;
+    }
+
+    public void setGatewayRoom(String gatewayRoom) {
+        this.gatewayRoom = gatewayRoom;
+    }
+
     public void handleKeyEvent() {
         if(signalStrength <= -111){
             signalStrengthIndicator = "LOW";
@@ -284,5 +320,33 @@ public class BOMGatewayEstDTO {
             signalStrengthIndicator = "HIGH";
         }
         
+    }
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BOMGatewayEstDTO other = (BOMGatewayEstDTO) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public int compareTo(BOMGatewayEstDTO t) {
+        return this.id.compareTo(t.getId());
     }
 }

@@ -6,6 +6,7 @@
 package ae.etisalatdigital.iot.ops.utility.sync.daos;
 
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
+import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGatewayMeterSemantics;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
