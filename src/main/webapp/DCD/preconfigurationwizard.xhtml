@@ -271,17 +271,20 @@
                                                 <h:outputText value="#{gatewayItem.gatewaysType} - #{gatewayItem.gatewaysVendor} - #{gatewayItem.gatewaysTypeProposed}" />
                                             </p:column>
                                             <p:column headerText="Serial Number" selectRow="false">
-                                                <h:inputText id="itemSerialNumber" value="#{gatewayItem.serialNumber}" size="18" required="true" requiredMessage="Serial Number is Required" rendererType="gwItemSaveBtn"/>
+                                                <h:inputText id="itemSerialNumber" value="#{gatewayItem.serialNumber}" required="true" requiredMessage="Serial Number is Required" rendererType="gwItemSaveBtn" class="datatable-input-text"/>
                                                 <input type="hidden" value="#{gatewayItem.serialNumber}" id="itemSerialNumber#{gatewayItem.id}"/>
                                             </p:column>
                                             <p:column headerText="SIM ICCID" selectRow="false">
-                                                <h:inputText id="itemSimICCID" value="#{gatewayItem.simICCID}" size="18" converterMessage="SIM ICCID - please enter digits only!" validatorMessage="SIM ICCID - minimum allowable is 19 digits">
-                                                    <f:validateLength minimum = "19"/>
+                                                <h:inputText id="itemSimICCID" value="#{gatewayItem.simICCID}" converterMessage="SIM ICCID - please enter digits only!" validatorMessage="SIM ICCID - minimum allowable is 19 digits" class="datatable-input-text">
+                                                    <f:validateLength minimum = "19" />
                                                 </h:inputText>
                                                 <input type="hidden" value="#{gatewayItem.simICCID}" id="itemSimICCID#{gatewayItem.id}"/>
                                             </p:column>
-                                            <p:column headerText="Gateway Location" selectRow="false">
-                                                <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor} - #{gatewayItem.gatewayRoom}" />
+                                            <p:column headerText="Floor" selectRow="false" style="width:5%">
+                                                <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}" />
+                                            </p:column>
+                                            <p:column headerText="Room" selectRow="false" style="width:5%">
+                                                <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayRoom}" />
                                             </p:column>
                                             <p:column headerText="Action" selectRow="false">
                                                 <p:commandButton id="gwItemSaveBtn" title="Save" icon="fa fa-save" class="button-warning p-mr-2 center-block" update="wizardform:tblGateways" process="@this wizardform:tblGateways itemSerialNumber itemSimICCID" actionListener="#{bomGatewaysController.saveGatewayEstimation(gatewayItem)}">
@@ -294,7 +297,7 @@
                                                                 value="#{bomMetersController.bomMeterModel}" 
                                                                 var="meterItem"
                                                                 itemValue="#{meterItem}" 
-                                                                itemLabel="#{meterItem.bomMeterType} - #{meterItem.meterManufacturer} - #{meterItem.meterModel} - #{meterItem.meterFloor} - #{meterItem.meterSerial}" 
+                                                                itemLabel="#{meterItem.bomMeterType} - #{meterItem.meterManufacturer} - #{meterItem.meterModel} - #{meterItem.meterFloor} - #{meterItem.meterRoom} - #{meterItem.meterSerial}" 
                                                                 converter="#{meterConverter}"
                                                                 showSourceControls="true"
                                                                 showTargetControls="true"
@@ -644,12 +647,22 @@
             margin: 0 auto;
             max-width: 1200px;
         }
-        /*        table,tbody,tr.ui-datatable-even{
-                    background-color: wheat;
-                }
-                table,tbody,tr.ui-datatable-odd{
-                    background-color: buttonface;
-                }*/
+
+        #tblGateways,tbody,tr.ui-datatable-even{
+            background: none repeat scroll 0 0 beige;
+            color: darkblue;
+        }
+        #tblGateways,tbody,tr.ui-datatable-even td input{
+            background-color: beige;
+        }
+        #tblGateways,tbody,tr.ui-datatable-odd{
+            background: none repeat scroll 0 0 cadetblue;
+            color: beige;
+        }
+        #tblGateways,tbody,tr.ui-datatable-odd td input{
+            background-color: cadetblue;
+        }
+
         table,tbody,tr,td,div.ui-icon-circle-triangle-e{
             background-position: 0 -192px;
         }
@@ -747,6 +760,9 @@
         }
         .ui-icon.ui-icon-minusthick{
             margin-top: -9px;
+        }
+        .datatable-input-text{
+            width: 100%;
         }
     </style>
 </html>

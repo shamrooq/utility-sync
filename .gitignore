@@ -1,2 +1,4 @@
 /target/
 main/webapp/generated/
+/.idea/
+*.iml
