@@ -5,6 +5,7 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
 import java.util.Date;
 
 
@@ -51,6 +52,8 @@ public class BOMMeterDTO {
     private Long meterModelId;
     private Long meterProtocolId;
     
+    private MSTMeterManufacturer meterManufacturerModel;
+    
     public BOMMeterDTO(){}
 
     
@@ -86,7 +89,7 @@ public class BOMMeterDTO {
     }
 
     public BOMMeterDTO(Long id, Long bomId, String meterStatus, String bomMeterType, String meterCorrelationID, String meterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,
-                       String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId) {
+                       String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId, MSTMeterManufacturer meterManufacturerModel) {
         this.id = id;
         this.bomId = bomId;
         this.meterStatus = meterStatus;
@@ -106,6 +109,7 @@ public class BOMMeterDTO {
         this.meterProtocolId = meterProtocolId;
         this.meterRoomId = meterRoomId;
         this.meterFloorId = meterFloorId;
+        this.meterManufacturerModel = meterManufacturerModel;
     }
     
     
@@ -195,6 +199,10 @@ public class BOMMeterDTO {
 
     public Long getMeterProtocolId() {
         return meterProtocolId;
+    }
+
+    public MSTMeterManufacturer getMeterManufacturerModel() {
+        return meterManufacturerModel;
     }
     
     
@@ -286,6 +294,10 @@ public class BOMMeterDTO {
 
     public void setMeterProtocolId(Long meterProtocolId) {
         this.meterProtocolId = meterProtocolId;
+    }
+
+    public void setMeterManufacturerModel(MSTMeterManufacturer meterManufacturerModel) {
+        this.meterManufacturerModel = meterManufacturerModel;
     }
     
     

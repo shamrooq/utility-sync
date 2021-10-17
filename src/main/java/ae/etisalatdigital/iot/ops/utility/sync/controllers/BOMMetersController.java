@@ -11,7 +11,10 @@ import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 
 import javax.faces.application.FacesMessage;
@@ -21,7 +24,11 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FlowEvent;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -70,6 +77,8 @@ public class BOMMetersController implements Serializable  {
     List<BOMMeterDTO> meters;
     List<BOMMeterDTO> metersElectricity;
     List<BOMMeterDTO> metersWater;
+    List<BOMMeterDTO> selectedMeterForDetails;
+    BOMMeterDTO selectedMeter;
     
     private Long wmeterRoomTypeId;
     private Long wmeterFloorTypeId;
@@ -122,6 +131,15 @@ public class BOMMetersController implements Serializable  {
     public List<BOMMeterDTO> getMeters() {
         return meters;
     }
+
+    public List<BOMMeterDTO> getSelectedMeterForDetails() {
+        return selectedMeterForDetails;
+    }
+
+    public BOMMeterDTO getSelectedMeter() {
+        return selectedMeter;
+    }
+    
     
     
 
@@ -150,6 +168,16 @@ public class BOMMetersController implements Serializable  {
     public void setMeters(List<BOMMeterDTO> meters) {
         this.meters = meters;
     }
+
+    public void setSelectedMeterForDetails(List<BOMMeterDTO> selectedMeterForDetails) {
+        this.selectedMeterForDetails = selectedMeterForDetails;
+    }
+
+    public void setSelectedMeter(BOMMeterDTO selectedMeter) {
+        this.selectedMeter = selectedMeter;
+    }
+    
+    
     
     
 
@@ -191,7 +219,7 @@ public class BOMMetersController implements Serializable  {
         
         String errormsg = "New Meter Added Successfully";
         FacesMessage msg = null;
-        /*
+        
         if(meterBOMType == null || meterBOMType.isEmpty()){
                 msg = new FacesMessage("Validation","Please Serlect Meter Medium!");
                 msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -235,10 +263,12 @@ public class BOMMetersController implements Serializable  {
                 
             }
             
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Success",errormsg));
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Success", errormsg);
+            PrimeFaces.current().dialog().showMessageDynamic(message);
         }
-        */
-        hesClient.GetAllDevices();
+       
+        
+        
     }
     
     public void addNewBOMWM(){
@@ -544,9 +574,61 @@ public class BOMMetersController implements Serializable  {
         
     }
     
-    public void connectionTest(){
-        String test = "Test";
-        hesClient.GetAllDevices();
+    public void meterConfigurations(String medium,BOMMeterDTO selectedMeter){
+        //String test = "Test";
+        //hesClient.GetAllDevices();
+        
+        selectedMeterForDetails =  new ArrayList<>();
+        selectedMeterForDetails.add(selectedMeter);
+        this.selectedMeter = selectedMeter;
+        selectedMeter.setBomMeterType(medium);
+        
+        Map<String, Object> options = new HashMap<>();
+        options.put("modal", true);
+        options.put("width", 800);
+        options.put("height", 500);
+        options.put("resizable", true);
+        options.put("draggable", false);
+        options.put("contentWidth", "100%");
+        options.put("contentHeight", "100%");
+        options.put("headerElement", "customheader");
+        PrimeFaces.current().dialog().openDynamic("viewMeterDetails", options, null);
     }
     
+    public void addNewMeterOnHES(BOMMeterDTO selectedMeter){
+        //if(){
+        //    selectedMeter.setMeterStatus("ONHES");
+        //}
+        hesClient.addNewMeterOnHES(selectedMeter);
+    }
+    
+    public void onHESConfirmation(SelectEvent event) {
+        //Product product = (Product) event.getObject();
+        //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Product Selected", "Name:" + product.getName());
+
+        //FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    
+    public void onHESCancellation(SelectEvent event) {
+        
+    }
+    public void onRowEdit(RowEditEvent<BOMMeterDTO> event) {
+        FacesMessage msg = new FacesMessage("Product Edited", String.valueOf(event.getObject().getMeterSerial()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowCancel(RowEditEvent<BOMMeterDTO> event) {
+        FacesMessage msg = new FacesMessage("Edit Cancelled", String.valueOf(event.getObject().getMeterSerial()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+
+        if (newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
 }

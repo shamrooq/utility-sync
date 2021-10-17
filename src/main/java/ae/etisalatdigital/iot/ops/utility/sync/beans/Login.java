@@ -18,7 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
+
 
 /**
  *

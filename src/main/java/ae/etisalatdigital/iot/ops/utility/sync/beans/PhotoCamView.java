@@ -17,7 +17,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.inject.Named;
 import org.primefaces.event.CaptureEvent;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+//import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -28,7 +28,7 @@ import org.primefaces.model.UploadedFile;
 public class PhotoCamView implements Serializable {
     
     private String filename;
-    private UploadedFile file;
+    ///private UploadedFile file;
 
     private String getRandomImageName() {
 		int i = (int) (Math.random() * 10000000);
@@ -58,7 +58,8 @@ public class PhotoCamView implements Serializable {
 			throw new FacesException("Error in writing captured image.", e);
 		}
     }
-
+    
+    /*
     public UploadedFile getFile() {
         return file;
     }
@@ -67,11 +68,14 @@ public class PhotoCamView implements Serializable {
         this.file = file;
     }
     
+    */
     public void upload() {
+    /*
         if (file != null) {
             FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
+        */
     }
     
     public void handleFileUpload(FileUploadEvent event) {
