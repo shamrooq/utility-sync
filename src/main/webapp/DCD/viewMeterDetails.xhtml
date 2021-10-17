@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>METER CONFIGURATIONS</title>
+        <style type="text/css">
+            .image-ring .ui-ring-item {
+                border: 0 none;
+            }
+
+            .image-ring .ui-ring-item img {
+                width: 100%;
+            }
+        </style>
+    </h:head>
+   
+    
+    
+    <h:body style="padding-top: 10px">
+        
+        <div class="card">
+            <h:form id="form">
+                <p:growl id="msgs" showDetail="true"/>
+                
+                <p:tabView>
+                    <p:tab title="Basic" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p:panelGrid columns="4">
+                                    <p:outputLabel  style="text-align: right" value="Medium"/>
+                                    <b:inputText  readonly="true" value="#{bomMetersController.selectedMeter.bomMeterType}"/>
+                                    <p:outputLabel  style="text-align: right" value=""/>
+                                    <p:outputLabel value=""/>
+
+                                    <p:outputLabel  style="text-align: right" value="Manufacturer:"/>
+                                    <b:inputText  readonly="true" value="#{bomMetersController.selectedMeter.meterManufacturerModel.manufacturerCode}"/>
+                                    <p:outputLabel  style="text-align: right" value="Model:"/>
+                                    <b:inputText  readonly="true" value="#{bomMetersController.selectedMeter.meterManufacturerModel.meterModelModel.modelCode}"/>
+                                </p:panelGrid>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <p:dataTable id="meter" 
+                                     var="vMeter"
+                                     
+                                     value="#{bomMetersController.selectedMeterForDetails}" 
+                                     editable="true" style="margin-bottom:20px">
+                            <p:ajax event="rowEdit" listener="#{bomMetersController.onRowEdit}" update=":form:msgs"/>
+                            <p:ajax event="rowEditCancel" listener="#{bomMetersController.onRowCancel}" update=":form:msgs"/>
+                            <p:column headerText="Code">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{vMeter.meterSerial}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="codeInput" value="#{vMeter.meterSerial}" style="width:100%"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Serial">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{vMeter.meterSerial}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="serialInput" value="#{vMeter.meterSerial}" style="width:100%"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column style="width:6rem">
+                                <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+                    <p:tab title="Metering Point">
+                        <p class="p-m-0">
+                             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </p:tab>
+                    <p:tab title="Telemetry">
+                        <p class="p-m-0">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                            dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </p:tab>
+                </p:tabView>
+                <div class="pull-right">
+                    <p:panelGrid id="pgSubmittionActions" columns="5" styleClass="ui-noborder">
+                        <b:commandButton value="Cancel" look="danger" styleClass="ui-button-flat p-ml-2">
+                            <i class="fa fa-close" style="font-size: 2rem" ></i>
+                        </b:commandButton>
+                        <b:commandButton value="Confirm" look="success" styleClass="ui-button-flat p-ml-2">
+                            <i class="fa fa-check-circle" style="font-size: 2rem" ></i>
+                           
+                        </b:commandButton>
+                        
+                    </p:panelGrid>
+                    
+                </div>
+                
+            </h:form>
+        </div>
+        
+    </h:body>
+</html>
+
+      

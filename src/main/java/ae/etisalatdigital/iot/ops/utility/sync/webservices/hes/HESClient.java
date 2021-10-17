@@ -8,6 +8,9 @@ package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes;
 import ae.etisalatdigital.commonUtils.exception.WebServiceException;
 import ae.etisalatdigital.commonUtils.ws.rest.RestClient;
 import ae.etisalatdigital.commonUtils.ws.rest.RestClientFilter;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentRequestModel;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -63,9 +66,6 @@ public class HESClient extends RestClient {
             Client client = builder.build();
             RestClientFilter clientFilter = new RestClientFilter();
             
-            ///Map<String, String> customHeaders = new HashMap<>();
-            ///customHeaders.put("Authorization", "Basic bWFsaWs6bWFsaWsx");
-            ///clientFilter.setCustomHeaders(customHeaders);
             
             client.register(clientFilter);
             
@@ -84,12 +84,28 @@ public class HESClient extends RestClient {
         
         populateCient();
         
-        String resourceURL = "/devices/type";
+        String resourceURL = "/equipment";
         
         String response = callGetMethod(SERVICE_URL, resourceURL, String.class);
         JSONArray arr = new JSONArray(response);
         System.out.println("JSONARR : " + arr);
         
+    }
+    
+    public EquipmentResponseModel addNewMeterOnHES(BOMMeterDTO meter){
+        
+        
+        String resourceURL = "/devices/type";
+        EquipmentRequestModel request = new EquipmentRequestModel();
+        request.setCode(meter.getMeterSerial());
+        request.setSerialNumber(meter.getMeterSerial());
+        
+        Map<String, Object> paramsMap = new HashMap<>();
+        
+        populateCient();
+        EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);
+        
+        return response;
     }
     
     /**
@@ -125,4 +141,6 @@ public class HESClient extends RestClient {
     private HostnameVerifier getHostnameVerifier() {
         return (String hostname, SSLSession session) -> true;
     }
+
+   
 }

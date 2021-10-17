@@ -11,22 +11,27 @@ import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import java.math.BigInteger;
 import javax.enterprise.context.SessionScoped;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FlowEvent;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import java.io.File;
@@ -35,21 +40,22 @@ import java.io.File;
  *
  * @author au_mobility
  */
+
 @Named(value = "bomMetersController")
 @SessionScoped
 public class BOMMetersController implements Serializable  {
-
+    
     private static final Logger LOGGER = Logger.getLogger(BOMMetersController.class);
-
+    
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager em;
-
+    
     private BOMMeterDTO meterRecord;
-
+    
     private Long bomId;
     private String utilityNumber;
     private String errorMessage;
-
+    
     private String meterBOMType;
     private String meterSerial;
     private String meterAmi;
@@ -58,51 +64,54 @@ public class BOMMetersController implements Serializable  {
     private Long meterProtocolId;
     private Long meterRoomTypeId;
     private Long meterFloorTypeId;
-
-
-
+    
+    
+    
     private String wmeterManufacturer;
     private String wmeterSerial;
     private String wmeterModel;
     private String wmeterType;
     private String wmeterStatus;
-
+    
+    
     private String emeterManufacturer;
     private String emeterSerial;
     private String emeterModel;
     private String emeterType;
     private String emeterStatus;
-
+    
     List<BOMMeterDTO> meters;
     List<BOMMeterDTO> metersElectricity;
     List<BOMMeterDTO> metersWater;
-    List<BOMMeterDTO> metersSource;
-    List<BOMMeterDTO> metersTarget;
-    private DualListModel<BOMMeterDTO> bomMeterModel;
+    List<BOMMeterDTO> selectedMeterForDetails;
+    BOMMeterDTO selectedMeter;
 
     private Long wmeterRoomTypeId;
     private Long wmeterFloorTypeId;
-
+    
     private Long emeterRoomTypeId;
     private Long emeterFloorTypeId;
-
+    
     private Long wmeterProtocolId;
     private Long emeterProtocolId;
-
+    
     private Long wmeterModelId;
     private Long emeterModelId;
     private Long wmeterManufacturerId;
     private Long emeterManufacturerId;
 
+    List<BOMMeterDTO> metersSource;
+    List<BOMMeterDTO> metersTarget;
+    private DualListModel<BOMMeterDTO> bomMeterModel;
 
     @Inject
     private BOMMeterBus bomMetersBus;
-
+    
     @Inject
     private HESClient hesClient;
-
-
-
+    
+    
+    
     public BOMMetersController() {
         metersSource = new ArrayList<>();
         metersTarget = new ArrayList<>();
@@ -119,6 +128,7 @@ public class BOMMetersController implements Serializable  {
         return LOGGER;
     }
 
+    
     public EntityManager getEm() {
         return em;
     }
@@ -142,6 +152,17 @@ public class BOMMetersController implements Serializable  {
     public List<BOMMeterDTO> getMeters() {
         return meters;
     }
+    
+    public List<BOMMeterDTO> getSelectedMeterForDetails() {
+        return selectedMeterForDetails;
+    }
+
+    public BOMMeterDTO getSelectedMeter() {
+        return selectedMeter;
+    }
+
+
+
 
     public void setEm(EntityManager em) {
         this.em = em;
@@ -166,31 +187,40 @@ public class BOMMetersController implements Serializable  {
     public void setMeters(List<BOMMeterDTO> meters) {
         this.meters = meters;
     }
-
-    public void refresh() {
-
+    
+    public void setSelectedMeterForDetails(List<BOMMeterDTO> selectedMeterForDetails) {
+        this.selectedMeterForDetails = selectedMeterForDetails;
     }
 
-    public void initiateAll() {
+    public void setSelectedMeter(BOMMeterDTO selectedMeter) {
+        this.selectedMeter = selectedMeter;
+    }
+
+    public void refresh(){
+        
+    }
+        
+    public void initiateAll(){
         utilityNumber = null;
-
+        
     }
-
+   
     /**
-     *
+     * 
      * @param event
-     * @return
+     * @return 
      */
+    
     public String onFlowProcess(FlowEvent event) {
-
+        
         return event.getNewStep();
-
+        
     }
 
-    public void fetchBomMeters(Long bomId) {
+    public void fetchBomMeters(Long bomId){
         this.bomId = bomId;
-        metersElectricity = bomMetersBus.findAllByBomIdForElectricType(bomId);
-        metersWater = bomMetersBus.findAllByBomIdForWaterType(bomId);
+        metersElectricity =  bomMetersBus.findAllByBomIdForElectricType(bomId);
+        metersWater =  bomMetersBus.findAllByBomIdForWaterType(bomId);
     }
 
     public void fetchBomMetersWithMeterModel(Long bomId) {
@@ -208,19 +238,18 @@ public class BOMMetersController implements Serializable  {
         //metersMapped = new ArrayList<>();
     }
 
-    public String getTotalMeters() {
+    public String getTotalMeters(){
         Integer totalMeters = 0;
-        if (metersElectricity != null && metersWater != null) {
-            totalMeters = metersElectricity.size() + metersWater.size();
-        }
+        if(metersElectricity != null && metersWater != null)
+         totalMeters = metersElectricity.size() + metersWater.size();
         return totalMeters.toString();
     }
-
+    
     public void addNewMeter(){
-
+        
         String errormsg = "New Meter Added Successfully";
         FacesMessage msg = null;
-        /*
+
         if(meterBOMType == null || meterBOMType.isEmpty()){
                 msg = new FacesMessage("Validation","Please Serlect Meter Medium!");
                 msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -255,64 +284,66 @@ public class BOMMetersController implements Serializable  {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         else{
-
+            
             if(meterBOMType.equals("WATER")){
                 metersWater = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
 
             }else{
                 metersElectricity = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
-
+                
             }
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Success",errormsg));
+            
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Success", errormsg);
+            PrimeFaces.current().dialog().showMessageDynamic(message);
         }
-        */
-        hesClient.GetAllDevices();
-    }
 
+
+
+    }
+    
     public void addNewBOMWM(){
         metersWater = bomMetersBus.addNewMeterByBomId(bomId, "WATER", wmeterManufacturer, wmeterSerial, wmeterModel, wmeterType);
-
+        
     }
-
-    public void addNewBOMEM() {
+    
+    public void addNewBOMEM(){
         metersElectricity = bomMetersBus.addNewMeterByBomId(bomId, "ELECTRIC", emeterManufacturer, emeterSerial, emeterModel, emeterType);
-
+        
     }
-
-    public void deleteBOMWM(Long meterID) {
-        if (meterID != null) {
-            metersWater = bomMetersBus.deleteMeter(meterID, bomId, "WATER");
-        } else {
+    public void deleteBOMWM(Long meterID){
+        if(meterID != null){
+            metersWater = bomMetersBus.deleteMeter(meterID,bomId,"WATER");
+        }else{
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage("Failure", "New Work Order Initiated WO: "));
         }
-
+        
     }
-
-    public void deleteBOMEM(Long meterID) {
-        if (meterID != null) {
-            metersElectricity = bomMetersBus.deleteMeter(meterID, bomId, "ELECTRIC");
-        } else {
+    
+    public void deleteBOMEM(Long meterID){
+        if(meterID != null){
+            metersElectricity = bomMetersBus.deleteMeter(meterID,bomId,"ELECTRIC");
+        }else{
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage("Failure", "Failed to delete requested meter: "));
         }
-
+        
     }
-
-    public void saveBOMEM(BOMMeterDTO emtr) {
+    
+    public void saveBOMEM(BOMMeterDTO emtr){
         emtr.setBomMeterType("ELECTRIC");
         bomMetersBus.updateMeterDetails(emtr);
+       
     }
-
-    public void saveBOMWM(BOMMeterDTO wmtr) {
+    
+    public void saveBOMWM(BOMMeterDTO wmtr){
         wmtr.setBomMeterType("WATER");
         bomMetersBus.updateMeterDetails(wmtr);
     }
-
+    
     /**
-     *
-     * @return
+     * 
+     * @return 
      */
     public BOMMeterDTO getMeterRecord() {
         return meterRecord;
@@ -406,9 +437,9 @@ public class BOMMetersController implements Serializable  {
     public Long getEmeterManufacturerId() {
         return emeterManufacturerId;
     }
-
+    
     /******/
-
+    
     public String getMeterBOMType() {
         return meterBOMType;
     }
@@ -443,7 +474,7 @@ public class BOMMetersController implements Serializable  {
 
     /**
      *
-     * @param meterRecord
+     * @param meterRecord 
      */
     public void setMeterRecord(BOMMeterDTO meterRecord) {
         this.meterRecord = meterRecord;
@@ -568,14 +599,67 @@ public class BOMMetersController implements Serializable  {
     public void setMeterProtocolId(Long meterProtocolId) {
         this.meterProtocolId = meterProtocolId;
     }
-
+    
     public void onUtilityChange(){
+        
+    }
+    
+    public void meterConfigurations(String medium,BOMMeterDTO selectedMeter){
+        //String test = "Test";
+        //hesClient.GetAllDevices();
 
+        selectedMeterForDetails =  new ArrayList<>();
+        selectedMeterForDetails.add(selectedMeter);
+        this.selectedMeter = selectedMeter;
+        selectedMeter.setBomMeterType(medium);
+
+        Map<String, Object> options = new HashMap<>();
+        options.put("modal", true);
+        options.put("width", 800);
+        options.put("height", 500);
+        options.put("resizable", true);
+        options.put("draggable", false);
+        options.put("contentWidth", "100%");
+        options.put("contentHeight", "100%");
+        options.put("headerElement", "customheader");
+        PrimeFaces.current().dialog().openDynamic("viewMeterDetails", options, null);
     }
 
-    public void connectionTest(){
-        String test = "Test";
-        hesClient.GetAllDevices();
+    public void addNewMeterOnHES(BOMMeterDTO selectedMeter){
+        //if(){
+        //    selectedMeter.setMeterStatus("ONHES");
+        //}
+        hesClient.addNewMeterOnHES(selectedMeter);
+    }
+
+    public void onHESConfirmation(SelectEvent event) {
+        //Product product = (Product) event.getObject();
+        //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Product Selected", "Name:" + product.getName());
+
+        //FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void onHESCancellation(SelectEvent event) {
+
+    }
+    public void onRowEdit(RowEditEvent<BOMMeterDTO> event) {
+        FacesMessage msg = new FacesMessage("Product Edited", String.valueOf(event.getObject().getMeterSerial()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowCancel(RowEditEvent<BOMMeterDTO> event) {
+        FacesMessage msg = new FacesMessage("Edit Cancelled", String.valueOf(event.getObject().getMeterSerial()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+
+        if (newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
     public DualListModel<BOMMeterDTO> getBomMeterModel() {

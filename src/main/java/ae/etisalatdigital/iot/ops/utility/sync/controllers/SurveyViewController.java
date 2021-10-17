@@ -52,8 +52,10 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
+//import org.primefaces.context.RequestContext;
 import org.primefaces.event.FlowEvent;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -288,27 +290,27 @@ public class SurveyViewController implements Serializable  {
 
     public void submitSurveyFailed(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       RequestContext context = RequestContext.getCurrentInstance();
+       //RequestContext context = RequestContext.getCurrentInstance();
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Failed");
-       context.execute("PF('dlg3').show();");
+       //context.execute("PF('dlg3').show();");
        
-       //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
+       //PrimeFaces.current().dialog().openDynamic("dlg3", utilityNumber, null);
     }
     
     public void submitSurvey(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       RequestContext context = RequestContext.getCurrentInstance();
+       ///RequestContext context = RequestContext.getCurrentInstance();
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Completed");
-       context.execute("PF('dlg3').show();");
+       ///context.execute("PF('dlg3').show();");
        
        //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
     }
     
     public void captureLocation(){
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('gmpDlg').show();");
+        //RequestContext context = RequestContext.getCurrentInstance();
+        //context.execute("PF('gmpDlg').show();");
         
     }
     
@@ -444,4 +446,12 @@ public class SurveyViewController implements Serializable  {
         protocols = protocolBus.findAll();
     }
     
+    
+    public void onItemSelect(SelectEvent event) {
+        Long selectedId = (Long) event.getObject();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected Model", "TEST");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+
+        //MSTMeterManufacturer selectedManufacturer =  (MSTMeterManufacturer) event.getObject());
+    }
 }

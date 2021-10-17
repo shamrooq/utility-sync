@@ -572,6 +572,11 @@
                                                                              id="tblWMs" 
                                                                              rowKey="#{bomWaterMeter.id}"
                                                                              selectionMode="single"
+                                                                             rows="10"
+                                                                             paginator="true"
+                                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                                                             paginatorPosition="bottom"
                                                                              >
                                                 
                                                     <f:facet name="header">
@@ -585,10 +590,10 @@
                                                         <f:facet name="header">
                                                             <h:outputText value="#"/>
                                                         </f:facet>
-                                                        <i class="fa fa-refresh fa-spin" />
+                                                        <i class="#{bomWaterMeter.meterStatus eq 'ONHES'? 'fa fa-send' : 'fa fa-spinner fa-spin'}" />
                                                     </p:column>
                                                 
-                                                    <p:column headerText="WMTRSerial" style="text-align: center">
+                                                <p:column headerText="WMTRSerial" sortBy="#{bomWaterMeter.meterSerial}" filterBy="#{bomWaterMeter.meterSerial}" style="text-align: center">
                                                         <f:facet name="header">
                                                             <h:outputText value="WMTR Serial"/>
                                                         </f:facet>
@@ -661,20 +666,26 @@
 
                                                         <p:toolbar style="background: white;border:none ">
                                                             <p:toolbarGroup style="margin-bottom: 2px">
-                                                                    <b:commandButton style="margin-left: 5px"  id="btnCaptureImgRowTblWMs"  update="mainform:tblWMs" look="info"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
+                                                                    <b:commandButton   id="btnCaptureImgRowTblWMs"  update="mainform:tblWMs" look="info"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
                                                                         <i class="fa fa-camera" ></i>
                                                                     </b:commandButton>
                                                                     
 
                                                             </p:toolbarGroup>
                                                             <p:toolbarGroup>
-                                                                    <b:commandButton  id="btnDeleteRowTblWMs" style="margin-left: 5px" look="danger" action="#{bomMetersController.deleteBOMWM(bomWaterMeter.id)}" onclick="PF('statusDialogdelete').show()" onsuccess="PF('statusDialogdelete').hide()" update="mainform:tblWMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
+                                                                    
+                                                                    
+                                                                   <b:commandButton  type="button" title="Save"  look="info" action="#{bomMetersController.saveBOMWM(bomWaterMeter)}" update="mainform:tblWMs" >
+                                                                        <i class="fa fa-pencil" ></i>
+                                                                   </b:commandButton>
+                                                                   
+                                                                    <b:commandButton  id="btnDeleteRowTblWMs" style="margin-left: 2px" look="danger" action="#{bomMetersController.deleteBOMWM(bomWaterMeter.id)}" onclick="PF('statusDialogdelete').show()" onsuccess="PF('statusDialogdelete').hide()" update="mainform:tblWMs"  immediate="true" process="@this"  >
                                                                             <i class="fa fa-trash" ></i>
                                                                     </b:commandButton>
-                                                                   <b:commandButton  type="button" title="Save" style="margin-left: 2px" look="info" action="#{bomMetersController.saveBOMWM(bomWaterMeter)}" styleClass="button-warning p-mr-2" >
-                                                                        <i class="fa fa-save" ></i>
-                                                                   </b:commandButton>
                                                                     
+                                                                    <b:commandButton  type="button" style="margin-left: 2px"  look="warning" action="#{bomMetersController.meterConfigurations('WATER',bomWaterMeter)}" update="mainform:tblWMs" >
+                                                                            <i class="fa fa-external-link" ></i>
+                                                                        </b:commandButton>	
                                                             </p:toolbarGroup>
 
 
@@ -694,6 +705,12 @@
                                                                              id="tblEMs" 
                                                                              rowKey="#{bomElectricMeter.id}"
                                                                              selectionMode="single"
+                                                                             
+                                                                             rows="10"
+                                                                             paginator="true"
+                                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                                                             paginatorPosition="bottom"
                                                                              >
                                                     <f:facet name="header">
                                                         <div class="">
@@ -705,10 +722,10 @@
                                                         <f:facet name="header">
                                                             <h:outputText value="#"/>
                                                         </f:facet>
-                                                        <i class="fa fa-refresh fa-spin" />
+                                                        <i class="#{bomElectricMeter.meterStatus eq 'ONHES'? 'fa fa-send' : 'fa fa-spinner fa-spin'}" />
                                                     </p:column>
 
-                                                    <p:column headerText="EMTRSerial" style="text-align: center">
+                                                <p:column headerText="EMTRSerial" filterBy="#{bomElectricMeter.meterSerial}" sortBy="#{bomElectricMeter.meterSerial}" style="text-align: center">
                                                         <f:facet name="header">
                                                             <h:outputText value="EMTR Serial"/>
                                                         </f:facet>
@@ -732,7 +749,7 @@
                                                         <f:facet name="header">
                                                             <h:outputText value="Manufacturer"/>
                                                         </f:facet>
-                                                        <b:selectOneMenu    value="#{bomElectricMeter.meterManufacturerId}"    immediate="false" >
+                                                        <b:selectOneMenu disabled="true"   value="#{bomElectricMeter.meterManufacturerId}"    immediate="false" >
                                                             <p:ajax event="change" update="@this"/>
                                                             <f:selectItems value="#{surveyViewController.meterManufacturers}" var="varManufac" itemLabel="#{varManufac.manufacturerCode}" itemValue="#{varManufac.id}"/>
                                                         </b:selectOneMenu>
@@ -742,7 +759,7 @@
                                                         <f:facet name="header">
                                                             <h:outputText value="Model"/>
                                                         </f:facet>
-                                                        <b:selectOneMenu   value="#{bomElectricMeter.meterModelId}"    immediate="false" >
+                                                        <b:selectOneMenu disabled="true"  value="#{bomElectricMeter.meterModelId}"    immediate="false" >
                                                             <p:ajax event="change" update="@this"/>
                                                             <f:selectItems value="#{surveyViewController.meterModels}" var="varModel" itemLabel="#{varModel.modelCode}" itemValue="#{varModel.id}"/>
                                                         </b:selectOneMenu>
@@ -751,7 +768,7 @@
                                                         <f:facet name="header">
                                                             <h:outputText value="Protocol"/>
                                                         </f:facet>
-                                                        <b:selectOneMenu   value="#{bomElectricMeter.meterProtocolId}"    immediate="false" >
+                                                        <b:selectOneMenu disabled="true"  value="#{bomElectricMeter.meterProtocolId}"    immediate="false" >
                                                             <p:ajax event="change" update="@this"/>
                                                             <f:selectItems value="#{surveyViewController.protocols}" var="varProtocol" itemLabel="#{varProtocol.protocolCode}" itemValue="#{varProtocol.id}"/>
                                                         </b:selectOneMenu>
@@ -784,22 +801,25 @@
                                                     <p:column headerText="Action(s)" style="width: 150px;text-align: center">
                                                         <p:toolbar style="background: white;border:none ">
                                                                 <p:toolbarGroup style="margin-bottom: 2px">
-                                                                        <b:commandButton style="margin-left: 5px"  id="btnCaptureImgRowTblEMs" look="info"  update="mainform:tblEMs"  immediate="true" process="@this" styleClass="ui-btn-danger p-mr-2"  >
+                                                                        <b:commandButton   id="btnCaptureImgRowTblEMs" look="info"  update="mainform:tblEMs"  immediate="true" process="@this"  >
                                                                             <i class="fa fa-camera" ></i>
                                                                         </b:commandButton>
                                                                         
 
                                                                 </p:toolbarGroup>
                                                                 <p:toolbarGroup>
-                                                                        <b:commandButton  id="btnDeleteRowTblEMs" style="margin-left: 5px" look="danger" action="#{bomMetersController.deleteBOMEM(bomElectricMeter.id)}"  update="mainform:tblEMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
-                                                                            <i class="fa fa-trash" ></i>
-                                                                        </b:commandButton>
-
-                                                                        <b:commandButton  type="button" title="Save" style="margin-left: 2px" look="info" action="#{bomMetersController.saveBOMEM(bomElectricMeter)}" styleClass="btn-btn-warning p-mr-2" >
+                                                                        
+                                                                        <b:commandButton  type="button"  look="info" action="#{bomMetersController.saveBOMEM(bomElectricMeter)}" update="mainform:tblEMs"  >
                                                                             <i class="fa fa-pencil" ></i>
                                                                         </b:commandButton>
                                                                         
-                                                                        
+                                                                        <b:commandButton  id="btnDeleteRowTblEMs" style="margin-left: 2px" look="danger" action="#{bomMetersController.deleteBOMEM(bomElectricMeter.id)}"  update="mainform:tblEMs"  immediate="true" process="@this"   >
+                                                                            <i class="fa fa-trash" ></i>
+                                                                        </b:commandButton>
+                                                                    
+                                                                        <b:commandButton  type="button" style="margin-left: 2px" look="warning" action="#{bomMetersController.meterConfigurations('ELECTRIC',bomElectricMeter)}" update="mainform:tblWMs"  >
+                                                                            <i class="fa fa-external-link" ></i>
+                                                                        </b:commandButton>
                                                                 </p:toolbarGroup>
 
                                                         </p:toolbar>
@@ -834,6 +854,7 @@
                                                 
                                                 <b:selectOneMenu id="estMTRManufacturers" value="#{bomMetersController.meterManufacturerId}"    immediate="false" >
                                                     <p:ajax event="change" update="@this"/>
+                                                    
                                                     <f:selectItem itemLabel="Select Manufacturer" itemValue="" noSelectionOption="true"/>
                                                     <f:selectItems value="#{surveyViewController.meterManufacturers}" var="varManufac" itemLabel="#{varManufac.manufacturerCode}" itemValue="#{varManufac.id}"/>
                                                 </b:selectOneMenu>
@@ -883,9 +904,16 @@
                                                 <br/>
                                                 <p:dataTable  value="#{bomGatewaysController.estimation}"
                                                 var="bomEstimation"
-                                                id="dtEstimation" 
+                                                id="dtEstimation"
+                                                
                                                 rowKey="#{bomEstimation.id}"
                                                 selectionMode="single"
+                                                rows="10"
+                                                paginator="true"
+                                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                                paginatorPosition="bottom" 
+                                                stripedRows="true"
                                                 >
 
                                                 <f:facet name="header">
@@ -1035,7 +1063,7 @@
                                                     <b:selectOneMenu id="estGtwFloor" value="#{bomGatewaysController.gatewayFloorId}"    immediate="false" >
                                                         <p:ajax event="change" update="@this"/>
                                                         <f:selectItem itemLabel="Select Floor" itemValue="" noSelectionOption="true"/>
-                                                        <f:selectItems value="#{surveyViewController.floorTypes}" var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
+                                                        <f:selectItems value="#{surveyViewController.floorTypes}"   var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
                                                     </b:selectOneMenu>
                                                     
                                                      <p:selectBooleanButton id="somPowerIntruption" onLabel="Yes" offLabel="No" value="#{bomGatewaysController.powerIntruption}" >

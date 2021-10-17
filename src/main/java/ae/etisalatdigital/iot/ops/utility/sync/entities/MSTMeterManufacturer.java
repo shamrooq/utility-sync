@@ -6,13 +6,17 @@
 package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -42,7 +46,14 @@ public class MSTMeterManufacturer implements Serializable {
     
     @Column(name = "MANUFACTURER_Description", length = 200)
     private String manufacturerDescription;
-
+    
+    @OneToMany(mappedBy = "meterManufacturerModel")
+    private Collection<BOMMeters> metersCollection;
+    
+    @JoinColumn(name = "MANUFACTURER_ID", referencedColumnName = "MODEL_ID", insertable = false, updatable = false)
+    @ManyToOne
+    private MSTMeterModel meterModelModel;
+    
     public Long getId() {
         return id;
     }
@@ -61,6 +72,14 @@ public class MSTMeterManufacturer implements Serializable {
 
     public String getManufacturerDescription() {
         return manufacturerDescription;
+    }
+
+    public Collection<BOMMeters> getMetersCollection() {
+        return metersCollection;
+    }
+
+    public MSTMeterModel getMeterModelModel() {
+        return meterModelModel;
     }
     
     
@@ -83,6 +102,14 @@ public class MSTMeterManufacturer implements Serializable {
 
     public void setManufacturerDescription(String manufacturerDescription) {
         this.manufacturerDescription = manufacturerDescription;
+    }
+
+    public void setMetersCollection(Collection<BOMMeters> metersCollection) {
+        this.metersCollection = metersCollection;
+    }
+
+    public void setMeterModelModel(MSTMeterModel meterModelModel) {
+        this.meterModelModel = meterModelModel;
     }
     
     
