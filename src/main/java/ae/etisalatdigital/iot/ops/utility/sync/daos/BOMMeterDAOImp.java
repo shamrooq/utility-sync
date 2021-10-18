@@ -35,7 +35,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     private final String reqGtwMeterSemanticsQry="select b.utility_number utilityNumber,bge.Serial_Number gatewaySerialNumber,bge.EST_GTW_ID gatewayId," +
         "bge.gtw_floor bge,bge.gtw_room,bm.bom_meter_id meterId,bm.METER_Serial meterSerialNumber,bm.BOM_METER_Type meterType," +
         "bm.METER_Model meterModel,bm.METER_Manufacturer meterManufacture,bm.METER_Room meterRoom,bm.METER_Floor meterFloor," +
-        "bm.METER_GTW_ID meterGtwId from bom b join BOM_Gateways_Est bge on b.BOM_ID=bge.BOM_ID join bom_meter bm on bge.BOM_ID=bm.BOM_ID and "+
+        "bm.METER_GTW_ID meterGtwId,bm.METER_Floor_Id meterFloorId,bm.METER_Room_Id meterRoomId from bom b join BOM_Gateways_Est bge on b.BOM_ID=bge.BOM_ID join bom_meter bm on bge.BOM_ID=bm.BOM_ID and "+
         "bge.EST_GTW_ID=bm.METER_GTW_ID where b.BOM_ID = ?1";
 
     @Override

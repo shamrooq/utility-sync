@@ -60,6 +60,7 @@ public class BOMGatewaysController implements Serializable {
     private Long gatewayRoomId;
     private Long gatewayFloorId;
     private int rowsPerPage = 10;
+    String rowsPerPageTemplate="10";
 
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
@@ -100,11 +101,18 @@ public class BOMGatewaysController implements Serializable {
     public void updateGtwEstimation(Long bomId){
         this.bomId = bomId;
         estimation = gatewayEstBus.findSomeByBomId(bomId);
-        if(estimation == null){
+        if (estimation == null) {
             List<BOMGatewayEstDTO> list = new ArrayList<>();
             estimation = list;
         }
-        setRowsPerPage(estimation.size());
+        if (estimation.size() >= 20) {
+            rowsPerPageTemplate = "10,20," + estimation.size();
+        } else if (estimation.size() >= 10) {
+            rowsPerPageTemplate = "10," + estimation.size();
+        } else {
+            rowsPerPageTemplate = ""+estimation.size();
+        }
+        setRowsPerPageTemplate(rowsPerPageTemplate);
     }
     public String getUtilityNumber() {
         return utilityNumber;
@@ -241,6 +249,30 @@ public class BOMGatewaysController implements Serializable {
         return gatewaysChainLabel;
     }
 
+    public Boolean getPowerIntruption() {
+        return powerIntruption;
+    }
+
+    public Long getSignalStrength() {
+        return signalStrength;
+    }
+
+    public String getSignalStrengthIndicator() {
+        return signalStrengthIndicator;
+    }
+
+    public Boolean getAntenaRequired() {
+        return antenaRequired;
+    }
+
+    public Long getGatewayRoomId() {
+        return gatewayRoomId;
+    }
+
+    public Long getGatewayFloorId() {
+        return gatewayFloorId;
+    }
+
     public void setGatewaysType(String gatewaysType) {
         this.gatewaysType = gatewaysType;
     }
@@ -305,5 +337,13 @@ public class BOMGatewaysController implements Serializable {
     }
     public void setRowsPerPage(int rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
+    }
+
+    public String getRowsPerPageTemplate() {
+        return rowsPerPageTemplate;
+    }
+
+    public void setRowsPerPageTemplate(String rowsPerPageTemplate) {
+        this.rowsPerPageTemplate = rowsPerPageTemplate;
     }
 }

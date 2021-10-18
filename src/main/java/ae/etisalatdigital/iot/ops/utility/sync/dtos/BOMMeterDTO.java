@@ -114,23 +114,27 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterFloorId = meterFloorId;
         this.meterManufacturerModel = meterManufacturerModel;
     }
-    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID, String meterFloor, String meterRoom, String meterManufacturer, String meterModel, String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,BigInteger meterGtwId) {
+    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String bomMeterType, String meterCorrelationID, String meterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,
+                       String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId, MSTMeterManufacturer meterManufacturerModel,BigInteger meterGtwId) {
         this.id = id;
         this.bomId = bomId;
         this.meterStatus = meterStatus;
         this.bomMeterType = bomMeterType;
         this.meterCorrelationID = meterCorrelationID;
-        this.meterFloor = meterFloor;
-        this.meterRoom = meterRoom;
-        this.meterManufacturer = meterManufacturer;
-        this.meterModel = meterModel;
         this.meterType = meterType;
         this.meterSerial = meterSerial;
         this.meterLabelGTW = meterLabelGTW;
         this.meterLabelCBL = meterLabelCBL;
         this.meterLabelJBX = meterLabelJBX;
         this.modifiedDate = modifiedDate;
-        this.meterGtwId=meterGtwId;
+        this.meterAmi = meterAmi;
+        this.meterManufacturerId = meterManufacturerId;
+        this.meterModelId = meterModelId;
+        this.meterProtocolId = meterProtocolId;
+        this.meterRoomId = meterRoomId;
+        this.meterFloorId = meterFloorId;
+        this.meterManufacturerModel = meterManufacturerModel;
+        this.meterGtwId = meterGtwId;
     }
     
     

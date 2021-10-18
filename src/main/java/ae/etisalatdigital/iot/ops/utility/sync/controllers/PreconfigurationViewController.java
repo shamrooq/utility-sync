@@ -9,6 +9,8 @@ import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.commonUtils.exception.WebException;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.OPDevice;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.Estimation;
+import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.InstallationSemanticView;
+import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGatewayMeterSemantics;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTBusinessBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTEmirateBus;
@@ -174,7 +176,8 @@ public class PreconfigurationViewController implements Serializable  {
     
     
     List<Estimation> estimation;
-    
+    private InstallationSemanticView installationSemanticView;
+
     @Inject
     private SurveyBus surveyBus;
     
@@ -225,7 +228,10 @@ public class PreconfigurationViewController implements Serializable  {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return event.getOldStep();
             }
-            
+            if(event.getNewStep().equals("semanticsTab")){
+                fetchGatewayMetersSemantics(this.selectedRequest.getActiveBom());
+            }
+
         }catch(Exception exc){
             LOGGER.error("Error in wizard flow process", exc);
             errormsg = "System Error, Contact System Administrator";
@@ -944,8 +950,14 @@ public class PreconfigurationViewController implements Serializable  {
     public void setPremiseTypes(List<MSTPremiseTypes> premiseTypes) {
         this.premiseTypes = premiseTypes;
     }
-    
-    
+    public InstallationSemanticView getInstallationSemanticView() {
+        return installationSemanticView;
+    }
+
+    public void setInstallationSemanticView(InstallationSemanticView installationSemanticView) {
+        this.installationSemanticView = installationSemanticView;
+    }
+
     public void findAllCustomers(){
        businessTypes =  businessBus.findAll();
     }
@@ -965,13 +977,17 @@ public class PreconfigurationViewController implements Serializable  {
     public void findAllPremiseTypes(){
        premiseTypes =  premiseTypeBus.findAll();
     }
-    
-    
-    
-    
-    
-    
-    
-
-    
+    public void fetchGatewayMetersSemantics(Long bomId) {
+        UtilityGatewayMeterSemantics gmSemantics = bomMetersBus.findGatewayAndMeterSemanticsByBomId(bomId);
+        if (gmSemantics != null) {
+            setUtilityNumber(gmSemantics.getUtilityNumber());
+            installationSemanticView = new InstallationSemanticView(this.utilityNumber,this.selectedRequest.getPremiseType());
+            installationSemanticView.setGtwMtrList(gmSemantics);
+            installationSemanticView.init();
+        }
+        else{
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Internal Server Error<br/> Please Try Again");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
 }
