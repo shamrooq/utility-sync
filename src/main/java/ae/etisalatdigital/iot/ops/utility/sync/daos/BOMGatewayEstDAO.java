@@ -29,4 +29,5 @@ public interface BOMGatewayEstDAO {
     abstract void updateRequestStatus(String mmsReference, Integer status);
     
     abstract Boolean delete(Long id);
+    abstract List<BOMGatewayEstDTO> findSomeByBomId(Long bomId);
 }

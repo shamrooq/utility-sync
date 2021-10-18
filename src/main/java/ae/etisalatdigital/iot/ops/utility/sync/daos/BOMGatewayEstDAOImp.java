@@ -123,5 +123,12 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
         
         return false;
     }
-        
+
+    @Override
+    public List<BOMGatewayEstDTO> findSomeByBomId(Long bomId){
+        TypedQuery<BOMGatewayEstDTO> query;
+        query = entityManager.createNamedQuery("BOMGatewaysEst.findSomeByBomId", BOMGatewayEstDTO.class);
+        query.setParameter("bomId", bomId);
+        return  query.getResultList();
+    }
 }

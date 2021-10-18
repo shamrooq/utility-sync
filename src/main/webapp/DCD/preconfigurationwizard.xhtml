@@ -258,7 +258,7 @@
                                                      var="gatewayItem" id="tblGateways"
                                                      rows="10" rowKey="#{gatewayItem.id}" rowExpandMode="single"
                                                      paginator="true" paginatorPosition="bottom" multiViewState="true"
-                                                     rowsPerPageTemplate="10,20,#{bomGatewaysController.estimation.indexOf(gatewayItem)}">
+                                                     rowsPerPageTemplate="#{bomGatewaysController.rowsPerPageTemplate}">
                                             <p:ajax event="rowToggle" listener="#{bomMetersController.fetchGatewayBomMeterModel(gatewayItem.id)}" 
                                                     process="@this tblGateways itemSerialNumber itemSimICCID" update="tblGateways"/>
                                             <p:column headerText="Map With Meters">

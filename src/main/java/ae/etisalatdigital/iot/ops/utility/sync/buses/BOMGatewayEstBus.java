@@ -37,7 +37,11 @@ public class BOMGatewayEstBus {
     public List<BOMGatewayEstDTO> findAllByBomId(Long bomId){
         return bomDao.findAllByBomId(bomId);
     }
-    
+
+    public List<BOMGatewayEstDTO> findSomeByBomId(Long bomId){
+        return bomDao.findSomeByBomId(bomId);
+    }
+
     public List<BOMGatewayEstDTO> addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,String csbleEtimation,String gatewayLocation){
         if( bomDao.addNewGatewayEstByBomId(bomId, gatewayBomType, proposedGateType, noOfGateways, metersPerGateway,csbleEtimation,gatewayLocation)){
            

@@ -48,6 +48,8 @@ public class BOMGatewaysController implements Serializable {
     private String gatewaysChainLabel;
     private List<BOMGatewayEstDTO> estimation;
     private int rowsPerPage = 10;
+    String rowsPerPageTemplate="10";
+
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
 
@@ -83,6 +85,23 @@ public class BOMGatewaysController implements Serializable {
             estimation = list;
         }
         setRowsPerPage(estimation.size());
+    }
+
+    public void updateGtwEstimation(Long bomId){
+        this.bomId = bomId;
+        estimation = gatewayEstBus.findSomeByBomId(bomId);
+        if (estimation == null) {
+            List<BOMGatewayEstDTO> list = new ArrayList<>();
+            estimation = list;
+        }
+        if (estimation.size() >= 20) {
+            rowsPerPageTemplate = "10,20," + estimation.size();
+        } else if (estimation.size() >= 10) {
+            rowsPerPageTemplate = "10," + estimation.size();
+        } else {
+            rowsPerPageTemplate = ""+estimation.size();
+        }
+        setRowsPerPageTemplate(rowsPerPageTemplate);
     }
 
     public String getUtilityNumber() {
@@ -233,5 +252,13 @@ public class BOMGatewaysController implements Serializable {
     }
     public void setRowsPerPage(int rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
+    }
+
+    public String getRowsPerPageTemplate() {
+        return rowsPerPageTemplate;
+    }
+
+    public void setRowsPerPageTemplate(String rowsPerPageTemplate) {
+        this.rowsPerPageTemplate = rowsPerPageTemplate;
     }
 }
