@@ -208,8 +208,8 @@ public class RequestController implements Serializable  {
         plotNumber = selectedRequest.getPremisePlotNumber();
         plotNumber = plotNumber == null ? "" : plotNumber;
         
-        latitude = selectedRequest.getPremiseLatitude().toString();
-        longitude = selectedRequest.getPremiseLongitude().toString();
+        latitude = selectedRequest.getPremiseLatitude()==null?"":selectedRequest.getPremiseLatitude().toString();
+        longitude = selectedRequest.getPremiseLongitude()==null?"":selectedRequest.getPremiseLongitude().toString();
         address = selectedRequest.getPremiseAddress();
         vendorName = "IN-HOUSE";
         

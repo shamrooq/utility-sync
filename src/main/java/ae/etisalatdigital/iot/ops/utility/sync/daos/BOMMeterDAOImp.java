@@ -10,6 +10,10 @@ import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGateway
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -32,11 +36,16 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager entityManager;
-    private final String reqGtwMeterSemanticsQry="select b.utility_number utilityNumber,bge.Serial_Number gatewaySerialNumber,bge.EST_GTW_ID gatewayId," +
-        "bge.gtw_floor bge,bge.gtw_room,bm.bom_meter_id meterId,bm.METER_Serial meterSerialNumber,bm.BOM_METER_Type meterType," +
-        "bm.METER_Model meterModel,bm.METER_Manufacturer meterManufacture,bm.METER_Room meterRoom,bm.METER_Floor meterFloor," +
-        "bm.METER_GTW_ID meterGtwId,bm.METER_Floor_Id meterFloorId,bm.METER_Room_Id meterRoomId from bom b join BOM_Gateways_Est bge on b.BOM_ID=bge.BOM_ID join bom_meter bm on bge.BOM_ID=bm.BOM_ID and "+
-        "bge.EST_GTW_ID=bm.METER_GTW_ID where b.BOM_ID = ?1";
+    private final String reqGtwMeterSemanticsQry="select b.utilityNumber utilityNumber,"
+            + "bge.serialNumber gatewaySerialNumber,bge.id gatewayId," +
+        "bge.mstFloor gtwFloor,bge.mstRoom gtwRoom,bm.id meterId,bm.meterSerial meterSerialNumber,"
+            + "bm.bomMeterType meterType," +
+        "bm.mstMeterModel meterModel,bm.meterManufacturerModel meterManufacture,bm.mstRoom meterRoom,"
+            + "bm.mstFloor meterFloor," +
+        "bm.meterGtwId meterGtwId from "
+            + "Boms b join BOMGatewaysEst bge on b.id=bge.bomId join "
+            + "BOMMeters bm on bge.bomId=bm.bomId and "+
+        "bge.id=bm.meterGtwId where b.id = ?1";
 
     @Override
     public List<BOMMeters> findAll() {
@@ -201,7 +210,8 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     }
     @Override
     public UtilityGatewayMeterSemantics findGtwAndMtrSemanticsByBomId(Long bomId) {
-        Query query = entityManager.createNativeQuery(reqGtwMeterSemanticsQry);
+        //Query query = entityManager.createNativeQuery(reqGtwMeterSemanticsQry);
+        Query query = entityManager.createQuery(reqGtwMeterSemanticsQry);
         query.setParameter(1, bomId);
         List<Object[]> gatewayMetersSemanticsList = query.getResultList();
         Set<BigInteger> gtwIds = new TreeSet<>();
@@ -223,10 +233,12 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
                 bomGtwDTO.setId(new BigInteger(obj[2].toString()));
             }
             if (null != obj[3]) {
-                bomGtwDTO.setGatewayFloor(obj[3].toString());
+                MSTFloor mstFloor = (MSTFloor)obj[3];
+                bomGtwDTO.setGatewayFloor(mstFloor.getFloorCode());
             }
             if (null != obj[4]) {
-                bomGtwDTO.setGatewayRoom(obj[4].toString());
+                MSTRoom mstRoom = (MSTRoom)obj[4];
+                bomGtwDTO.setGatewayRoom(mstRoom.getRoomCode());
             }
             bomMeterDTO = new BOMMeterDTO();
             if (null != obj[5]) {
@@ -239,16 +251,20 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
                 bomMeterDTO.setBomMeterType(obj[7].toString());
             }
             if (null != obj[8]) {
-                bomMeterDTO.setMeterModel(obj[8].toString());
+                MSTMeterModel meterModel = (MSTMeterModel)obj[8];
+                bomMeterDTO.setMeterModel(meterModel.getModelTitle());
             }
             if (null != obj[9]) {
-                bomMeterDTO.setMeterManufacturer(obj[9].toString());
+                MSTMeterManufacturer meterManufacturer = (MSTMeterManufacturer)obj[9];
+                bomMeterDTO.setMeterManufacturer(meterManufacturer.getManufacturerName());
             }
             if (null != obj[10]) {
-                bomMeterDTO.setMeterFloor(obj[10].toString());
+                MSTRoom mstRoom = (MSTRoom)obj[10];
+                bomMeterDTO.setMeterRoom(mstRoom.getRoomCode());
             }
             if (null != obj[11]) {
-                bomMeterDTO.setMeterRoom(obj[11].toString());
+                MSTFloor mstFloor = (MSTFloor)obj[11];
+                bomMeterDTO.setMeterFloor(mstFloor.getFloorCode());
             }
             if (null != obj[12]) {
                 bomMeterDTO.setMeterGtwId(new BigInteger(obj[12].toString()));

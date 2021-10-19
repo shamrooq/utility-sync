@@ -7,13 +7,18 @@ package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -25,10 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "BOM_Gateways_Est")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.gatewayRoomId, m.gatewayFloorId, m.cableLength ) FROM BOMGatewaysEst m")
-        ,@NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.gatewayRoomId, m.gatewayFloorId, m.cableLength ) FROM BOMGatewaysEst m where m.bomId = :bomId")
+    @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.mstRoom.id, m.mstFloor.id, m.cableLength ) FROM BOMGatewaysEst m")
+        ,@NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.mstRoom.id, m.mstRoom.id, m.cableLength ) FROM BOMGatewaysEst m where m.bomId = :bomId")
         , @NamedQuery(name = "BOMGatewaysEst.DELETE", query = "DELETE FROM BOMGatewaysEst m WHERE m.id = :id")
-        ,@NamedQuery(name = "BOMGatewaysEst.findSomeByBomId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simICCID,m.gatewayFloor,m.gatewayRoom) FROM BOMGatewaysEst m where m.bomId = :bomId")
+        ,@NamedQuery(name = "BOMGatewaysEst.findSomeByBomId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simICCID,m.mstFloor.floorCode,m.mstRoom.roomCode) FROM BOMGatewaysEst m where m.bomId = :bomId")
  })
 public class BOMGatewaysEst implements Serializable {
 
@@ -74,11 +79,18 @@ public class BOMGatewaysEst implements Serializable {
     @Column(name = "Antena_Required")
     private Boolean antenaRequired;
     
-    
-    @Column(name = "GTW_Room_Id")
-    private Long gatewayRoomId;
-    @Column(name = "GTW_Floor_Id")
-    private Long gatewayFloorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="GTW_Room_Id")
+    private MSTRoom mstRoom;
+            
+    //private Long gatewayRoomId;
+
+//    @Column(name = "GTW_Floor_Id")
+//    private Long gatewayFloorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="GTW_Floor_Id")
+    private MSTFloor mstFloor;
+            
     @Column(name = "Cable_Length")
     private Double cableLength;
     @Column(name="Gtw_Floor")
@@ -153,14 +165,6 @@ public class BOMGatewaysEst implements Serializable {
 
     public Boolean getAntenaRequired() {
         return antenaRequired;
-    }
-
-    public Long getGatewayRoomId() {
-        return gatewayRoomId;
-    }
-
-    public Long getGatewayFloorId() {
-        return gatewayFloorId;
     }
 
     public Double getCableLength() {
@@ -239,14 +243,6 @@ public class BOMGatewaysEst implements Serializable {
         this.antenaRequired = antenaRequired;
     }
 
-    public void setGatewayRoomId(Long gatewayRoomId) {
-        this.gatewayRoomId = gatewayRoomId;
-    }
-
-    public void setGatewayFloorId(Long gatewayFloorId) {
-        this.gatewayFloorId = gatewayFloorId;
-    }
-
     public void setCableLength(Double cableLength) {
         this.cableLength = cableLength;
     }
@@ -273,6 +269,22 @@ public class BOMGatewaysEst implements Serializable {
 
     public void setGatewayRoom(String gatewayRoom) {
         this.gatewayRoom = gatewayRoom;
+    }
+
+    public MSTRoom getMstRoom() {
+        return mstRoom;
+    }
+
+    public void setMstRoom(MSTRoom mstRoom) {
+        this.mstRoom = mstRoom;
+    }
+
+    public MSTFloor getMstFloor() {
+        return mstFloor;
+    }
+
+    public void setMstFloor(MSTFloor mstFloor) {
+        this.mstFloor = mstFloor;
     }
 
     @Override

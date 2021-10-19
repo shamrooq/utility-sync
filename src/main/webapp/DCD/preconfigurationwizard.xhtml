@@ -101,7 +101,7 @@
                                                     <p:outputLabel   value="Survey Permit Number:"/>
                                                 </p:column>
                                                 <p:column colspan="3">
-                                                    <p:outputLabel id="itSurveyPermit" value="#{preconfigurationViewController.selectedRequest.premiseType}"/>
+                                                    <p:outputLabel id="itSurveyPermit" value=""/>
                                                 </p:column>
                                             </p:row>
                                             <p:row>
@@ -281,7 +281,7 @@
                                             <input type="hidden" value="#{gatewayItem.simICCID}" id="itemSimICCID#{gatewayItem.id}"/>
                                         </p:column>
                                         <p:column headerText="Floor" selectRow="false" style="width:5%">
-                                                <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}" />
+                                            <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}" />
                                             </p:column>
                                             <p:column headerText="Room" selectRow="false" style="width:5%">
                                                 <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayRoom}" />

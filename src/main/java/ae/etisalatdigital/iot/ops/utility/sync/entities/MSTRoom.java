@@ -6,15 +6,9 @@
 package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,6 +36,9 @@ public class MSTRoom implements Serializable {
     @Column(name = "ROOM_Description", length = 200)
     private String roomDescription;
     
+    @OneToMany(mappedBy = "mstRoom")
+    private List<BOMGatewaysEst> bomGatewayEstListRoomId;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
