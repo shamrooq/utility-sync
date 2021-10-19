@@ -14,6 +14,10 @@
         <f:viewAction  action="#{surveyViewController.findAllGatewayTypes()}"/>
         <f:viewAction  action="#{surveyViewController.findAllProtocols()}"/>
         <f:viewAction  action="#{bomGatewaysController.findAllEstimations()}"/>
+        <f:viewAction  action="#{surveyViewController.findAllRoomTypes()}"/>
+        <f:viewAction  action="#{surveyViewController.findAllFloorTypes()}"/>
+        <f:viewAction  action="#{surveyViewController.findAllMeterManufacturers()}"/>
+        <f:viewAction  action="#{surveyViewController.findAllMeterModels()}"/>
     </f:metadata>
     <h:head>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"></meta>
@@ -77,7 +81,7 @@
                                     <p:panelGrid columns="3">
                                         <p:outputLabel  style="text-align: right" value="Utility Number:"/>
                                         <b:inputText id="itUtilityNumber" value="#{usrequestController.utilityNumber}" placeholder="e.g UN-10123456789"  style="width: 420px"/>
-                                        <b:commandButton id="btnInitiate" look="info" type="button"   styleClass="ui-button-raised p-ml-2" value=" Initiate" style="width: 250px" update="mainform:pnlSurveyInitialDetails mainform:pnlMisc  mainform:pnlWater mainform:pnlElectricity mainform:pnlEstimation mainform:dtEstimation mainform:tblWMs mainform:tblEMs mainform:pnlActions mainform:pgSubmittionActions mainform:itAdditionalInfo" >
+                                        <b:commandButton id="btnInitiate" look="info" type="button"   styleClass="ui-button-raised p-ml-2" value=" Initiate" style="width: 250px" update="mainform:pnlSurveyInitialDetails mainform:pnlMisc mainform:pnlEstimation mainform:dtEstimation mainform:tblWMs mainform:tblEMs mainform:pnlActions mainform:pgSubmittionActions mainform:itAdditionalInfo" >
                                             <i class="fa fa-external-link" ></i>
                                             <f:actionListener binding="#{ussurveyController.refresh()}"/>
                                             <f:actionListener binding="#{usrequestController.updateSelected()}"/> 
@@ -241,162 +245,7 @@
                                 
                                 <!-- -->
                                 <br/>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        
-                                        <p:panel id="pnlWater" toggleable="true" header="Water Meter(s) Count:">
-                                            
-                                            <p:panelGrid style="margin-top:20px">
-                                                
-                                                    <f:facet name="header">
-                                                        <p:row>
-                                                            <p:column colspan="2" style="text-align: center">
-                                                                <p:outputLabel value="AMI Meters"/>
-                                                            </p:column>
-                                                            <p:column colspan="2" style="text-align: center">
-                                                                <p:outputLabel value="Non AMI Meters"/>
-                                                            </p:column>
-                                                        </p:row>
-
-                                                    </f:facet>
-                                                    <p:row>
-                                                        <p:column colspan="2" style="text-align: center">
-                                                            <p:inputNumber  id="itWMAMIMeters" decimalPlaces="0" value="#{ussurveyController.metersWM_AMI}">
-                                                                <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                            </p:column>
-                                                          
-                                                        <p:column colspan="2" style="text-align: center">
-                                                            <p:inputNumber  id="itWMNAMIMeters" decimalPlaces="0" value="#{ussurveyController.metersWM_NAMI}">
-                                                                <!--p:ajax event="change" update="@this"/-->
-                                                            </p:inputNumber>
-                                                        </p:column>
-                                                    </p:row>
-                                            </p:panelGrid>
-                                            
-                                            <p:panelGrid>
-                                                <f:facet name="header">
-                                                    <p:row>
-                                                        <p:column colspan="2" style="text-align: center">
-                                                            <p:outputLabel value="MBus"/>
-                                                        </p:column>
-                                                        <p:column colspan="2" style="text-align: center">
-                                                            <p:outputLabel value="Wireless MBus"/>
-
-                                                        </p:column>
-                                                        <p:column colspan="2" style="text-align: center;background: white">
-                                                            
-                                                            <b:selectOneMenu id="itWMOthers" value="#{ussurveyController.metersWM_Label_Others}"  immediate="false" >
-                                                                <p:ajax event="change" update="@this"/>
-                                                                <f:selectItem itemLabel="Select Protocol" itemValue="" noSelectionOption="true"/>
-                                                                <f:selectItems value="#{surveyViewController.protocols}" var="varProtocol" itemLabel="#{varProtocol.protocolTitle}" itemValue="#{varProtocol.protocolTitle}"/>
-                                                            </b:selectOneMenu>
-                                                            
-                                                        </p:column>
-                                                    </p:row>
-                                                    
-                                                </f:facet>
-                                                <p:row>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="itWMMBus" decimalPlaces="0"  value="#{ussurveyController.metersWM_MBUS}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="itWMWMBus" decimalPlaces="0"  value="#{ussurveyController.metersWM_WMBUS}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="inWMOthers" decimalPlaces="0" value="#{ussurveyController.metersWM_Others}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                </p:row>
-                                            </p:panelGrid>
-                                            
-                                            
-                                            
-                                        </p:panel>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p:panel id="pnlElectricity" toggleable="true" header="Electricity Meter(s) Count:">
-                                            <p:panelGrid style="margin-top:20px">
-                                                
-                                                    <f:facet name="header">
-                                                        <p:row>
-                                                            <p:column colspan="2" style="text-align: center">
-                                                                <p:outputLabel value="AMI Meters"/>
-                                                            </p:column>
-                                                            <p:column colspan="2" style="text-align: center">
-                                                                <p:outputLabel value="Non AMI Meters"/>
-                                                            </p:column>
-                                                        </p:row>
-
-                                                    </f:facet>
-                                                
-                                                <p:row>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="itEMAMIMeters" decimalPlaces="0" value="#{ussurveyController.metersEM_AMI}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>  
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="itEMNAMIMeters" decimalPlaces="0"  value="#{ussurveyController.metersEM_NAMI}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                </p:row>
-                                                                                               
-                                            </p:panelGrid>
-                                            
-                                            <p:panelGrid>
-                                                
-                                                    <f:facet name="header">
-                                                        <p:row>
-                                                            <p:column colspan="2" style="text-align: center">
-                                                                <p:outputLabel value="DLMS"/>
-                                                            </p:column>
-                                                            <p:column colspan="2" style="text-align: center">
-                                                                <p:outputLabel value="Euridis"/>
-                                                                
-                                                            </p:column>
-                                                            <p:column colspan="2" style="text-align: center;background: white">
-                                                                <b:selectOneMenu id="itEMOthers" value="#{ussurveyController.metersEM_Label_Others}"  immediate="false" >
-                                                                    <p:ajax event="change" update="@this"/>
-                                                                    <f:selectItem itemLabel="Select Protocol" itemValue="" noSelectionOption="true"/>
-                                                                    <f:selectItems value="#{surveyViewController.protocols}" var="varProtocol" itemLabel="#{varProtocol.protocolTitle}" itemValue="#{varProtocol.protocolTitle}"/>
-                                                                </b:selectOneMenu>
-                                                                
-                                                            </p:column>
-                                                        </p:row>
-
-                                                    </f:facet>
-                                                
-                                                <p:row>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="itEMDLMS" decimalPlaces="0"  value="#{ussurveyController.metersEM_DLMS}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="itEMEuridis" decimalPlaces="0" value="#{ussurveyController.metersEM_Euridis}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                    <p:column colspan="2" style="text-align: center">
-                                                        <p:inputNumber id="inEMOthers" decimalPlaces="0"  value="#{ussurveyController.metersEM_Others}">
-                                                             <!--p:ajax event="change" update="@this"/-->
-                                                        </p:inputNumber>
-                                                    </p:column>
-                                                </p:row>
-                                                
-                                            </p:panelGrid>
-                                            
-                                        </p:panel>
-                                    </div>
-                                </div>
-                                <br/>
+                                
                                 
                                 <!-- -->
                                 <div class="row">
@@ -723,6 +572,11 @@
                                                                              id="tblWMs" 
                                                                              rowKey="#{bomWaterMeter.id}"
                                                                              selectionMode="single"
+                                                                             rows="10"
+                                                                             paginator="true"
+                                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                                                             paginatorPosition="bottom"
                                                                              >
                                                 
                                                     <f:facet name="header">
@@ -731,73 +585,107 @@
 
                                                         </div>
                                                     </f:facet>
-
-
-                                                    <p:column headerText="VehicleID" style="width: 100px;align-content: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="UMR #"/>
-                                                        </f:facet>
-                                                        <h:outputText value="#{bomWaterMeter.id}" />
-                                                    </p:column>
-
-                                                    <p:column headerText="VehicleID" style="text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="Floor"/>
-                                                        </f:facet>
-                                                        <h:inputText value="#{bomWaterMeter.meterFloor}"/>
-                                                    </p:column>
-
-                                                    <p:column headerText="Type" style="text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="WM Room"/>
-                                                        </f:facet>
-                                                        <h:inputText value="#{bomWaterMeter.meterRoom}"/>
-                                                    </p:column>
-
                                                     
-                                                    <p:column headerText="Tracking" style="text-align: center">
+                                                    <p:column headerText="WMTRStatus" style="width: 50px;text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="Manufacturer"/>
+                                                            <h:outputText value="#"/>
                                                         </f:facet>
-                                                        <h:outputText value="#{bomWaterMeter.meterManufacturer}"/>
+                                                        <i class="#{bomWaterMeter.meterStatus eq 'ONHES'? 'fa fa-send' : 'fa fa-spinner fa-spin'}" />
                                                     </p:column>
                                                 
-                                                    <p:column headerText="Tracking" style="text-align: center">
+                                                <p:column headerText="WMTRSerial" sortBy="#{bomWaterMeter.meterSerial}" filterBy="#{bomWaterMeter.meterSerial}" style="text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="WM Serial"/>
+                                                            <h:outputText value="WMTR Serial"/>
                                                         </f:facet>
                                                         <h:outputText value="#{bomWaterMeter.meterSerial}"/>
                                                     </p:column>
-
-                                                    <p:column headerText="Tracking" style="text-align: center">
+                                                    
+                                                    <p:column headerText="estWMTRTblAMI" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="AMI"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu id="estWMTTblRAMI" value="#{bomWaterMeter.meterAmi}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItem itemLabel="AMR" itemValue="AMI"/>
+                                                            <f:selectItem itemLabel="NON-AMR" itemValue="NONAMR"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                
+                                                    <p:column headerText="WMTRManu" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Manufacturer"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu   disabled="true" value="#{bomWaterMeter.meterManufacturerId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.meterManufacturers}" var="varManufac" itemLabel="#{varManufac.manufacturerCode}" itemValue="#{varManufac.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    
+                                                    <p:column headerText="WMTRModel" style="text-align: center">
                                                         <f:facet name="header">
                                                             <h:outputText value="WM Model"/>
                                                         </f:facet>
-                                                        <h:outputText value="#{bomWaterMeter.meterModel}"/>
+                                                        <b:selectOneMenu  disabled="true" value="#{bomWaterMeter.meterModelId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.meterModels}" var="varModel" itemLabel="#{varModel.modelCode}" itemValue="#{varModel.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    <p:column headerText="WMTRProtocol" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Protocol"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu  disabled="true" value="#{bomWaterMeter.meterProtocolId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.protocols}" var="varProtocol" itemLabel="#{varProtocol.protocolCode}" itemValue="#{varProtocol.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    
+
+                                                    <p:column headerText="WMTRRoom" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Room"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu id="estWMTRTblRoom" value="#{bomWaterMeter.meterRoomId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.roomTypes}" var="varRoomType" itemLabel="#{varRoomType.roomCode}" itemValue="#{varRoomType.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    <p:column headerText="WMTRFloor" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Floor"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu id="estWMTRTblFloor" value="#{bomWaterMeter.meterFloorId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.floorTypes}" var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
+                                                        </b:selectOneMenu>
                                                     </p:column>
 
-                                                <p:column headerText="Tracking" style="width: 250px;text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="WM Type"/>
-                                                        </f:facet>
-                                                        <h:outputText value="#{bomWaterMeter.meterType}"/>
-                                                    </p:column>
+                                                
                                                     
                                                 <p:column headerText="Action(s)" style="width: 150px;text-align: center">
 
                                                         <p:toolbar style="background: white;border:none ">
                                                             <p:toolbarGroup style="margin-bottom: 2px">
-                                                                    <p:commandButton style="margin-left: 5px"  id="btnCaptureImgRowTblWMs" icon="fa fa-camera"  update="mainform:tblWMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
-
-                                                                    </p:commandButton>
-                                                                    <p:commandButton  id="btnCaptureLocRowTblWMs" icon="fa fa-globe" update="mainform:tblWMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  />
+                                                                    <b:commandButton   id="btnCaptureImgRowTblWMs"  update="mainform:tblWMs" look="info"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
+                                                                        <i class="fa fa-camera" ></i>
+                                                                    </b:commandButton>
+                                                                    
 
                                                             </p:toolbarGroup>
                                                             <p:toolbarGroup>
-                                                                    <p:commandButton style="margin-left: 5px" type="button" title="Save" icon="fa fa-external-link" styleClass="ui-button-warning p-mr-2" />
-                                                                    <p:commandButton  type="button" title="Save" icon="fa fa-save" styleClass="button-warning p-mr-2" />
-                                                                    <p:commandButton  id="btnDeleteRowTblWMs" icon="fa fa-trash" action="#{bomMetersController.deleteBOMWM(bomWaterMeter.id)}" onclick="PF('statusDialogdelete').show()" onsuccess="PF('statusDialogdelete').hide()" update="mainform:tblWMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  />
-
+                                                                    
+                                                                    
+                                                                   <b:commandButton  type="button" title="Save"  look="info" action="#{bomMetersController.saveBOMWM(bomWaterMeter)}" update="mainform:tblWMs" >
+                                                                        <i class="fa fa-pencil" ></i>
+                                                                   </b:commandButton>
+                                                                   
+                                                                    <b:commandButton  id="btnDeleteRowTblWMs" style="margin-left: 2px" look="danger" action="#{bomMetersController.deleteBOMWM(bomWaterMeter.id)}" onclick="PF('statusDialogdelete').show()" onsuccess="PF('statusDialogdelete').hide()" update="mainform:tblWMs"  immediate="true" process="@this"  >
+                                                                            <i class="fa fa-trash" ></i>
+                                                                    </b:commandButton>
+                                                                    
+                                                                    <b:commandButton  type="button" style="margin-left: 2px"  look="warning" action="#{bomMetersController.meterConfigurations('WATER',bomWaterMeter)}" update="mainform:tblWMs" >
+                                                                            <i class="fa fa-external-link" ></i>
+                                                                        </b:commandButton>	
                                                             </p:toolbarGroup>
 
 
@@ -809,115 +697,200 @@
                                                     
                                                 </p:dataTable>
                                             
-                                            <br/>
-                                            <p:panelGrid columns="5">
-                                                <b:inputText id="itWMManufacturer" value="#{bomMetersController.wmeterManufacturer}"  placeholder="Meter Manufacturer" />
-                                                <b:inputText id="itWMSerial" value="#{bomMetersController.wmeterSerial}"  placeholder="Meter Serial" />
-                                                <b:inputText id="itWMModel" value="#{bomMetersController.wmeterModel}" placeholder="Meter Model" />
-                                                <b:inputText id="itWMType" value="#{bomMetersController.wmeterType}" placeholder="Meter Type" />
-                                                <b:inputText id="itWMStatus" value="#{bomMetersController.wmeterStatus}"  placeholder="Meter Status" />
-                                                <b:commandButton id="btnAddWM"  icon="pi pi-check"  styleClass="ui-button-flat p-ml-2" look="info" value="Add New Water Meter" update="mainform:tblWMs" style="width: 250px" >
-                                                    <f:actionListener binding="#{bomMetersController.addNewBOMWM()}"/>
-                                                </b:commandButton>
-                                            </p:panelGrid>
-                                            
                                             <p:separator />
                                             
+                                        
                                             <p:dataTable value="#{bomMetersController.metersElectricity}"
                                                                              var="bomElectricMeter"
                                                                              id="tblEMs" 
                                                                              rowKey="#{bomElectricMeter.id}"
                                                                              selectionMode="single"
+                                                                             
+                                                                             rows="10"
+                                                                             paginator="true"
+                                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                                                             paginatorPosition="bottom"
                                                                              >
                                                     <f:facet name="header">
                                                         <div class="">
                                                             <span style="font-weight: bold">Electricity Meters</span>
                                                         </div>
                                                     </f:facet>
-
-                                                    <p:column headerText="VehicleID" style="width: 100px;text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="UMR #"/>
-                                                        </f:facet>
-                                                        <h:outputText value="#{bomElectricMeter.id}"/>
-                                                    </p:column>
-
-                                                    <p:column headerText="VehicleID" style="text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="Floor"/>
-                                                        </f:facet>
-                                                        <h:inputText value="#{bomElectricMeter.meterFloor}"/>
-                                                    </p:column>
-
-                                                    <p:column headerText="Type" style="text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="EM Room"/>
-                                                        </f:facet>
-                                                        <h:inputText value="#{bomElectricMeter.meterRoom}"/>
-                                                    </p:column>
-
-                                                    <p:column headerText="Tracking" style="text-align: center">
-                                                        <f:facet name="header">
-                                                            <h:outputText value="Manufacturer"/>
-                                                        </f:facet>
-                                                        <h:outputText value="#{bomElectricMeter.meterManufacturer}"/>
-                                                    </p:column>
                                                 
-                                                    <p:column headerText="Tracking" style="text-align: center">
+                                                    <p:column headerText="EMTRStatus" style="width: 50px;text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="EM Serial"/>
+                                                            <h:outputText value="#"/>
+                                                        </f:facet>
+                                                        <i class="#{bomElectricMeter.meterStatus eq 'ONHES'? 'fa fa-send' : 'fa fa-spinner fa-spin'}" />
+                                                    </p:column>
+
+                                                <p:column headerText="EMTRSerial" filterBy="#{bomElectricMeter.meterSerial}" sortBy="#{bomElectricMeter.meterSerial}" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="EMTR Serial"/>
                                                         </f:facet>
                                                         <h:outputText value="#{bomElectricMeter.meterSerial}"/>
                                                     </p:column>
-
-                                                    <p:column headerText="Tracking" style="text-align: center">
+                                                    
+                                                    <p:column headerText="estEMTRTblAMI" style="text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="EM Model"/>
+                                                            <h:outputText value="AMI"/>
                                                         </f:facet>
-                                                        <h:outputText value="#{bomElectricMeter.meterModel}"/>
+                                                        <b:selectOneMenu id="estEMTTblRAMI" value="#{bomElectricMeter.meterAmi}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItem itemLabel="AMR" itemValue="AMI"/>
+                                                            <f:selectItem itemLabel="NON-AMR" itemValue="NONAMR"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    
+                                                
+                                                
+                                                    <p:column headerText="EMTRManu" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Manufacturer"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu disabled="true"   value="#{bomElectricMeter.meterManufacturerId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.meterManufacturers}" var="varManufac" itemLabel="#{varManufac.manufacturerCode}" itemValue="#{varManufac.id}"/>
+                                                        </b:selectOneMenu>
+                                                        
+                                                    </p:column>
+                                                    <p:column headerText="EMTRModel" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Model"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu disabled="true"  value="#{bomElectricMeter.meterModelId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.meterModels}" var="varModel" itemLabel="#{varModel.modelCode}" itemValue="#{varModel.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    <p:column headerText="EMTRProtocol" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Protocol"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu disabled="true"  value="#{bomElectricMeter.meterProtocolId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.protocols}" var="varProtocol" itemLabel="#{varProtocol.protocolCode}" itemValue="#{varProtocol.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                   
+                                                    <p:column headerText="EMTRRoom" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Room"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu id="estEMTRTblRoom" value="#{bomElectricMeter.meterRoomId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.roomTypes}" var="varRoomType" itemLabel="#{varRoomType.roomCode}" itemValue="#{varRoomType.id}"/>
+                                                        </b:selectOneMenu>
+                                                        
                                                     </p:column>
 
-                                                    <p:column headerText="Tracking" style="width: 250px;text-align: center">
+                                                    <p:column headerText="EMTRFloor" style="text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="EM Type"/>
+                                                            <h:outputText value="Floor"/>
                                                         </f:facet>
-                                                        <h:outputText value="#{bomElectricMeter.meterType}"/>
+                                                        <b:selectOneMenu id="estEMTRTblFloor" value="#{bomElectricMeter.meterFloorId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.floorTypes}" var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
+                                                        </b:selectOneMenu>
+                                                        
                                                     </p:column>
+
+                                                    
                                                     
                                                     <p:column headerText="Action(s)" style="width: 150px;text-align: center">
                                                         <p:toolbar style="background: white;border:none ">
                                                                 <p:toolbarGroup style="margin-bottom: 2px">
-                                                                        <p:commandButton style="margin-left: 5px"  id="btnCaptureImgRowTblEMs" icon="fa fa-camera"  update="mainform:tblEMs"  immediate="true" process="@this" styleClass="ui-btn-danger p-mr-2"  >
-
-                                                                        </p:commandButton>
-                                                                        <p:commandButton  id="btnCaptureLocRowTblEMs" icon="fa fa-globe"    update="mainform:tblEMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  >
-
-                                                                        </p:commandButton>
+                                                                        <b:commandButton   id="btnCaptureImgRowTblEMs" look="info"  update="mainform:tblEMs"  immediate="true" process="@this"  >
+                                                                            <i class="fa fa-camera" ></i>
+                                                                        </b:commandButton>
+                                                                        
 
                                                                 </p:toolbarGroup>
                                                                 <p:toolbarGroup>
-                                                                        <p:commandButton style="margin-left: 5px" type="button" title="Save" icon="fa fa-external-link" styleClass="ui-button-warning p-mr-2" />
-                                                                        <p:commandButton  type="button" title="Save" icon="fa fa-save" styleClass="btn-btn-warning p-mr-2" />
-                                                                        <p:commandButton  id="btnDeleteRowTblEMs" icon="fa fa-trash" action="#{bomMetersController.deleteBOMEM(bomElectricMeter.id)}"  update="mainform:tblEMs"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  />
-
+                                                                        
+                                                                        <b:commandButton  type="button"  look="info" action="#{bomMetersController.saveBOMEM(bomElectricMeter)}" update="mainform:tblEMs"  >
+                                                                            <i class="fa fa-pencil" ></i>
+                                                                        </b:commandButton>
+                                                                        
+                                                                        <b:commandButton  id="btnDeleteRowTblEMs" style="margin-left: 2px" look="danger" action="#{bomMetersController.deleteBOMEM(bomElectricMeter.id)}"  update="mainform:tblEMs"  immediate="true" process="@this"   >
+                                                                            <i class="fa fa-trash" ></i>
+                                                                        </b:commandButton>
+                                                                    
+                                                                        <b:commandButton  type="button" style="margin-left: 2px" look="warning" action="#{bomMetersController.meterConfigurations('ELECTRIC',bomElectricMeter)}" update="mainform:tblWMs"  >
+                                                                            <i class="fa fa-external-link" ></i>
+                                                                        </b:commandButton>
                                                                 </p:toolbarGroup>
 
                                                         </p:toolbar>
                                                     </p:column>
                                         </p:dataTable>
                                             
+                                            
                                             <br/>
-                                            <p:panelGrid columns="5" >
+                                            <p:fieldset legend="Add New Meter" toggleable="true" toggleSpeed="500">
+                                                <p:selectOneRadio id="console" value="#{bomMetersController.meterBOMType}">
+                                                    <f:selectItem itemLabel="Electicity Meter" itemValue="ELECTRIC" />
+                                                    <f:selectItem itemLabel="Water Meter" itemValue="WATER"/>
+                                                    <p:ajax update="estMTRManufacturers" listener="#{bomMetersController.onUtilityChange}"/>
+                                                </p:selectOneRadio>
+                                                <br/>   
+                                            <p:panelGrid columns="7" >
+                                                <h:outputText value="Serial"/>
+                                                <h:outputText value="AMI"/>
+                                                <h:outputText value="Manufacturer"/>
+                                                <h:outputText value="Model"/>
+                                                <h:outputText value="Protocol"/>
+                                                <h:outputText value="Room"/>
+                                                <h:outputText value="Floor"/>
                                                 
-                                                <b:inputText id="itEMManufacturer" value="#{bomMetersController.emeterManufacturer}"  placeholder="Meter Manufacturer" />
-                                                <b:inputText id="itEMSerial" value="#{bomMetersController.emeterSerial}" placeholder="Meter Serial" />
-                                                <b:inputText id="itEMModel" value="#{bomMetersController.emeterModel}"  placeholder="Meter Model" />
-                                                <b:inputText id="itEMType" value="#{bomMetersController.emeterType}"  placeholder="Meter Type" />
-                                                <b:inputText id="itEMStatus" value="#{bomMetersController.emeterStatus}"  placeholder="Meter Status" />
-                                                <b:commandButton id="btnAddEM" icon="pi pi-check"  styleClass="ui-button-flat p-ml-2" look="info" value="Add New Electric Meter" update="mainform:tblEMs" style="width: 250px" >
-                                                    <f:actionListener binding="#{bomMetersController.addNewBOMEM()}"/>
+                                                <b:inputText id="itMSerial" value="#{bomMetersController.meterSerial}" placeholder="Meter Serial" />
+                                                <b:selectOneMenu id="estMTRAMI" value="#{bomMetersController.meterAmi}"    immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select AMI" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItem itemLabel="AMI" itemValue="AMR"/>
+                                                    <f:selectItem itemLabel="NON-AMI" itemValue="NONAMR"/>
+                                                </b:selectOneMenu>
+                                                
+                                                <b:selectOneMenu id="estMTRManufacturers" value="#{bomMetersController.meterManufacturerId}"    immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    
+                                                    <f:selectItem itemLabel="Select Manufacturer" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{surveyViewController.meterManufacturers}" var="varManufac" itemLabel="#{varManufac.manufacturerCode}" itemValue="#{varManufac.id}"/>
+                                                </b:selectOneMenu>
+                                                
+                                                <b:selectOneMenu id="estMTRModels" value="#{bomMetersController.meterModelId}"    immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Models" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{surveyViewController.meterModels}" var="varModel" itemLabel="#{varModel.modelCode}" itemValue="#{varModel.id}"/>
+                                                </b:selectOneMenu>
+                                                
+                                                <b:selectOneMenu id="estMTRProtocol" value="#{bomMetersController.meterProtocolId}"    immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Protocol" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{surveyViewController.protocols}" var="varProtocol" itemLabel="#{varProtocol.protocolCode}" itemValue="#{varProtocol.id}"/>
+                                                </b:selectOneMenu>
+                                                
+                                                <b:selectOneMenu id="estMTRRoom" value="#{bomMetersController.meterRoomTypeId}"    immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Room" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{surveyViewController.roomTypes}" var="varRoomType" itemLabel="#{varRoomType.roomCode}" itemValue="#{varRoomType.id}"/>
+                                                </b:selectOneMenu>
+
+                                                <b:selectOneMenu id="estMTRFloor" value="#{bomMetersController.meterFloorTypeId}"    immediate="false" >
+                                                    <p:ajax event="change" update="@this"/>
+                                                    <f:selectItem itemLabel="Select Floor" itemValue="" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{surveyViewController.floorTypes}" var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
+                                                </b:selectOneMenu>
+                                                
+                                                
+                                                
+                                                <b:commandButton id="btnAddMtr"  styleClass="ui-button-flat p-ml-2" look="info" value=" New Meter" update="mainform:growl mainform:tblWMs mainform:tblEMs" style="width: 200px" >
+                                                    <i class="fa fa-plus" ></i>
+                                                    <f:actionListener binding="#{bomMetersController.addNewMeter()}"/>
                                                 </b:commandButton>
                                             </p:panelGrid>
+                                            </p:fieldset>
                                         </p:panel>
                                         
                                     </div>
@@ -927,21 +900,29 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         
-                                            <p:panel id="pnlEstimations" header = "BOM Estimations - Gateways | Remarks | Images" >
+                                            <p:panel id="pnlEstimations" header = "BOM Estimations - Gateways | Remarks " >
                                                 <br/>
                                                 <p:dataTable  value="#{bomGatewaysController.estimation}"
                                                 var="bomEstimation"
-                                                id="dtEstimation" 
+                                                id="dtEstimation"
+                                                
                                                 rowKey="#{bomEstimation.id}"
                                                 selectionMode="single"
+                                                rows="10"
+                                                paginator="true"
+                                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                                paginatorPosition="bottom" 
+                                                stripedRows="true"
                                                 >
 
                                                 <f:facet name="header">
                                                     <div class="">
-                                                        <span style="font-weight: bold">Water/Electricity Gateways</span>
+                                                        <span style="font-weight: bold">Gateways</span>
                                                     </div>
                                                 </f:facet>    
-                                                    <p:column headerText="VehicleID" style="width: 100px;text-align: center">
+                                                    
+                                                    <p:column headerText="GtwEstID" style="width: 100px;text-align: center">
                                                         <f:facet name="header">
                                                             <h:outputText value="SI. #"/>
                                                         </f:facet>
@@ -950,45 +931,90 @@
 
                                                     <p:column headerText="Type" style="width: 150px;text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="Electricity/Water"/>
+                                                            <h:outputText value="Gateway"/>
                                                         </f:facet>
                                                         <h:outputText value="#{bomEstimation.gatewaysType}"/>
                                                     </p:column>
 
-                                                    <p:column headerText="Tracking">
+                                                    <p:column headerText="GatewayType" style="text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="Type of Gateway Proposed"/>
+                                                            <h:outputText value="Gateway Type"/>
                                                         </f:facet>
                                                         <h:outputText  value="#{bomEstimation.gatewaysTypeProposed}"/>
                                                     </p:column>
 
-                                                    <p:column headerText="Tracking" style="width: 200px;text-align: center">
+                                                    <p:column headerText="CableLength" style="width: 150px;text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="No: of Meters to be connected per GW"/>
+                                                            <h:outputText value="Cable length"/>
                                                         </f:facet>
-                                                        <h:outputText value="#{bomEstimation.metersPerGateway}"/>
-                                                    </p:column>
-
-                                                    <p:column headerText="Tracking" >
-                                                        <f:facet name="header">
-                                                            <h:outputText value="Estimated cable length"/>
-                                                        </f:facet>
-                                                        <h:outputText value="#{bomEstimation.estimatedCableLength}"/>
+                                                        <h:panelGrid columns="1" cellpadding="4">
+                                                            <p:inputNumber  id="estTblcableLength" value="#{bomEstimation.cableLength}"   decimalPlaces="2" symbol=" meters" symbolPosition="s" emptyValue="zero"  />
+                                                        </h:panelGrid>
                                                     </p:column>
                                                     
-                                                    <p:column headerText="Tracking" >
+                                                    <p:column headerText="GTWRoom" style="text-align: center">
                                                         <f:facet name="header">
-                                                            <h:outputText value="Gateway Location"/>
+                                                            <h:outputText value="Room"/>
                                                         </f:facet>
-                                                        <h:outputText value="#{bomEstimation.gatewaysLocation}"/>
+                                                        <b:selectOneMenu id="estGtwTblRoom" value="#{bomEstimation.gatewayRoomId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.roomTypes}" var="varRoomType" itemLabel="#{varRoomType.roomCode}" itemValue="#{varRoomType.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    <p:column headerText="GTWFloor" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Floor"/>
+                                                        </f:facet>
+                                                        <b:selectOneMenu id="estGtwTblFloor" value="#{bomEstimation.gatewayFloorId}"    immediate="false" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                            <f:selectItems value="#{surveyViewController.floorTypes}" var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
+                                                        </b:selectOneMenu>
+                                                    </p:column>
+                                                    
+                                                    <p:column headerText="PowerIntruption" style="text-align: center" >
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Power Intruption"/>
+                                                        </f:facet>
+                                                        <p:selectBooleanButton id="somPowerIntruption" onLabel="Yes" offLabel="No" value="#{bomEstimation.powerIntruption}" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                        </p:selectBooleanButton>
+                                                    </p:column>
+                                                    <p:column headerText="SignalStrength" style="width: 150px;text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Signal Stength"/>
+                                                        </f:facet>
+                                                        <h:panelGrid columns="1" cellpadding="4">
+                                                            <p:inputNumber id="nSignalStrength" value="#{bomEstimation.signalStrength}" decimalPlaces="0" symbol="dB" symbolPosition="s" emptyValue="zero" minValue="-125" maxValue="0" required="true">
+                                                                <p:ajax event="keyup" update="signalStrengthIndicator" listener="#{bomEstimation.handleKeyEvent}"/>
+                                                            </p:inputNumber>
+                                                             
+                                                        </h:panelGrid>
+                                                    </p:column>
+                                                    <p:column headerText="SignalStrengthIndicator" style="text-align: center">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Indicator"/>
+                                                        </f:facet>
+                                                        <h:outputText id="signalStrengthIndicator" value="#{bomEstimation.signalStrengthIndicator}" style="#{bomEstimation.signalStrengthIndicator eq 'LOW'?'color:red;': bomEstimation.signalStrengthIndicator eq 'MEDIUM'?'color:orange':bomEstimation.signalStrengthIndicator eq 'HIGH'?'color:green':'color:black;'}"  />
+                                                    </p:column>
+                                                    <p:column headerText="AntenaRequirement" style="text-align: center" >
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Antena"/>
+                                                        </f:facet>
+                                                        <p:selectBooleanButton id="bAntena" onLabel="Yes" offLabel="No" value="#{bomEstimation.antenaRequired}" >
+                                                            <p:ajax event="change" update="@this"/>
+                                                        </p:selectBooleanButton>
                                                     </p:column>
                                                     
                                                     <p:column headerText="Action(s)" style="width: 150px;text-align: center">
                                                         <p:toolbar style="background: white;border:none ">
                                               
                                                                 <p:toolbarGroup>
-                                                                    <p:commandButton  id="btnDeleteRowTblGWs" icon="fa fa-trash" action="#{bomGatewaysController.deleteGatewayEst(bomEstimation.id)}"  update="mainform:dtEstimation"  immediate="true" process="@this" styleClass="ui-button-danger p-mr-2"  />
-
+                                                                    <b:commandButton  id="btnDeleteRowTblGWs" look="danger" action="#{bomGatewaysController.deleteGatewayEst(bomEstimation.id)}"  update="mainform:dtEstimation"  immediate="true" process="@this"   >
+                                                                        <i class="fa fa-trash" ></i>
+                                                                    </b:commandButton>
+                                                                    <b:commandButton  id="btnSaveRowTblGWs" look="info"  action="#{bomGatewaysController.saveGatewayEst(bomEstimation)}"  update="mainform:dtEstimation" style="margin-left: 2px"  >
+                                                                        <i class="fa fa-save" ></i>
+                                                                    </b:commandButton>
                                                                 </p:toolbarGroup>
 
                                                         </p:toolbar>
@@ -997,33 +1023,65 @@
                                             </p:dataTable>
                                                 
                                                 <br/>
-                                                
-                                                <p:panelGrid columns="5" >                                                
+                                                <p:fieldset legend="Add New Gateway" toggleable="true" toggleSpeed="500">
+                                                <p:panelGrid columns="8" >                                                
+                                                    <h:outputText value="Gateway" />
+                                                    <h:outputText value="Gateway Type"/>
                                                     
-                                                    <b:selectOneMenu id="estGWType" value="#{bomGatewaysController.gatewaysType}"  immediate="false">
+                                                    <h:outputText value="Cable Length"/>
+                                                    <h:outputText value="Room"/>
+                                                    <h:outputText value="Floor"/>
+                                                    <h:outputText value="Power Intruption"/>
+                                                    <h:outputText value="Signal Strength"/>
+                                                    <h:outputText value="Antena"/>
+                                                    
+                                                    <b:selectOneMenu id="estGWType" value="#{bomGatewaysController.gatewaysType}"  immediate="false" style="width: 200px;text-align: center">
                                                         <p:ajax event="change" update="@this"/>
-                                                        <f:selectItem itemLabel="Select Electricity / Water" itemValue="" noSelectionOption="true"/>
+                                                        <f:selectItem itemLabel="Select Gateway" itemValue="" noSelectionOption="true"/>
                                                         <f:selectItem itemLabel="Electricity" itemValue="Electricity"/>
                                                         <f:selectItem itemLabel="Water" itemValue="Water"/>
+                                                        <f:selectItem itemLabel="Hybrid" itemValue="Hybrid"/>
                                                     </b:selectOneMenu>
                                                     
-                                                    <b:selectOneMenu id="estGWProposed" value="#{bomGatewaysController.gatewaysTypeProposed}"   immediate="false">
+                                                    
+                                                    <b:selectOneMenu id="estGWProposed" value="#{bomGatewaysController.gatewaysTypeProposed}"    immediate="false" style="width: 200px;text-align: center">
                                                         <p:ajax event="change" update="@this"/>
                                                         <f:selectItem itemLabel="Select Gateway Type" itemValue="" noSelectionOption="true"/>
                                                         <f:selectItems value="#{surveyViewController.gatewayTypes}" var="varGatewayType" itemLabel="#{varGatewayType.gatewayTypeCode}" itemValue="#{varGatewayType.gatewayTypeCode}"/>
                                                     </b:selectOneMenu>
                                                     
-                                                    <p:inputNumber decimalPlaces="0" id="estGWForMtrs" value="#{bomGatewaysController.metersPerGateway}"  placeholder="Meters per GW" />
-                                                    <p:inputText  id="estcableLength" value="#{bomGatewaysController.estimatedCableLength}"  placeholder="Cable Length" />
+                                                      
                                                     
-                                                    <p:inputText  id="estGtwLocation" value="#{bomGatewaysController.gatewaysLocation}"  placeholder="Gateway Location" />
+                                                    <p:inputNumber  id="estcableLength" value="#{bomGatewaysController.cableLength}"   decimalPlaces="2" symbol=" meters" symbolPosition="s" emptyValue="zero"  />
                                                     
+                                                   <b:selectOneMenu id="estGtwRoom" value="#{bomGatewaysController.gatewayRoomId}"    immediate="false" >
+                                                        <p:ajax event="change" update="@this"/>
+                                                        <f:selectItem itemLabel="Select Room" itemValue="" noSelectionOption="true"/>
+                                                        <f:selectItems value="#{surveyViewController.roomTypes}" var="varRoomType" itemLabel="#{varRoomType.roomCode}" itemValue="#{varRoomType.id}"/>
+                                                    </b:selectOneMenu>
                                                     
-                                                    <b:commandButton id="btnAddEstimation" icon="pi pi-check"  styleClass="ui-button-flat p-ml-2" look="info" value="Add New Gateway" update="mainform:dtEstimation" style="width: 250px" >
-                                                            <f:actionListener binding="#{bomGatewaysController.addNewGatewayEst()}"/>
+                                                    <b:selectOneMenu id="estGtwFloor" value="#{bomGatewaysController.gatewayFloorId}"    immediate="false" >
+                                                        <p:ajax event="change" update="@this"/>
+                                                        <f:selectItem itemLabel="Select Floor" itemValue="" noSelectionOption="true"/>
+                                                        <f:selectItems value="#{surveyViewController.floorTypes}"   var="varFloorType" itemLabel="#{varFloorType.floorCode}" itemValue="#{varFloorType.id}"/>
+                                                    </b:selectOneMenu>
+                                                    
+                                                     <p:selectBooleanButton id="somPowerIntruption" onLabel="Yes" offLabel="No" value="#{bomGatewaysController.powerIntruption}" >
+                                                        <p:ajax event="change" update="@this"/>
+                                                    </p:selectBooleanButton>
+                                                    <p:inputNumber id="nSignalStrength" value="#{bomGatewaysController.signalStrength}"  decimalPlaces="0" symbol=" dB" symbolPosition="s" emptyValue="zero" minValue="-125" maxValue="0" />
+                                                    
+                                                    <p:selectBooleanButton id="bAntenaRequired" onLabel="Yes" offLabel="No" value="#{bomGatewaysController.powerIntruption}" >
+                                                        <p:ajax event="change" update="@this"/>
+                                                    </p:selectBooleanButton>
+                                                    
+                                                    <b:commandButton id="btnAddEstimation"  styleClass="ui-button-flat p-ml-2" look="info" value=" New Gateway" update="mainform:growl mainform:dtEstimation" style="width: 200px" >
+                                                         <i class="fa fa-plus" ></i>   
+                                                        <f:actionListener binding="#{bomGatewaysController.addNewGatewayEst()}"/>
                                                     </b:commandButton>
                                                 </p:panelGrid>
-                                                <br/>
+                                                </p:fieldset>
+                                                 <br/>
                                                 
                                                 
                                                 <p:separator/>

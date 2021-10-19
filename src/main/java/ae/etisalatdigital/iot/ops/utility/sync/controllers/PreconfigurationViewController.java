@@ -7,6 +7,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 import ae.etisalatdigital.commonUtils.exception.BusinessException;
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.commonUtils.exception.WebException;
+import ae.etisalatdigital.iot.ops.utility.sync.beans.OPDevice;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.Estimation;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.InstallationSemanticView;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGatewayMeterSemantics;
@@ -19,7 +20,11 @@ import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTVendorBus;
 
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.SurveyDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.Surveys;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.SurveyBus;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.MSTVendorDTO;
+        
+import ae.etisalatdigital.iot.ops.utility.sync.daos.MSTVendorDAO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTBusiness;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTEmirateRegions;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTEmirates;
@@ -30,7 +35,10 @@ import ae.etisalatdigital.iot.ops.utility.sync.entities.Requests;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.enterprise.context.SessionScoped;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -56,6 +64,8 @@ public class PreconfigurationViewController implements Serializable  {
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager em;
     
+    
+   
     private String utilityNumber;
     private String errorMessage;
     private String surveyorSignature;
@@ -162,9 +172,12 @@ public class PreconfigurationViewController implements Serializable  {
     List<MSTPremiseTypes> premiseTypes;
     List<MSTBusiness> businessTypes;
     List<MSTProtocol> protocols;
+    
+    
+    
     List<Estimation> estimation;
     private InstallationSemanticView installationSemanticView;
-    
+
     @Inject
     private SurveyBus surveyBus;
     
@@ -193,15 +206,41 @@ public class PreconfigurationViewController implements Serializable  {
     
     @Inject
     private BOMGatewaysController gatewaysController;
- 
+    
+
     public static Logger getLOGGER() {
         return LOGGER;
     }
     
     public String onFlowProcess(FlowEvent event) throws WebException, DataAccessException, BusinessException {
-        if(event.getNewStep().equals("semanticsTab")){
-            fetchGatewayMetersSemantics(this.selectedRequest.getActiveBom());
+        
+        String errormsg = null;
+        FacesMessage msg = null;
+        
+        try{
+            if(selectedRequest.getRequestStatus().equalsIgnoreCase("Survey Completed")){
+                msg = new FacesMessage("Thanks Survey was completed.");
+                msg.setSeverity(FacesMessage.SEVERITY_INFO);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }else{
+                msg = new FacesMessage("Please complete Survey First.");
+                msg.setSeverity(FacesMessage.SEVERITY_FATAL);
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return event.getOldStep();
+            }
+            if(event.getNewStep().equals("semanticsTab")){
+                fetchGatewayMetersSemantics(this.selectedRequest.getActiveBom());
+            }
+
+        }catch(Exception exc){
+            LOGGER.error("Error in wizard flow process", exc);
+            errormsg = "System Error, Contact System Administrator";
+            //exc.printStackTrace();
+            msg = new FacesMessage(errormsg);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return event.getOldStep();
         }
+        
         return event.getNewStep();
     }
 

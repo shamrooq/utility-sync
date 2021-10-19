@@ -12,9 +12,13 @@ import ae.etisalatdigital.iot.ops.utility.sync.beans.SurveyAction;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTBusinessBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTEmirateBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTEmirateRegionBus;
+import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTFloorBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTGatewayTypeBus;
+import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTMeterManufacturerBus;
+import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTMeterModelBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTPremiseTypeBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTProtocolBus;
+import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTRoomBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTVendorBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.RequestDTO;
@@ -23,9 +27,13 @@ import ae.etisalatdigital.iot.ops.utility.sync.dtos.RequestDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTBusiness;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTEmirateRegions;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTEmirates;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTGatewayTypes;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTPremiseTypes;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTProtocol;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTVendors;
 import static com.mashape.unirest.http.Unirest.options;
 
@@ -44,8 +52,10 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
+//import org.primefaces.context.RequestContext;
 import org.primefaces.event.FlowEvent;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -76,6 +86,11 @@ public class SurveyViewController implements Serializable  {
     List<MSTProtocol> protocols;
     List<MSTGatewayTypes> gatewayTypes;
     
+    List<MSTRoom> roomTypes;
+    List<MSTFloor> floorTypes;
+    
+    List<MSTMeterManufacturer> meterManufacturers;
+    List<MSTMeterModel> meterModels;
     
     List<SurveyAction> surveyAction;
     
@@ -115,6 +130,17 @@ public class SurveyViewController implements Serializable  {
     
     @Inject
     private BOMGatewaysController controllerBomGateways;
+    
+    @Inject
+    private MSTRoomBus roomBus;
+    @Inject
+    private MSTFloorBus floorBus;
+    
+    @Inject
+    private MSTMeterManufacturerBus meterManufacturerBus;
+    @Inject
+    private MSTMeterModelBus meterModelBus;
+    
     
     public static Logger getLOGGER() {
         return LOGGER;
@@ -264,27 +290,27 @@ public class SurveyViewController implements Serializable  {
 
     public void submitSurveyFailed(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       RequestContext context = RequestContext.getCurrentInstance();
+       //RequestContext context = RequestContext.getCurrentInstance();
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Failed");
-       context.execute("PF('dlg3').show();");
+       //context.execute("PF('dlg3').show();");
        
-       //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
+       //PrimeFaces.current().dialog().openDynamic("dlg3", utilityNumber, null);
     }
     
     public void submitSurvey(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       RequestContext context = RequestContext.getCurrentInstance();
+       ///RequestContext context = RequestContext.getCurrentInstance();
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Completed");
-       context.execute("PF('dlg3').show();");
+       ///context.execute("PF('dlg3').show();");
        
        //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
     }
     
     public void captureLocation(){
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('gmpDlg').show();");
+        //RequestContext context = RequestContext.getCurrentInstance();
+        //context.execute("PF('gmpDlg').show();");
         
     }
     
@@ -313,6 +339,22 @@ public class SurveyViewController implements Serializable  {
     public List<MSTPremiseTypes> getPremiseTypes() {
         return premiseTypes;
     }
+    
+    public List<MSTRoom> getRoomTypes() {
+        return roomTypes;
+    }
+
+    public List<MSTFloor> getFloorTypes() {
+        return floorTypes;
+    }
+    
+    public List<MSTMeterManufacturer> getMeterManufacturers() {
+        return meterManufacturers;
+    }
+
+    public List<MSTMeterModel> getMeterModels() {
+        return meterModels;
+    }
 
     public void setEmirates(List<MSTEmirates> emirates) {
         this.emirates = emirates;
@@ -325,6 +367,28 @@ public class SurveyViewController implements Serializable  {
     public void setPremiseTypes(List<MSTPremiseTypes> premiseTypes) {
         this.premiseTypes = premiseTypes;
     }
+
+    public void setRoomTypes(List<MSTRoom> roomTypes) {
+        this.roomTypes = roomTypes;
+    }
+
+    public void setFloorTypes(List<MSTFloor> floorTypes) {
+        this.floorTypes = floorTypes;
+    }
+
+    
+
+    public void setMeterManufacturers(List<MSTMeterManufacturer> meterManufacturers) {
+        this.meterManufacturers = meterManufacturers;
+    }
+
+    public void setMeterModels(List<MSTMeterModel> meterModels) {
+        this.meterModels = meterModels;
+    }
+
+    
+    
+    
     
     
     public void findAllCustomers(){
@@ -347,7 +411,21 @@ public class SurveyViewController implements Serializable  {
        premiseTypes =  premiseTypeBus.findAll();
     }
 
+    public void findAllRoomTypes(){
+        roomTypes = roomBus.findAll();
+    }
     
+    public void findAllFloorTypes(){
+        floorTypes = floorBus.findAll();
+    }
+    
+    public void findAllMeterManufacturers(){
+        meterManufacturers = meterManufacturerBus.findAll();
+    }
+    
+    public void findAllMeterModels(){
+        meterModels = meterModelBus.findAll();
+    }
     
     public List<MSTGatewayTypes> getGatewayTypes() {
         return gatewayTypes;
@@ -368,4 +446,12 @@ public class SurveyViewController implements Serializable  {
         protocols = protocolBus.findAll();
     }
     
+    
+    public void onItemSelect(SelectEvent event) {
+        Long selectedId = (Long) event.getObject();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected Model", "TEST");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+
+        //MSTMeterManufacturer selectedManufacturer =  (MSTMeterManufacturer) event.getObject());
+    }
 }

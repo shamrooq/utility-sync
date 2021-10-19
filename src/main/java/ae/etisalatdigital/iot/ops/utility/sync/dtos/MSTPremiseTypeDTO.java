@@ -6,9 +6,7 @@
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
 
 /**
  *

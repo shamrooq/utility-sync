@@ -42,6 +42,15 @@ public class BOMGatewayEstBus {
         return bomDao.findSomeByBomId(bomId);
     }
 
+    public List<BOMGatewayEstDTO> addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,Double cableLength,Long gatewayRoomId, Long gatewayFloorId, Boolean powerIntruption, Long signalStrength, Boolean antenaRequired){
+        if( bomDao.addNewGatewayEstByBomId(bomId, gatewayBomType, proposedGateType, noOfGateways, metersPerGateway,cableLength,gatewayRoomId,gatewayFloorId,powerIntruption,signalStrength,antenaRequired)){
+
+            return findAllByBomId(bomId);
+
+        }
+        return null;
+    }
+
     public List<BOMGatewayEstDTO> addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,String csbleEtimation,String gatewayLocation){
         if( bomDao.addNewGatewayEstByBomId(bomId, gatewayBomType, proposedGateType, noOfGateways, metersPerGateway,csbleEtimation,gatewayLocation)){
            

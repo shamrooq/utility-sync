@@ -40,7 +40,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
+///import org.primefaces.context.RequestContext;
 import org.primefaces.event.FlowEvent;
 
 /**
@@ -119,7 +119,14 @@ public class CabelingViewController implements Serializable  {
     public static Logger getLOGGER() {
         return LOGGER;
     }
-
+    
+    
+    public String onFlowProcess(FlowEvent event) {
+        
+        return event.getNewStep();
+        
+    }
+    
     public SurveyController getControllerSurvey() {
         return controllerSurvey;
     }
@@ -256,40 +263,36 @@ public class CabelingViewController implements Serializable  {
         
     }
    
-    public String onFlowProcess(FlowEvent event) {
-        
-        return event.getNewStep();
-        
-    }
+    
 
     
     
     public void submitCablingFailed(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       RequestContext context = RequestContext.getCurrentInstance();
+       //////RequestContext context = RequestContext.getCurrentInstance();
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Cabling Failed");
        
        ///surveyBus.updateSurveyDetails(savable);
        
-       context.execute("PF('dlg3').show();");
+       /////////context.execute("PF('dlg3').show();");
        
        //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
     }
     
     public void submitCabling(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       RequestContext context = RequestContext.getCurrentInstance();
+       ///////RequestContext context = RequestContext.getCurrentInstance();
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Cabling Completed");
-       context.execute("PF('dlg3').show();");
+       //////context.execute("PF('dlg3').show();");
        
        //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
     }
     
     public void captureLocation(){
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('gmpDlg').show();");
+        ////////////RequestContext context = RequestContext.getCurrentInstance();
+        /////////context.execute("PF('gmpDlg').show();");
         
     }
     

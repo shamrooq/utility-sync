@@ -25,10 +25,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "BOM_Gateways_Est")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel ) FROM BOMGatewaysEst m"),
-    @NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simICCID,m.gatewayFloor,m.gatewayRoom) FROM BOMGatewaysEst m where m.bomId = :bomId"),
-    @NamedQuery(name = "BOMGatewaysEst.DELETE", query = "DELETE FROM BOMGatewaysEst m WHERE m.id = :id")
-})
+    @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.gatewayRoomId, m.gatewayFloorId, m.cableLength ) FROM BOMGatewaysEst m")
+        ,@NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.gatewayRoomId, m.gatewayFloorId, m.cableLength ) FROM BOMGatewaysEst m where m.bomId = :bomId")
+        , @NamedQuery(name = "BOMGatewaysEst.DELETE", query = "DELETE FROM BOMGatewaysEst m WHERE m.id = :id")
+        ,@NamedQuery(name = "BOMGatewaysEst.findSomeByBomId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simICCID,m.gatewayFloor,m.gatewayRoom) FROM BOMGatewaysEst m where m.bomId = :bomId")
+ })
 public class BOMGatewaysEst implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +39,7 @@ public class BOMGatewaysEst implements Serializable {
     private BigInteger id;
     @Column(name = "BOM_ID")
     private Long bomId;
+    
     @Column(name = "EST_BOM_GTW_Type")
     private String gatewaysType;
     @Column(name = "EST_GTW_Type")
@@ -48,6 +50,7 @@ public class BOMGatewaysEst implements Serializable {
     private int gatewaysRequired;
     @Column(name = "MTRS_Per_GTW")
     private int metersPerGateway;
+    
     @Column(name = "GTW_Vendor")
     private String gatewaysVendor;
     @Column(name = "GTW_Location")
@@ -56,64 +59,37 @@ public class BOMGatewaysEst implements Serializable {
     private String gatewaysDaisychain;
     @Column(name = "GTW_ChainLabel")
     private String gatewaysChainLabel;
+    
     @Column(name = "Serial_Number")
     private String serialNumber;
     @Column(name = "SIM_ICCID")
     private BigInteger simICCID;
-    @Column(name="Power_Intruption")
+    @Column(name = "Power_Intruption")
     private Boolean powerIntruption;
-    @Column(name="Signal_Strength")
+    @Column(name = "Signal_Strength")
     private Long signalStrength;
-    @Column(name="Signal_Strength_Indicator")
+    @Column(name = "Signal_Strength_Indicator")
     private String signalStrengthIndicator;
+    
+    @Column(name = "Antena_Required")
+    private Boolean antenaRequired;
+    
+    
+    @Column(name = "GTW_Room_Id")
+    private Long gatewayRoomId;
+    @Column(name = "GTW_Floor_Id")
+    private Long gatewayFloorId;
+    @Column(name = "Cable_Length")
+    private Double cableLength;
     @Column(name="Gtw_Floor")
     private String gatewayFloor;
     @Column(name="Gtw_Room")
     private String gatewayRoom;
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public BigInteger getSimICCID() {
-        return simICCID;
-    }
-
-    public void setSimICCID(BigInteger simICCID) {
-        this.simICCID = simICCID;
-    }
-
-    public Boolean getPowerIntruption() {
-        return powerIntruption;
-    }
-
-    public void setPowerIntruption(Boolean powerIntruption) {
-        this.powerIntruption = powerIntruption;
-    }
-
-    public Long getSignalStrength() {
-        return signalStrength;
-    }
-
-    public void setSignalStrength(Long signalStrength) {
-        this.signalStrength = signalStrength;
-    }
-
-    public String getSignalStrengthIndicator() {
-        return signalStrengthIndicator;
-    }
-
-    public void setSignalStrengthIndicator(String signalStrengthIndicator) {
-        this.signalStrengthIndicator = signalStrengthIndicator;
-    }
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
-
+    
     public BigInteger getId() {
         return id;
     }
@@ -121,7 +97,8 @@ public class BOMGatewaysEst implements Serializable {
     public Long getBomId() {
         return bomId;
     }
-
+    
+   
     public String getGatewaysType() {
         return gatewaysType;
     }
@@ -158,9 +135,45 @@ public class BOMGatewaysEst implements Serializable {
         return gatewaysChainLabel;
     }
 
+    public Boolean getPowerIntruption() {
+        return powerIntruption;
+    }
+
+    public Long getSignalStrength() {
+        return signalStrength;
+    }
+
+    public String getSignalStrengthIndicator() {
+        return signalStrengthIndicator;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public Boolean getAntenaRequired() {
+        return antenaRequired;
+    }
+
+    public Long getGatewayRoomId() {
+        return gatewayRoomId;
+    }
+
+    public Long getGatewayFloorId() {
+        return gatewayFloorId;
+    }
+
+    public Double getCableLength() {
+        return cableLength;
+    }
+    
+    
+    
+    
+    
     /**
-     *
-     * @param id
+     * 
+     * @param id 
      */
     public void setId(BigInteger id) {
         this.id = id;
@@ -169,7 +182,7 @@ public class BOMGatewaysEst implements Serializable {
     public void setBomId(Long bomId) {
         this.bomId = bomId;
     }
-
+    
     public void setGatewaysType(String gatewaysType) {
         this.gatewaysType = gatewaysType;
     }
@@ -204,6 +217,46 @@ public class BOMGatewaysEst implements Serializable {
 
     public void setGatewaysChainLabel(String gatewaysChainLabel) {
         this.gatewaysChainLabel = gatewaysChainLabel;
+    }
+
+    public void setPowerIntruption(Boolean powerIntruption) {
+        this.powerIntruption = powerIntruption;
+    }
+
+    public void setSignalStrength(Long signalStrength) {
+        this.signalStrength = signalStrength;
+    }
+
+    public void setSignalStrengthIndicator(String signalStrengthIndicator) {
+        this.signalStrengthIndicator = signalStrengthIndicator;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public void setAntenaRequired(Boolean antenaRequired) {
+        this.antenaRequired = antenaRequired;
+    }
+
+    public void setGatewayRoomId(Long gatewayRoomId) {
+        this.gatewayRoomId = gatewayRoomId;
+    }
+
+    public void setGatewayFloorId(Long gatewayFloorId) {
+        this.gatewayFloorId = gatewayFloorId;
+    }
+
+    public void setCableLength(Double cableLength) {
+        this.cableLength = cableLength;
+    }
+
+    public BigInteger getSimICCID() {
+        return simICCID;
+    }
+
+    public void setSimICCID(BigInteger simICCID) {
+        this.simICCID = simICCID;
     }
 
     public String getGatewayFloor() {
@@ -246,5 +299,5 @@ public class BOMGatewaysEst implements Serializable {
     public String toString() {
         return "ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst[ id=" + id + " ]";
     }
-
+    
 }

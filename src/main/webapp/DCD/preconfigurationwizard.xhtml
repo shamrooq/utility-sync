@@ -276,11 +276,11 @@
                                             </p:column>
                                             <p:column headerText="SIM ICCID" selectRow="false">
                                                 <h:inputText id="itemSimICCID" value="#{gatewayItem.simICCID}" converterMessage="SIM ICCID - please enter digits only!" validatorMessage="SIM ICCID - minimum allowable is 19 digits" class="datatable-input-text">
-                                                    <f:validateLength minimum = "19" />
+                                                    <f:validateLength minimum = "19"/>
                                                 </h:inputText>
                                                 <input type="hidden" value="#{gatewayItem.simICCID}" id="itemSimICCID#{gatewayItem.id}"/>
                                             </p:column>
-                                            <p:column headerText="Floor" selectRow="false" style="width:5%">
+                                        <p:column headerText="Floor" selectRow="false" style="width:5%">
                                                 <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}" />
                                             </p:column>
                                             <p:column headerText="Room" selectRow="false" style="width:5%">
@@ -297,7 +297,7 @@
                                                                 value="#{bomMetersController.bomMeterModel}" 
                                                                 var="meterItem"
                                                                 itemValue="#{meterItem}" 
-                                                                itemLabel="#{meterItem.bomMeterType} - #{meterItem.meterManufacturer} - #{meterItem.meterModel} - #{meterItem.meterFloor} - #{meterItem.meterRoom} - #{meterItem.meterSerial}" 
+                                                                itemLabel="#{meterItem.bomMeterType} - #{meterItem.meterManufacturer} - #{meterItem.meterModel} - #{meterItem.meterFloor} - #{meterItem.meterRoom} - #{meterItem.meterSerial}"
                                                                 converter="#{meterConverter}"
                                                                 showSourceControls="true"
                                                                 showTargetControls="true"

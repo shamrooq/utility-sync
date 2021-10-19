@@ -56,7 +56,21 @@ public class BOMMeterBus {
         return null;
     }
     
-    
+    public List<BOMMeterDTO> addNewMeterByBomId(Long bomId, String meterBomType,String meterSerial, String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId){
+        if( bomDao.addNewMeterByBomId(bomId, meterBomType,meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId,meterRoomId,meterFloorId)){
+
+            if(meterBomType.equalsIgnoreCase("water"))
+            {
+                return findAllByBomIdForWaterType(bomId);
+            }else
+            {
+                return findAllByBomIdForElectricType(bomId);
+            }
+
+        }
+        return null;
+    }
+
     public List<BOMMeterDTO> findAllByBomIdForElectricType(Long bomId){
         return bomDao.findAllByBomIdAndBomMeterType(bomId, "ELECTRIC");
     }

@@ -109,7 +109,21 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
         return false;
     }
     
-    
+    @Override
+    public Boolean addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,Double cableLength,Long gatewayRoomId, Long gatewayFloorId, Boolean powerIntruption, Long signalStrength, Boolean antenaRequired){
+
+        try{
+            Query query = entityManager.createNativeQuery("exec [dbo].[SP_InsertNewGateways_Est] '"+gatewayBomType+"','"+proposedGateType+"',"+bomId+","+noOfGateways+","+metersPerGateway+","+cableLength+","+gatewayRoomId+","+gatewayFloorId+","+powerIntruption+","+signalStrength+","+antenaRequired);
+            System.out.println("BOMGatewayEstDAOImp.addNewGatewayEstByBomId()-"+query);
+            query.executeUpdate();
+            return true;
+        }catch(Exception exp){
+            System.out.println("add New Gateway Failed:"+exp.getMessage());
+        }
+
+        return false;
+    }
+
     @Override
     public Boolean delete(Long id) {
         try{
@@ -123,7 +137,6 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
         
         return false;
     }
-
     @Override
     public List<BOMGatewayEstDTO> findSomeByBomId(Long bomId){
         TypedQuery<BOMGatewayEstDTO> query;
