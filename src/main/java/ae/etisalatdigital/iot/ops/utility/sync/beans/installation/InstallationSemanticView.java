@@ -9,6 +9,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.faces.application.FacesMessage;
@@ -78,10 +79,16 @@ public class InstallationSemanticView implements Serializable {
         selection = rootNode;
         gatewayMap= new HashMap<>();
         meterMap = new HashMap<>();
+        for(Map.Entry<Long, List<BOMGatewayEstDTO>> entry:this.semantics.getGatewayFloors().entrySet()){
+            addDivision(rootNode, entry.getValue().get(0).getGatewayFloor(),
+                    entry.getValue());
+        }
+/*
         for (BOMGatewayEstDTO gtwNode : this.semantics.getGatewaySet()) {
             addDivision(rootNode, gtwNode,
                     this.semantics.getGtwMeterMap().get(gtwNode.getId()));
         }
+*/
     }
 
     public String getUtilityNumber() {
@@ -90,6 +97,27 @@ public class InstallationSemanticView implements Serializable {
 
     public void setUtilityNumber(String utilityNumber) {
         this.utilityNumber = utilityNumber;
+    }
+
+    protected OrganigramNode addDivision(OrganigramNode parent, String floorCode, List<BOMGatewayEstDTO> gatewayEstDTOList) {
+        OrganigramNode divisionNode = new DefaultOrganigramNode("floor",
+                floorCode, parent);
+        divisionNode.setDroppable(true);
+        divisionNode.setDraggable(true);
+        divisionNode.setSelectable(true);
+        divisionNode.setExpanded(false);
+        if (gatewayEstDTOList != null) {
+            for (BOMGatewayEstDTO gtw : gatewayEstDTOList) {
+                String type = "gateway";
+                OrganigramNode gatewayNode = new DefaultOrganigramNode(type,
+                        gtw.getSerialNumber(), divisionNode);
+                gatewayNode.setExpanded(false);
+                gatewayNode.setDraggable(true);
+                gatewayNode.setSelectable(true);
+                addDivision(gatewayNode,gtw,this.semantics.getGtwMeterMap().get(gtw.getId()));
+            }
+        }
+        return divisionNode;
     }
 
     protected OrganigramNode addDivision(OrganigramNode parent, BOMGatewayEstDTO gtwNode, Set<BOMMeterDTO> meters) {

@@ -341,6 +341,9 @@
                                     >
                                         <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{node.type} - #{node.data}"/>
                                     </p:organigramNode>
+                                    <p:organigramNode type="floor" styleClass="gateway" icon="fa" iconPos="left" >
+                                        <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{preconfigurationViewController.installationSemanticView.getNodeGateway(node.data)}"/>
+                                    </p:organigramNode>
                                     <p:organigramNode type="gateway" styleClass="gateway" icon="fa" iconPos="left" >
                                         <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{preconfigurationViewController.installationSemanticView.getNodeGateway(node.data)}"/>
                                     </p:organigramNode>

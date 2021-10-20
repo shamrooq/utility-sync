@@ -45,7 +45,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         "bm.meterGtwId meterGtwId from "
             + "Boms b join BOMGatewaysEst bge on b.id=bge.bomId join "
             + "BOMMeters bm on bge.bomId=bm.bomId and "+
-        "bge.id=bm.meterGtwId where b.id = ?1";
+        "bge.id=bm.meterGtwId where b.id = ?1 order by bge.mstFloor.id";
 
     @Override
     public List<BOMMeters> findAll() {
@@ -217,9 +217,10 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         Set<BigInteger> gtwIds = new TreeSet<>();
         BOMGatewayEstDTO bomGtwDTO;
         BOMMeterDTO bomMeterDTO;
-        Set<BOMGatewayEstDTO> gatewayEstDTOs = new TreeSet<>();
+        Set<BOMGatewayEstDTO> gatewayEstDTOSet = new TreeSet<>();
         Set<BOMMeterDTO> meterDTOs = new TreeSet<>();
         UtilityGatewayMeterSemantics gatewayMetersSemantics = new UtilityGatewayMeterSemantics();
+        Map<Long,List<BOMGatewayEstDTO>> floorGtwMap=new HashMap<>();
         for (Object[] obj : gatewayMetersSemanticsList) {
             if (null != obj[0]) {
                 gatewayMetersSemantics.setUtilityNumber(obj[0].toString());
@@ -235,6 +236,10 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             if (null != obj[3]) {
                 MSTFloor mstFloor = (MSTFloor)obj[3];
                 bomGtwDTO.setGatewayFloor(mstFloor.getFloorCode());
+                if(floorGtwMap.get(mstFloor.getId())==null){
+                    floorGtwMap.put(mstFloor.getId(),new ArrayList<>());
+                }
+                floorGtwMap.get(mstFloor.getId()).add(bomGtwDTO);
             }
             if (null != obj[4]) {
                 MSTRoom mstRoom = (MSTRoom)obj[4];
@@ -269,10 +274,11 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             if (null != obj[12]) {
                 bomMeterDTO.setMeterGtwId(new BigInteger(obj[12].toString()));
             }
-            gatewayEstDTOs.add(bomGtwDTO);
+            gatewayEstDTOSet.add(bomGtwDTO);
             meterDTOs.add(bomMeterDTO);
         }
-        gatewayMetersSemantics.setGatewaySet(gatewayEstDTOs);
+        gatewayMetersSemantics.setGatewayFloors(floorGtwMap);
+        gatewayMetersSemantics.setGatewaySet(gatewayEstDTOSet);
         Map gtwMeterMap = new TreeMap<BigInteger, Set<BOMMeterDTO>>();
         for (BigInteger gtwId : gtwIds) {
             for (BOMMeterDTO meterDTO : meterDTOs) {
