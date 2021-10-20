@@ -120,7 +120,7 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
 
     public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID, 
             String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX,
-            Date modifiedDate, String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, 
+            Date modifiedDate, String meterAmi, Long meterProtocolId, 
                        MSTRoom mstRoom, MSTFloor mstFloor, MSTMeterManufacturer meterManufacturerModel,
                        MSTMeterModel mstMeterModel,BigInteger meterGtwId) {
         this.id = id;
@@ -135,13 +135,14 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterLabelJBX = meterLabelJBX;
         this.modifiedDate = modifiedDate;
         this.meterAmi = meterAmi;
-        this.meterManufacturerId = meterManufacturerId;
-        this.meterModelId = meterModelId;
         this.meterProtocolId = meterProtocolId;
         this.meterRoomId = mstRoom.getId();
         this.meterFloorId = mstFloor.getId();
-        this.meterManufacturer = meterManufacturerModel.getManufacturerName();
+        this.meterManufacturerModel = meterManufacturerModel;
+        this.meterManufacturer = this.meterManufacturerModel.getManufacturerName();
         this.meterModel=mstMeterModel.getModelTitle();
+        this.meterManufacturerId = meterManufacturerModel.getId();
+        this.meterModelId = mstMeterModel.getId();
         this.meterGtwId = meterGtwId;
         this.meterFloor=mstFloor.getFloorCode();
         this.meterRoom=mstRoom.getRoomCode();

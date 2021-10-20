@@ -118,12 +118,12 @@ public class BOMMetersController implements Serializable  {
         this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
     }
 
-    @PostConstruct
-    public void init() {
-        metersSource = new ArrayList<>();
-        metersTarget = new ArrayList<>();
-        this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
-    }
+//    @PostConstruct
+//    public void init() {
+//        metersSource = new ArrayList<>();
+//        metersTarget = new ArrayList<>();
+//        this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
+//    }
     public static Logger getLOGGER() {
         return LOGGER;
     }
