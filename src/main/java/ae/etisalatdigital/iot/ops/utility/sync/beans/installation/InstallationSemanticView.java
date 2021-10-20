@@ -7,10 +7,12 @@ package ae.etisalatdigital.iot.ops.utility.sync.beans.installation;
 
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -99,7 +101,7 @@ public class InstallationSemanticView implements Serializable {
         this.utilityNumber = utilityNumber;
     }
 
-    protected OrganigramNode addDivision(OrganigramNode parent, String floorCode, List<BOMGatewayEstDTO> gatewayEstDTOList) {
+    protected void addDivision(OrganigramNode parent, String floorCode, List<BOMGatewayEstDTO> gatewayEstDTOList) {
         OrganigramNode divisionNode = new DefaultOrganigramNode("floor",
                 floorCode, parent);
         divisionNode.setDroppable(true);
@@ -117,22 +119,22 @@ public class InstallationSemanticView implements Serializable {
                 addDivision(gatewayNode,gtw,this.semantics.getGtwMeterMap().get(gtw.getId()));
             }
         }
-        return divisionNode;
+        //return divisionNode;
     }
 
-    protected OrganigramNode addDivision(OrganigramNode parent, BOMGatewayEstDTO gtwNode, Set<BOMMeterDTO> meters) {
-        OrganigramNode divisionNode = new DefaultOrganigramNode("gateway", gtwNode.getSerialNumber(), parent);
+    protected void addDivision(OrganigramNode parent, BOMGatewayEstDTO gtwNode, Set<BOMMeterDTO> meters) {
+        //OrganigramNode divisionNode = new DefaultOrganigramNode("gateway", gtwNode.getSerialNumber(), parent);
         gatewayMap.put(gtwNode.getSerialNumber(), gtwNode);
         //divisionNode.setRowKey(gtwNode.getGatewayFloor() + InstallationSemanticView.HYPHEN_STR + gtwNode.getGatewayRoom());
-        divisionNode.setDroppable(true);
-        divisionNode.setDraggable(true);
-        divisionNode.setSelectable(true);
-        divisionNode.setExpanded(false);
+//        divisionNode.setDroppable(true);
+//        divisionNode.setDraggable(true);
+//        divisionNode.setSelectable(true);
+//        divisionNode.setExpanded(false);
         if (meters != null) {
             for (BOMMeterDTO meter : meters) {
                 String type = null == meter.getBomMeterType() ? "water" : meter.getBomMeterType().toLowerCase();
                 OrganigramNode meterNode = new DefaultOrganigramNode(type,
-                        meter.getMeterSerial(), divisionNode);
+                        meter.getMeterSerial(), parent);
                 /*meterNode.setRowKey(meter.getMeterFloor() + InstallationSemanticView.HYPHEN_STR + meter.getMeterRoom()
                         + meter.getMeterManufacturer() + InstallationSemanticView.HYPHEN_STR + meter.getMeterModel()
                         + InstallationSemanticView.HYPHEN_STR + meter.getMeterSerial());*/
@@ -141,7 +143,7 @@ public class InstallationSemanticView implements Serializable {
                 meterNode.setSelectable(true);
             }
         }
-        return divisionNode;
+        //return divisionNode;
     }
 
     public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
@@ -286,6 +288,11 @@ public class InstallationSemanticView implements Serializable {
     public String getNodeGateway(String key) {
         this.gateway = (BOMGatewayEstDTO)gatewayMap.get(key);
         return gateway.getGatewayFloor() + InstallationSemanticView.HYPHEN_STR+gateway.getGatewayRoom();
+    }
+
+    public String getFloorNodeDetails(String key) {
+        MSTFloor optionalFloor = Optional.ofNullable(this.semantics.getFloorMap().get(key)).orElse(null);
+        return optionalFloor == null?"":optionalFloor.getFloorDescription();
     }
 
     public String getNodeMeter(String key) {

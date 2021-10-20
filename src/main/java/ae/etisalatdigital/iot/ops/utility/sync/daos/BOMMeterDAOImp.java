@@ -221,6 +221,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         Set<BOMMeterDTO> meterDTOs = new TreeSet<>();
         UtilityGatewayMeterSemantics gatewayMetersSemantics = new UtilityGatewayMeterSemantics();
         Map<Long,List<BOMGatewayEstDTO>> floorGtwMap=new HashMap<>();
+        Map<String,MSTFloor> floorMap=new HashMap<>();
         for (Object[] obj : gatewayMetersSemanticsList) {
             if (null != obj[0]) {
                 gatewayMetersSemantics.setUtilityNumber(obj[0].toString());
@@ -238,6 +239,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
                 bomGtwDTO.setGatewayFloor(mstFloor.getFloorCode());
                 if(floorGtwMap.get(mstFloor.getId())==null){
                     floorGtwMap.put(mstFloor.getId(),new ArrayList<>());
+                    floorMap.put(mstFloor.getFloorCode(), mstFloor);
                 }
                 floorGtwMap.get(mstFloor.getId()).add(bomGtwDTO);
             }
@@ -276,6 +278,9 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             }
             gatewayEstDTOSet.add(bomGtwDTO);
             meterDTOs.add(bomMeterDTO);
+        }
+        if(floorMap.size()>0){
+            gatewayMetersSemantics.setFloorMap(floorMap);
         }
         gatewayMetersSemantics.setGatewayFloors(floorGtwMap);
         gatewayMetersSemantics.setGatewaySet(gatewayEstDTOSet);

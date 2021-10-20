@@ -7,9 +7,11 @@ package ae.etisalatdigital.iot.ops.utility.sync.beans.installation;
 
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +24,7 @@ import javax.faces.view.ViewScoped;
 @ViewScoped
 public class UtilityGatewayMeterSemantics implements Serializable{
     private String utilityNumber;
+    private Map<String,MSTFloor> floorMap;
     private Map<Long, List<BOMGatewayEstDTO>> gatewayFloors;
     private Set<BOMGatewayEstDTO> gatewaySet;
     private Set<BOMMeterDTO> meterList;
@@ -73,5 +76,15 @@ public class UtilityGatewayMeterSemantics implements Serializable{
 
     public void setGatewayFloors(Map<Long, List<BOMGatewayEstDTO>> gatewayFloors) {
         this.gatewayFloors = gatewayFloors;
+    }
+
+    public Map<String, MSTFloor> getFloorMap() {
+        if(this.floorMap == null)
+            this.floorMap = new HashMap<>();
+        return floorMap;
+    }
+
+    public void setFloorMap(Map<String, MSTFloor> floorMap) {
+        this.floorMap = floorMap;
     }
 }
