@@ -36,7 +36,6 @@ public class BOMGatewaysController implements Serializable {
     private BOMGatewayEstDTO gatewayEstRecord;
     private String utilityNumber;
     private Long bomId;
-    private BigInteger BOMId;
     private String errorMessage;
     private String gatewaysType;
     private String gatewaysTypeProposed;
