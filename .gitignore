@@ -2,3 +2,4 @@
 main/webapp/generated/
 /.idea/
 *.iml
+nb-configuration.xml
