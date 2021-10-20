@@ -5,7 +5,10 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -114,8 +117,12 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterFloorId = meterFloorId;
         this.meterManufacturerModel = meterManufacturerModel;
     }
-    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String bomMeterType, String meterCorrelationID, String meterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX, Date modifiedDate,
-                       String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, Long meterRoomId, Long meterFloorId, MSTMeterManufacturer meterManufacturerModel,BigInteger meterGtwId) {
+
+    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID, 
+            String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX,
+            Date modifiedDate, String meterAmi, Long meterManufacturerId, Long meterModelId, Long meterProtocolId, 
+                       MSTRoom mstRoom, MSTFloor mstFloor, MSTMeterManufacturer meterManufacturerModel,
+                       MSTMeterModel mstMeterModel,BigInteger meterGtwId) {
         this.id = id;
         this.bomId = bomId;
         this.meterStatus = meterStatus;
@@ -131,10 +138,13 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterManufacturerId = meterManufacturerId;
         this.meterModelId = meterModelId;
         this.meterProtocolId = meterProtocolId;
-        this.meterRoomId = meterRoomId;
-        this.meterFloorId = meterFloorId;
-        this.meterManufacturerModel = meterManufacturerModel;
+        this.meterRoomId = mstRoom.getId();
+        this.meterFloorId = mstFloor.getId();
+        this.meterManufacturer = meterManufacturerModel.getManufacturerName();
+        this.meterModel=mstMeterModel.getModelTitle();
         this.meterGtwId = meterGtwId;
+        this.meterFloor=mstFloor.getFloorCode();
+        this.meterRoom=mstRoom.getRoomCode();
     }
     
     

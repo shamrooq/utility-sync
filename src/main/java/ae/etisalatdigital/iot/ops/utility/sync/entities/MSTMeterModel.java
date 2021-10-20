@@ -7,6 +7,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,6 +48,9 @@ public class MSTMeterModel implements Serializable {
     
     @OneToMany(mappedBy = "meterModelModel")
     private Collection<MSTMeterManufacturer> manufacturerCollection;
+    
+    @OneToMany(mappedBy = "mstMeterModel")
+    private List<BOMMeters> modelsCollection;
     
     public Long getId() {
         return id;
@@ -94,10 +98,15 @@ public class MSTMeterModel implements Serializable {
     public void setManufacturerCollection(Collection<MSTMeterManufacturer> manufacturerCollection) {
         this.manufacturerCollection = manufacturerCollection;
     }
-    
-    
-    
 
+    public List<BOMMeters> getModelsCollection() {
+        return modelsCollection;
+    }
+
+    public void setModelsCollection(List<BOMMeters> modelsCollection) {
+        this.modelsCollection = modelsCollection;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
