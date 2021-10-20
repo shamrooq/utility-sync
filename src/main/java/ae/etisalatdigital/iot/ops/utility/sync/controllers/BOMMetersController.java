@@ -8,33 +8,26 @@ package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
+import org.apache.log4j.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.*;
+import org.primefaces.model.DualListModel;
 
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 import javax.enterprise.context.SessionScoped;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.apache.log4j.Logger;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.FlowEvent;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.TransferEvent;
-import org.primefaces.model.DualListModel;
 import java.io.File;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -118,12 +111,6 @@ public class BOMMetersController implements Serializable  {
         this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
     }
 
-//    @PostConstruct
-//    public void init() {
-//        metersSource = new ArrayList<>();
-//        metersTarget = new ArrayList<>();
-//        this.bomMeterModel = new DualListModel<>(metersTarget, metersSource);
-//    }
     public static Logger getLOGGER() {
         return LOGGER;
     }
