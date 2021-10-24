@@ -10,10 +10,10 @@ import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -81,16 +81,11 @@ public class InstallationSemanticView implements Serializable {
         selection = rootNode;
         gatewayMap= new HashMap<>();
         meterMap = new HashMap<>();
-        for(Map.Entry<Long, List<BOMGatewayEstDTO>> entry:this.semantics.getGatewayFloors().entrySet()){
-            addDivision(rootNode, entry.getValue().get(0).getGatewayFloor(),
+        for(Map.Entry<Long, Set<BOMGatewayEstDTO>> entry:this.semantics.getGatewayFloors().entrySet()){
+            BOMGatewayEstDTO firstElement = (BOMGatewayEstDTO)((TreeSet)entry.getValue()).first();
+            addFloorAndGtwNodes(rootNode, firstElement.getGatewayFloor(),
                     entry.getValue());
         }
-/*
-        for (BOMGatewayEstDTO gtwNode : this.semantics.getGatewaySet()) {
-            addDivision(rootNode, gtwNode,
-                    this.semantics.getGtwMeterMap().get(gtwNode.getId()));
-        }
-*/
     }
 
     public String getUtilityNumber() {
@@ -101,7 +96,13 @@ public class InstallationSemanticView implements Serializable {
         this.utilityNumber = utilityNumber;
     }
 
-    protected void addDivision(OrganigramNode parent, String floorCode, List<BOMGatewayEstDTO> gatewayEstDTOList) {
+    /**
+     * method to add all the floors and gateway linked to each floor of a utility reference number(parent)
+     * @param parent
+     * @param floorCode
+     * @param gatewayEstDTOList
+     */
+    protected void addFloorAndGtwNodes(OrganigramNode parent, String floorCode, Set<BOMGatewayEstDTO> gatewayEstDTOList) {
         OrganigramNode divisionNode = new DefaultOrganigramNode("floor",
                 floorCode, parent);
         divisionNode.setDroppable(true);
@@ -116,34 +117,29 @@ public class InstallationSemanticView implements Serializable {
                 gatewayNode.setExpanded(false);
                 gatewayNode.setDraggable(true);
                 gatewayNode.setSelectable(true);
-                addDivision(gatewayNode,gtw,this.semantics.getGtwMeterMap().get(gtw.getId()));
+                addFloorAndGtwNodes(gatewayNode,gtw,this.semantics.getGtwMeterMap().get(gtw.getId()));
             }
         }
-        //return divisionNode;
     }
 
-    protected void addDivision(OrganigramNode parent, BOMGatewayEstDTO gtwNode, Set<BOMMeterDTO> meters) {
-        //OrganigramNode divisionNode = new DefaultOrganigramNode("gateway", gtwNode.getSerialNumber(), parent);
+    /**
+     * method to add each meter node to its parent gateway node
+     * @param parent
+     * @param gtwNode
+     * @param meters
+     */
+    protected void addFloorAndGtwNodes(OrganigramNode parent, BOMGatewayEstDTO gtwNode, Set<BOMMeterDTO> meters) {
         gatewayMap.put(gtwNode.getSerialNumber(), gtwNode);
-        //divisionNode.setRowKey(gtwNode.getGatewayFloor() + InstallationSemanticView.HYPHEN_STR + gtwNode.getGatewayRoom());
-//        divisionNode.setDroppable(true);
-//        divisionNode.setDraggable(true);
-//        divisionNode.setSelectable(true);
-//        divisionNode.setExpanded(false);
         if (meters != null) {
             for (BOMMeterDTO meter : meters) {
                 String type = null == meter.getBomMeterType() ? "water" : meter.getBomMeterType().toLowerCase();
                 OrganigramNode meterNode = new DefaultOrganigramNode(type,
                         meter.getMeterSerial(), parent);
-                /*meterNode.setRowKey(meter.getMeterFloor() + InstallationSemanticView.HYPHEN_STR + meter.getMeterRoom()
-                        + meter.getMeterManufacturer() + InstallationSemanticView.HYPHEN_STR + meter.getMeterModel()
-                        + InstallationSemanticView.HYPHEN_STR + meter.getMeterSerial());*/
                 meterMap.put(meter.getMeterSerial(), meter);
                 meterNode.setDraggable(true);
                 meterNode.setSelectable(true);
             }
         }
-        //return divisionNode;
     }
 
     public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {

@@ -220,7 +220,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         Set<BOMGatewayEstDTO> gatewayEstDTOSet = new TreeSet<>();
         Set<BOMMeterDTO> meterDTOs = new TreeSet<>();
         UtilityGatewayMeterSemantics gatewayMetersSemantics = new UtilityGatewayMeterSemantics();
-        Map<Long,List<BOMGatewayEstDTO>> floorGtwMap=new HashMap<>();
+        Map<Long,Set<BOMGatewayEstDTO>> floorGtwMap=new HashMap<>();
         Map<String,MSTFloor> floorMap=new HashMap<>();
         for (Object[] obj : gatewayMetersSemanticsList) {
             if (null != obj[0]) {
@@ -236,16 +236,18 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             }
             if (null != obj[3]) {
                 MSTFloor mstFloor = (MSTFloor)obj[3];
-                bomGtwDTO.setGatewayFloor(mstFloor.getFloorCode());
                 if(floorGtwMap.get(mstFloor.getId())==null){
-                    floorGtwMap.put(mstFloor.getId(),new ArrayList<>());
+                    floorGtwMap.put(mstFloor.getId(),new TreeSet<>());
                     floorMap.put(mstFloor.getFloorCode(), mstFloor);
                 }
+                bomGtwDTO.setGatewayFloor(mstFloor.getFloorCode());
+                bomGtwDTO.setGatewayFloorId(mstFloor.getId());
                 floorGtwMap.get(mstFloor.getId()).add(bomGtwDTO);
             }
             if (null != obj[4]) {
                 MSTRoom mstRoom = (MSTRoom)obj[4];
                 bomGtwDTO.setGatewayRoom(mstRoom.getRoomCode());
+                bomGtwDTO.setGatewayRoomId(mstRoom.getId());
             }
             bomMeterDTO = new BOMMeterDTO();
             if (null != obj[5]) {
