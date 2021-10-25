@@ -139,7 +139,7 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterRoomId = mstRoom==null?null:mstRoom.getId();
         this.meterFloorId = mstFloor==null?null:mstFloor.getId();
         this.meterManufacturerModel = meterManufacturerModel;
-        this.meterManufacturer = meterManufacturerModel==null?"":this.meterManufacturerModel.getManufacturerName();
+        this.meterManufacturer = meterManufacturerModel==null?"":meterManufacturerModel.getManufacturerName();
         this.meterModel=mstMeterModel==null?"":mstMeterModel.getModelTitle();
         this.meterManufacturerId = meterManufacturerModel==null?null:meterManufacturerModel.getId();
         this.meterModelId = mstMeterModel==null?null:mstMeterModel.getId();
