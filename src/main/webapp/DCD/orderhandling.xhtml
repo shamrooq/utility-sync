@@ -3,8 +3,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     
     
     <h:head>
@@ -43,7 +42,7 @@
         <b:container id="maincontainer" fluid="true">
 
             <h:form id="wizardform">
-                <p:growl id="growl" sticky="true" showDetail="true" showSummary="true" widgetVar="growlWV" autoUpdate="true"/>
+                <p:growl id="growl" sticky="true" showDetail="true" showSummary="true" widgetVar="growlWV"/>
                 <f:metadata>
                     
                 </f:metadata>
@@ -203,7 +202,7 @@
                                       value="Add vehicle:" onclick="add();">
                                     </input>
                   <input type="button" id="removerows" class="removerows" 
-                    value="Delete Vehicle" onclick="delete();"/>  
+                    value="Delete Vehicle" onclick="deleteInput()"/>  
    
                       <span id="myspan"></span>
                       <br></br>
@@ -322,53 +321,48 @@
     </script>-->
 <script type="text/javascript">
    function add() {
-     var element = document.createElement("input");
-     element.setAttribute("type", "text");
-     element.setAttribute("name", "mytext");
+    var element = document.createElement("input");
+    element.setAttribute("type", "text");
+    element.setAttribute("name", "mytext");
     var spanvar = document.getElementById("myspan");
     spanvar .appendChild(element);
    }
-   function delete() {
+   function deleteInput() {
        var element = document.deleteElement("input");
-       
    }
-</script>
-    <script>
-        function viewAjaxStatusDialog() {
-            if (!$(".ui-dialog-mask").length) {
-                PF('statusDialog').show();
-            }
+    function viewAjaxStatusDialog() {
+        if (!$(".ui-dialog-mask").length) {
+            PF('statusDialog').show();
         }
-        function hideAjaxStatusDialog() {
-            PF('statusDialog').hide();
-        }
+    }
+    function hideAjaxStatusDialog() {
+        PF('statusDialog').hide();
+    }
 
-        function hideBackOnLastTab() {
-            PF('wiz').backNav.css("visibility", "hidden");
-        }
-        function popup() {
-            alert("Request closed");
-        }
-    </script>
-    <script>
-        function updateOnlineStatus()
-        {
-            var str = "Online";
-            document.getElementById("status").innerHTML = "You're back " + str.fontcolor("green");
-            document.getElementById("status").style.borderColor = "#ff9800";
-            document.getElementById("status").style.backgroundColor = "#ffc599";
-        }
+    function hideBackOnLastTab() {
+        PF('wiz').backNav.css("visibility", "hidden");
+    }
+    function popup() {
+        alert("Request closed");
+    }
+    function updateOnlineStatus()
+    {
+        var str = "Online";
+        document.getElementById("status").innerHTML = "You're back " + str.fontcolor("green");
+        document.getElementById("status").style.borderColor = "#ff9800";
+        document.getElementById("status").style.backgroundColor = "#ffc599";
+    }
 
-        function updateOfflineStatus()
-        {
-            var str = "Offline";
-            document.getElementById("status").innerHTML = "You're " + str.fontcolor("red");
-            document.getElementById("status").style.borderColor = "#ff0000";
-            document.getElementById("status").style.backgroundColor = "#ffd9dc";
-        }
+    function updateOfflineStatus()
+    {
+        var str = "Offline";
+        document.getElementById("status").innerHTML = "You're " + str.fontcolor("red");
+        document.getElementById("status").style.borderColor = "#ff0000";
+        document.getElementById("status").style.backgroundColor = "#ffd9dc";
+    }
 
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOfflineStatus);
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOfflineStatus);
     </script>
     <style type="text/css">
         .navbar-default .navbar-collapse {
