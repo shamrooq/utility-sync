@@ -15,6 +15,7 @@ import java.util.Objects;
  */
 public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDTO>{
     
+    private static final long serialVersionUID = 7654321L;
     private BigInteger id;
     private Long bomId; 
     private String gatewaysType;

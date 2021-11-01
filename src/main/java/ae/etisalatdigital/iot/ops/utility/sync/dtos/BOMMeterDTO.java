@@ -9,6 +9,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
+import java.io.Serializable;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -19,8 +20,9 @@ import java.util.Objects;
  *
  * @author au_mobility
  */
-public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
+public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
 
+    private static final long serialVersionUID = 1234567L;
     private Long id;
     
     private Long bomId;

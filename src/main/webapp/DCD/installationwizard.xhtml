@@ -68,7 +68,7 @@
                                                 <b:inputText id="itUtilityNumber" value="#{preconfigurationViewController.utilityNumber}" placeholder="e.g UN-10123456789"  style="width: 220px"/>
                                                 <b:commandButton id="btnLookup" look="warning" styleClass="ui-button-flat p-ml-2" value="SEARCH" update="wizardform:pnlSurveyInitialDetails wizardform:pnlBOMDetails" style="width: 100px;font-size:1.5rem;"  >
                                                     <f:actionListener binding="#{preconfigurationViewController.updateSelected()}"/> 
-                                                    <f:actionListener binding="#{bomGatewaysController.updateEstimation(preconfigurationViewController.selectedRequest.activeBom)}"/>
+                                                <f:actionListener binding="#{bomGatewaysController.updateGtwEstimation(preconfigurationViewController.selectedRequest.activeBom)}"/>
                                                     <f:actionListener binding="#{bomMetersController.fetchBomMetersWithMeterModel(preconfigurationViewController.selectedRequest.activeBom)}"/>
                                                 </b:commandButton>
                                             </p:panelGrid>
@@ -101,7 +101,7 @@
                                                         <p:outputLabel   value="Survey Permit Number:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="itSurveyPermit" value="#{preconfigurationViewController.selectedRequest.premiseType}"/>
+                                                    <p:outputLabel id="itSurveyPermit" value=""/>
                                                     </p:column>
                                                 </p:row>
                                                 <p:row>
@@ -262,7 +262,7 @@
                                             <p:ajax event="rowToggle" listener="#{bomMetersController.fetchGatewayBomMeterModel(gatewayItem.id)}" 
                                                     process="@this tblGateways itemSerialNumber itemSimICCID" update="tblGateways"/>
                                             <p:column headerText="Map With Meters">
-                                                <p:rowToggler />
+                                                <p:rowToggler/>
                                             </p:column>
                                             <p:column headerText="Gateway Label" selectRow="false">
                                                 <h:outputText value="#{gatewayItem.gatewaysChainLabel}" />
@@ -323,38 +323,24 @@
                                 <p></p>
                                 <p:panel header="Semantic Diagram - Gateway and Meters" collapsed="false" 
                                          id="semanticsPanel">
-                                    <p:organigram id="organigram"
-                                                  widgetVar="organigram"
-                                                  value="#{preconfigurationViewController.installationSemanticView.rootNode}"
-                                                  var="node"
-                                                  leafNodeConnectorHeight="#{preconfigurationViewController.installationSemanticView.leafNodeConnectorHeight}"
-                                                  autoScrollToSelection="#{preconfigurationViewController.installationSemanticView.autoScrollToSelection}"
-                                                  zoom="#{preconfigurationViewController.installationSemanticView.zoom}"
-                                                  selection="#{preconfigurationViewController.installationSemanticView.selection}"
-                                                  style="#{preconfigurationViewController.installationSemanticView.style}">
-                                        <p:organigramNode type="root"
-                                                          icon="fa fa-sitemap">
-                                            <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{node.data}" />
-                                        </p:organigramNode>
-                                        <p:organigramNode type="#{preconfigurationViewController.installationSemanticView.premiseType}"
-                                                          styleClass="root #{preconfigurationViewController.installationSemanticView.premiseType}" 
-                                                          >
-                                            <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{node.type} - #{node.data}"/>
-                                        </p:organigramNode>
-                                        <p:organigramNode type="gateway" styleClass="gateway" icon="fa" iconPos="left" >
-                                            <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{preconfigurationViewController.installationSemanticView.getNodeGateway(node.data)}"/>
-                                        </p:organigramNode>
-                                        <p:organigramNode type="water" styleClass="water" icon="fa">
-                                            <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{preconfigurationViewController.installationSemanticView.getNodeMeter(node.data)}"/>
-                                        </p:organigramNode>
-                                        <p:organigramNode type="electric"
-                                                          styleClass="electric"
-                                                          icon="fa" id="electricOrganigramNode">
-                                            <b:label class="label-bottom-center" value="#{node.data}" tooltip="#{preconfigurationViewController.installationSemanticView.getNodeMeter(node.data)}"/>
-                                        </p:organigramNode>
-                                        <p:ajax event="select" process="@this" update="@form:growl"
-                                                      listener="#{preconfigurationViewController.installationSemanticView.nodeSelectListener}"/>
-                                  </p:organigram>
+                                    <p:tree id="tree"
+                                            value="#{preconfigurationViewController.installationSemanticView.rootNode}"
+                                            var="treeNode" draggable="true" orientation="horizontal" selectionMode="multiple"
+                                            selection="#{preconfigurationViewController.installationSemanticView.selection}"
+                                            >
+                                        <p:treeNode type="root" icon="fa fa-sitemap">
+                                            <b:label value="#{treeNode.toString()}" tooltip="#{preconfigurationViewController.installationSemanticView.premiseType}"/>
+                                        </p:treeNode>
+                                        <p:treeNode type="#{preconfigurationViewController.installationSemanticView.premiseType}"
+                                                    styleClass="#{preconfigurationViewController.installationSemanticView.premiseType}" >
+                                            <b:label value="#{treeNode}" tooltip="#{preconfigurationViewController.installationSemanticView.premiseType}"/>
+                                        </p:treeNode>
+                                        <p:treeNode type="floor" styleClass="floor-grid-blue-bg">
+                                            <b:label value="#{treeNode}" tooltip="#{preconfigurationViewController.installationSemanticView.getFloorNodeDetails(treeNode)}" />
+                                            <p:diagram value="#{preconfigurationViewController.installationSemanticView.getFloorElements(treeNode)}" styleClass="diagram-panel">
+                                            </p:diagram>
+                                        </p:treeNode>
+                                    </p:tree>
                                 </p:panel>
                             </p:tab>
                             <p:tab title="ACCEPT" id="acceptTab" titleStyleClass="middleTab">
@@ -674,82 +660,84 @@
             margin-right: auto;
             margin-left: auto;
         }
-        .ui-widget .ui-organigram{
-            justify-content: center;
+        .ui-widget .ui-tree{
+            justify-content: flex-start;
             display: flex;
         }
-        .ui-organigram .ui-organigram-node.root {
+/*        .ui-widget-content{
+            border: none;
+        }*/
+        .ui-tree .ui-tree-horizontal{
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            bottom: 0;
+            box-shadow: none;
+            min-height: 105px;
+            min-width: inherit;
+        }
+/*        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+            background-color: #FFFFFF;
+            border: none;
+        }*/
+        .ui-tree .ui-treenode.root {
             background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/1.1.Location.png');
-            background-size: 100px 100px;
+            background-size: contain;
             background-repeat: no-repeat;
-            background-color: purple;
-            bottom: 0;
-            box-shadow: none;
-            min-height: 100px;
         }
-        .ui-organigram .ui-organigram-node.villa {
+        .ui-tree .ui-treenode.villa {
             background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/2.1.Villa.png');
-            background-size: 100px 100px;
+            background-size: contain;
             background-repeat: no-repeat;
-            background-color: white;
-            bottom: 0;
-            box-shadow: none;
-            min-height: 105px;
+            line-height: 0.85;
         }
-        .ui-organigram .ui-organigram-node.building {
+        .ui-tree .ui-treenode.building {
             background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/2.5.LowRiseBuilding.png');
-            background-size: 100px 100px;
+            background-size: contain;
             background-repeat: no-repeat;
-            background-color: white;
-            bottom: 0;
-            line-height: 1.85;
-            box-shadow: none;
-            min-height: 105px;
+            line-height: 0.85;
         }
-        .ui-organigram .ui-organigram-node.gateway {
+        .ui-tree .ui-treenode.floor{
+            background: -moz-linear-gradient(top, #93e7ff 0%, #007efc 100%);
+            background: -webkit-linear-gradient(top, #93e7ff 0%, #007efc 100%);
+            background: linear-gradient(to bottom, #93e7ff 0%, #007efc 100%);
+            background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/greenmarker.png');
+            background-size: contain;
+            line-height: 0.85;
+            min-height: 105px;
+            background-repeat: no-repeat;
+        }
+        .ui-tree .ui-treenode.gateway {
             background: #93e7ff;
             background: -moz-linear-gradient(top, #93e7ff 0%, #007efc 100%);
             background: -webkit-linear-gradient(top, #93e7ff 0%, #007efc 100%);
             background: linear-gradient(to bottom, #93e7ff 0%, #007efc 100%);
             background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/5.4.GW.png');
-            background-size: 100px 100px;
+            background-size: contain;
+            line-height: 0.85;
             background-repeat: no-repeat;
-            background-color: white;
-            bottom: 0;
-            line-height: 1.85;
-            box-shadow: none;
-            min-height: 105px;
         }
 
-        .ui-organigram .ui-organigram-node.electric {
+        .ui-tree .ui-treenode.electric {
             background: #88c048;
             background: -moz-linear-gradient(top, #88c048 0%, #69a038 100%);
             background: -webkit-linear-gradient(top, #88c048 0%, #69a038 100%);
             background: linear-gradient(to bottom, #88c048 0%, #69a038 100%);
             background-image: url('../resources/images/5.2.ElectricMeter.png');
+            background-size: contain;
+            line-height: 0.85;
             background-repeat: no-repeat;
-            background-size: 100px 100px;
-            background-color: white;
-            bottom: 0;
-            line-height: 1.85;
-            box-shadow: none;
-            min-height: 100px;
         }
-        .ui-organigram .ui-organigram-node.water {
+        .ui-tree .ui-treenode.water {
             background: #88c048;
             background: -moz-linear-gradient(top, #88c048 0%, #69a038 100%);
             background: -webkit-linear-gradient(top, #88c048 0%, #69a038 100%);
             background: linear-gradient(to bottom, #88c048 0%, #69a038 100%);
             background-image: url('../resources/images/5.1.WaterMeter.png');
+            background-size: contain;
+            line-height: 0.85;
             background-repeat: no-repeat;
-            background-size: 100px 100px;
-            background-color: white;
-            bottom: 0;
-            line-height: 1.85;
-            box-shadow: none;
-            min-height: 100px;
         }
-        .ui-organigram .target{
+        .ui-tree .target{
             justify-content: center;
         }
         .label-bottom-center{
@@ -758,11 +746,57 @@
             margin-bottom: 0%;
             background-color: white; 
         }
-        .ui-icon.ui-icon-minusthick{
+        .ui-icon.ui-icon-minus{
             margin-top: -9px;
         }
         .datatable-input-text{
             width: 100%;
+        }
+        .diagram-gateway-box {
+/*            border:1px solid #aaa;*/
+            width:80px;
+            height:30px;
+            padding:10px;
+            color: lightyellow;
+            text-align: center;
+            background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/5.4.GW.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .diagram-meter-water-box {
+/*            border:1px solid #aaa;*/
+            width:80px;
+            height:30px;
+            padding:10px;
+            color: lightyellow;
+            text-align: center;
+            background-image: url('../resources/images/5.1.WaterMeter.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .diagram-meter-electric-box {
+/*            border:1px solid #aaa;*/
+            width:80px;
+            height:30px;
+            padding:10px;
+            text-align: center;
+            color: lightyellow;
+            background-image: url('../resources/images/5.2.ElectricMeter.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .diagram-panel{
+            margin: 0 auto;
+            height:240px;
+            width:420%;
+            background-color: cadetblue;
+            /*border: 1px solid darkgray;*/
+        }
+        .floor-grid-blue-bg{
+            background-color: cadetblue;
+        }
+        .ui-diagram-element{
+            position: inherit;
         }
     </style>
 </html>
