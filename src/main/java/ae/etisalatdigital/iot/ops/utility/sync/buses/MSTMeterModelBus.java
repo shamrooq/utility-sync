@@ -29,7 +29,9 @@ public class MSTMeterModelBus {
     }
     
    
-   
+   public List<MSTMeterModel> findAllByManufacturerId(Long manufacturerId){
+        return meterModelDao.findAllByManufacturerId(manufacturerId);
+    }
     
   
 }

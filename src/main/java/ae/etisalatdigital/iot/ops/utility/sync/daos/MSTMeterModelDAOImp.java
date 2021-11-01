@@ -31,5 +31,15 @@ public class MSTMeterModelDAOImp implements MSTMeterModelDAO {
         return entityManager.createNamedQuery("MSTMeterModel.findAll", MSTMeterModel.class).getResultList();
     }
     
-    
+    /**
+     * 
+     * @param manufacturerId
+     * @return 
+     */
+    @Override
+    public List<MSTMeterModel> findAllByManufacturerId(Long manufacturerId){
+        TypedQuery<MSTMeterModel> query = entityManager.createNamedQuery("MSTMeterModel.findAllByManufacturerId", MSTMeterModel.class);
+        query.setParameter("manufacturerId", manufacturerId);
+        return  query.getResultList();
+    }
 }

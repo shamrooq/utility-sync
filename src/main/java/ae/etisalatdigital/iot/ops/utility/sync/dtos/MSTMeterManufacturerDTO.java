@@ -5,6 +5,8 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
+
 /**
  *
  * @author appadmin
@@ -12,15 +14,19 @@ package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 public class MSTMeterManufacturerDTO {
     
     private Long id;
+    private Long utilityId;
     private String manufacturerCode;
     private String manufacturerName;
     private String manufacturerDescription;
+    
+    
 
-    public MSTMeterManufacturerDTO(Long id, String manufacturerCode, String manufacturerName, String manufacturerDescription) {
+    public MSTMeterManufacturerDTO(Long id, Long utilityId, String manufacturerCode, String manufacturerName, String manufacturerDescription) {
         this.id = id;
         this.manufacturerCode = manufacturerCode;
         this.manufacturerName = manufacturerName;
         this.manufacturerDescription = manufacturerDescription;
+        this.utilityId = utilityId;
     }
 
     public Long getId() {
@@ -39,6 +45,13 @@ public class MSTMeterManufacturerDTO {
         return manufacturerDescription;
     }
 
+    public Long getUtilityId() {
+        return utilityId;
+    }
+    
+    
+    
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,6 +67,11 @@ public class MSTMeterManufacturerDTO {
     public void setManufacturerDescription(String manufacturerDescription) {
         this.manufacturerDescription = manufacturerDescription;
     }
+
+    public void setUtilityId(Long utilityId) {
+        this.utilityId = utilityId;
+    }
+    
     
     
 }

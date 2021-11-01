@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -570,8 +572,14 @@ public class BOMMetersController implements Serializable  {
         this.meterProtocolId = meterProtocolId;
     }
     
-    public void onUtilityChange(){
+    
+    
+    public void onUtilityTypeChange(){
         
+        
+
+        //FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "CHANGE","Selected: "+meterBOMType);
+        //FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     
     public void meterConfigurations(String medium,BOMMeterDTO selectedMeter){

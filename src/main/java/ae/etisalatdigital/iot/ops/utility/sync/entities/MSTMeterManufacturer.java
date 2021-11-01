@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MSTMeterManufacturer.findAll", query = "SELECT m FROM MSTMeterManufacturer m")
+   ,@NamedQuery(name = "MSTMeterManufacturer.findAllByUtilityId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.MSTMeterManufacturerDTO(m.id,m.utilityId,m.manufacturerCode,m.manufacturerName,m.manufacturerDescription) FROM MSTMeterManufacturer m where m.utilityId = :utilityId")
 })
 public class MSTMeterManufacturer implements Serializable {
 
@@ -37,6 +38,9 @@ public class MSTMeterManufacturer implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MANUFACTURER_ID", nullable = false)
     private Long id;
+    
+    @Column(name = "UTILITY_Id")
+    private Long utilityId;
     
     @Column(name = "MANUFACTURER_Code", length = 100)
     private String manufacturerCode;
@@ -81,6 +85,10 @@ public class MSTMeterManufacturer implements Serializable {
     public MSTMeterModel getMeterModelModel() {
         return meterModelModel;
     }
+
+    public Long getUtilityId() {
+        return utilityId;
+    }
     
     
     
@@ -110,6 +118,10 @@ public class MSTMeterManufacturer implements Serializable {
 
     public void setMeterModelModel(MSTMeterModel meterModelModel) {
         this.meterModelModel = meterModelModel;
+    }
+
+    public void setUtilityId(Long utilityId) {
+        this.utilityId = utilityId;
     }
     
     
