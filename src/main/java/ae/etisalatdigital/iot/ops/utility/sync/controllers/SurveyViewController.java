@@ -39,8 +39,10 @@ import static com.mashape.unirest.http.Unirest.options;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.enterprise.context.SessionScoped;
 
@@ -63,7 +65,7 @@ import org.primefaces.event.SelectEvent;
  */
 
 @Named(value = "surveyViewController")
-@SessionScoped
+@ViewScoped
 public class SurveyViewController implements Serializable  {
     
     private static final Logger LOGGER = Logger.getLogger(SurveyViewController.class);
@@ -290,22 +292,44 @@ public class SurveyViewController implements Serializable  {
 
     public void submitSurveyFailed(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       //RequestContext context = RequestContext.getCurrentInstance();
+       
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Failed");
-       //context.execute("PF('dlg3').show();");
        
-       //PrimeFaces.current().dialog().openDynamic("dlg3", utilityNumber, null);
+       
+       Map<String, Object> options = new HashMap<>();
+        options.put("modal", true);
+        options.put("width", 350);
+        options.put("height", 550);
+        options.put("showEffect", "fade");
+        options.put("resizable", false);
+        options.put("draggable", false);
+        options.put("fitViewport", true);
+        options.put("contentWidth", "100%");
+        options.put("contentHeight", "100%");
+        options.put("headerElement", "customheader");
+       PrimeFaces.current().dialog().openDynamic("viewSurveyFail", options, null);
     }
     
     public void submitSurvey(RequestDTO selectedRequest){
        System.out.println("ae.etisalatdigital.iot.ops.utility.sync.controllers.SurveyViewController.submitSurvey()");
-       ///RequestContext context = RequestContext.getCurrentInstance();
+       
        
        controllerSurvey.saveSurveyDetails(selectedRequest,"Completed");
-       ///context.execute("PF('dlg3').show();");
        
-       //PrimeFaces.current().dialog().openDynamic("viewProducts", utilityNumber, null);
+       
+       
+       Map<String, Object> options = new HashMap<>();
+        options.put("modal", true);
+        options.put("width", 350);
+        options.put("height", 550);
+        options.put("showEffect", "fade");
+        options.put("resizable", false);
+        options.put("draggable", false);
+        options.put("contentWidth", "100%");
+        options.put("contentHeight", "100%");
+        options.put("headerElement", "customheader");
+       PrimeFaces.current().dialog().openDynamic("viewSurveySuccess", options, null);
     }
     
     public void captureLocation(){
@@ -423,8 +447,26 @@ public class SurveyViewController implements Serializable  {
         meterManufacturers = meterManufacturerBus.findAll();
     }
     
+    public void onUtilityTypeChange(String selectedValue){
+        if(selectedValue.equals("ELECTRIC")){
+            meterManufacturers = meterManufacturerBus.findAllByUtilityId(1L);
+        }else{
+            meterManufacturers = meterManufacturerBus.findAllByUtilityId(2L);
+        }
+        
+    }
+    
     public void findAllMeterModels(){
         meterModels = meterModelBus.findAll();
+    }
+    
+    public void onManufacturerChange(Long manufecturerId){
+        if(manufecturerId > 0)
+        {
+            meterModels = null;
+            meterModels = meterModelBus.findAllByManufacturerId(manufecturerId);
+        }
+        
     }
     
     public List<MSTGatewayTypes> getGatewayTypes() {
@@ -454,4 +496,6 @@ public class SurveyViewController implements Serializable  {
 
         //MSTMeterManufacturer selectedManufacturer =  (MSTMeterManufacturer) event.getObject());
     }
+    
+    
 }

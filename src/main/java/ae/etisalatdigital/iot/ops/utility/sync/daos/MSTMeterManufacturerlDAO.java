@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface MSTMeterManufacturerlDAO {
     abstract List<MSTMeterManufacturer> findAll();
+    abstract List<MSTMeterManufacturer> findAllByUtilityId(Long utilityId);
 }
