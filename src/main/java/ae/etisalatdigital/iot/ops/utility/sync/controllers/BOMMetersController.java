@@ -650,12 +650,12 @@ public class BOMMetersController implements Serializable  {
         
     }
     public void onRowEdit(RowEditEvent<BOMMeterDTO> event) {
-        FacesMessage msg = new FacesMessage("Product Edited", String.valueOf(event.getObject().getMeterSerial()));
+        FacesMessage msg = new FacesMessage("Product Edited", ((BOMMeterDTO)event.getObject()).getMeterSerial());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void onRowCancel(RowEditEvent<BOMMeterDTO> event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", String.valueOf(event.getObject().getMeterSerial()));
+        FacesMessage msg = new FacesMessage("Edit Cancelled", ((BOMMeterDTO)event.getObject()).getMeterSerial());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
