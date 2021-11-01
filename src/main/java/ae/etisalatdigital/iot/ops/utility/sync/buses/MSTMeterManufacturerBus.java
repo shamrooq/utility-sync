@@ -28,7 +28,9 @@ public class MSTMeterManufacturerBus {
         return meterManufacturerDao.findAll();
     }
     
-   
+    public List<MSTMeterManufacturer> findAllByUtilityId(Long utilityId){
+        return meterManufacturerDao.findAllByUtilityId(utilityId);
+    } 
    
     
   

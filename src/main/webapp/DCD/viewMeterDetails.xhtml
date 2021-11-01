@@ -7,7 +7,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
-        <title>METER CONFIGURATIONS</title>
+        <title>HES METER PARAMETERS</title>
         <style type="text/css">
             .image-ring .ui-ring-item {
                 border: 0 none;
@@ -46,14 +46,14 @@
                         </div>
 
                         <br/>
-                        <p:dataTable id="meter" 
+                        <p:dataTable id="meterBasic" 
                                      var="vMeter"
                                      
                                      value="#{bomMetersController.selectedMeterForDetails}" 
                                      editable="true" style="margin-bottom:20px">
                             <p:ajax event="rowEdit" listener="#{bomMetersController.onRowEdit}" update=":form:msgs"/>
                             <p:ajax event="rowEditCancel" listener="#{bomMetersController.onRowCancel}" update=":form:msgs"/>
-                            <p:column headerText="Code">
+                            <p:column headerText="HES Code">
                                 <p:cellEditor>
                                     <f:facet name="output">
                                         <h:outputText value="#{vMeter.meterSerial}"/>
@@ -79,16 +79,97 @@
                         </p:dataTable>
                     </p:tab>
                     <p:tab title="Metering Point">
-                        <p class="p-m-0">
-                             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                
+                                <p:panelGrid columns="4">
+                                    <p:outputLabel  style="text-align: right" value="ADRESS"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="READ KEY"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="IP"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    
+                                    <p:outputLabel  style="text-align: right" value="PORT"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="LINK ADRESS"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="LINK TIMEOUT"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                </p:panelGrid>
+                            </div>
+                        </div>
+                        <br/>
+                        <p:dataTable id="meterMeteringPoint" 
+                                     var="vMeter"
+                                     
+                                     value="#{bomMetersController.selectedMeterForDetails}" 
+                                     editable="true" style="margin-bottom:20px">
+                            <p:ajax event="rowEdit" listener="#{bomMetersController.onRowEdit}" update=":form:msgs"/>
+                            <p:ajax event="rowEditCancel" listener="#{bomMetersController.onRowCancel}" update=":form:msgs"/>
+                            <p:column headerText="Latitude">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{vMeter.meterSerial}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="codeInput" value="#{vMeter.meterSerial}" style="width:100%"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Longitude">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{vMeter.meterSerial}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="serialInput" value="#{vMeter.meterSerial}" style="width:100%"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column style="width:6rem">
+                                <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                            </p:column>
+                        </p:dataTable>
+                        
                     </p:tab>
+                    
                     <p:tab title="Telemetry">
-                        <p class="p-m-0">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                            dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p:panelGrid columns="2" >
+                                    <p:outputLabel  style="text-align: right" value="Communication Address"/>
+                                    
+                                    <b:inputText   readonly="true" value="http://198.34,32.34/endpoint" style="width: 250px"/>
+                                    
+                                    
+                                    
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="6">
+                                    <p:outputLabel  style="text-align: right" value="isPasswordHex"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Baud Rate"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Logical Adress"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    
+                                    <p:outputLabel  style="text-align: right" value="Interface Type"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Authentication Level"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Physical Address"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Initial Baud"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Meter Password"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                    <p:outputLabel  style="text-align: right" value="Client Address"/>
+                                    <b:inputText  readonly="true" value=""/>
+                                </p:panelGrid>
+                            </div>
+                        </div>
                     </p:tab>
                 </p:tabView>
                 <div class="pull-right">

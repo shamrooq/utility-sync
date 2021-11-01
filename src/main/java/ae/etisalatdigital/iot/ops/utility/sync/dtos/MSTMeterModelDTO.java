@@ -15,21 +15,29 @@ public class MSTMeterModelDTO {
     private String modelCode;
     private String modelTitle;
     private String modelDescription;
-
+    
+    private Long manufacturerId;
+    
     public MSTMeterModelDTO() {
     }
 
-    public MSTMeterModelDTO(Long id, String modelCode, String modelTitle, String modelDescription) {
+    public MSTMeterModelDTO(Long id, Long manufacturerId, String modelCode, String modelTitle, String modelDescription) {
         this.id = id;
         this.modelCode = modelCode;
         this.modelTitle = modelTitle;
         this.modelDescription = modelDescription;
+        this.manufacturerId = manufacturerId;
     }
 
     public Long getId() {
         return id;
     }
 
+    public Long getManufacturerId() {
+        return manufacturerId;
+    }
+    
+    
     public String getModelCode() {
         return modelCode;
     }
@@ -56,6 +64,10 @@ public class MSTMeterModelDTO {
 
     public void setModelDescription(String modelDescription) {
         this.modelDescription = modelDescription;
+    }
+
+    public void setManufacturerId(Long manufacturerId) {
+        this.manufacturerId = manufacturerId;
     }
     
     

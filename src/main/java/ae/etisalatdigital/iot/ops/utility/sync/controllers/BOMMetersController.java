@@ -9,25 +9,32 @@ import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import org.apache.log4j.Logger;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.*;
 import org.primefaces.model.DualListModel;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.io.File;
+
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.context.SessionScoped;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.FlowEvent;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TransferEvent;
+import java.io.File;
 import java.util.stream.Collectors;
+import java.math.BigInteger;
 
 /**
  *
@@ -78,7 +85,7 @@ public class BOMMetersController implements Serializable  {
     List<BOMMeterDTO> metersWater;
     List<BOMMeterDTO> selectedMeterForDetails;
     BOMMeterDTO selectedMeter;
-
+    
     private Long wmeterRoomTypeId;
     private Long wmeterFloorTypeId;
     
@@ -139,7 +146,7 @@ public class BOMMetersController implements Serializable  {
     public List<BOMMeterDTO> getMeters() {
         return meters;
     }
-    
+
     public List<BOMMeterDTO> getSelectedMeterForDetails() {
         return selectedMeterForDetails;
     }
@@ -147,9 +154,9 @@ public class BOMMetersController implements Serializable  {
     public BOMMeterDTO getSelectedMeter() {
         return selectedMeter;
     }
-
-
-
+    
+    
+    
 
     public void setEm(EntityManager em) {
         this.em = em;
@@ -158,6 +165,8 @@ public class BOMMetersController implements Serializable  {
     public void setUtilityNumber(String utilityNumber) {
         this.utilityNumber = utilityNumber;
     }
+
+    
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -174,7 +183,7 @@ public class BOMMetersController implements Serializable  {
     public void setMeters(List<BOMMeterDTO> meters) {
         this.meters = meters;
     }
-    
+
     public void setSelectedMeterForDetails(List<BOMMeterDTO> selectedMeterForDetails) {
         this.selectedMeterForDetails = selectedMeterForDetails;
     }
@@ -182,6 +191,10 @@ public class BOMMetersController implements Serializable  {
     public void setSelectedMeter(BOMMeterDTO selectedMeter) {
         this.selectedMeter = selectedMeter;
     }
+    
+    
+    
+    
 
     public void refresh(){
         
@@ -237,7 +250,7 @@ public class BOMMetersController implements Serializable  {
         
         String errormsg = "New Meter Added Successfully";
         FacesMessage msg = null;
-
+        
         if(meterBOMType == null || meterBOMType.isEmpty()){
                 msg = new FacesMessage("Validation","Please Serlect Meter Medium!");
                 msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -284,9 +297,9 @@ public class BOMMetersController implements Serializable  {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Success", errormsg);
             PrimeFaces.current().dialog().showMessageDynamic(message);
         }
-
-
-
+       
+        
+        
     }
     
     public void addNewBOMWM(){
@@ -588,19 +601,25 @@ public class BOMMetersController implements Serializable  {
         this.meterProtocolId = meterProtocolId;
     }
     
-    public void onUtilityChange(){
+
+
+    public void onUtilityTypeChange(){
+
         
+
+        //FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "CHANGE","Selected: "+meterBOMType);
+        //FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     
     public void meterConfigurations(String medium,BOMMeterDTO selectedMeter){
         //String test = "Test";
         //hesClient.GetAllDevices();
-
+        
         selectedMeterForDetails =  new ArrayList<>();
         selectedMeterForDetails.add(selectedMeter);
         this.selectedMeter = selectedMeter;
         selectedMeter.setBomMeterType(medium);
-
+        
         Map<String, Object> options = new HashMap<>();
         options.put("modal", true);
         options.put("width", 800);
@@ -612,31 +631,31 @@ public class BOMMetersController implements Serializable  {
         options.put("headerElement", "customheader");
         PrimeFaces.current().dialog().openDynamic("viewMeterDetails", options, null);
     }
-
+    
     public void addNewMeterOnHES(BOMMeterDTO selectedMeter){
         //if(){
         //    selectedMeter.setMeterStatus("ONHES");
         //}
         hesClient.addNewMeterOnHES(selectedMeter);
     }
-
+    
     public void onHESConfirmation(SelectEvent event) {
         //Product product = (Product) event.getObject();
         //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Product Selected", "Name:" + product.getName());
 
         //FacesContext.getCurrentInstance().addMessage(null, message);
     }
-
+    
     public void onHESCancellation(SelectEvent event) {
-
+        
     }
     public void onRowEdit(RowEditEvent<BOMMeterDTO> event) {
-        FacesMessage msg = new FacesMessage("Product Edited", ((BOMMeterDTO)event.getObject()).getMeterSerial());
+        FacesMessage msg = new FacesMessage("Product Edited", String.valueOf(event.getObject().getMeterSerial()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void onRowCancel(RowEditEvent<BOMMeterDTO> event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", ((BOMMeterDTO)event.getObject()).getMeterSerial());
+        FacesMessage msg = new FacesMessage("Edit Cancelled", String.valueOf(event.getObject().getMeterSerial()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
