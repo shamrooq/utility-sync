@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes;
 import ae.etisalatdigital.commonUtils.exception.WebServiceException;
 import ae.etisalatdigital.commonUtils.ws.rest.RestClient;
 import ae.etisalatdigital.commonUtils.ws.rest.RestClientFilter;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentRequestModel;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
@@ -93,21 +94,27 @@ public class HESClient extends RestClient {
     }
     
     public EquipmentResponseModel addNewMeterOnHES(BOMMeterDTO meter){
-        
-        
-        String resourceURL = "/devices/type";
+        String resourceURL = "/equipment";
         EquipmentRequestModel request = new EquipmentRequestModel();
         request.setCode(meter.getMeterSerial());
         request.setSerialNumber(meter.getMeterSerial());
-        
         Map<String, Object> paramsMap = new HashMap<>();
-        
         populateCient();
         EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);
-        
         return response;
     }
     
+    public EquipmentResponseModel addNewGatewayOnHES(BOMGatewayEstDTO gateway){
+        String resourceURL = "/equipment";
+        EquipmentRequestModel request = new EquipmentRequestModel();
+        request.setCode(gateway.getSerialNumber());
+        request.setSerialNumber(gateway.getSerialNumber());
+        //request.setModel_id(gateway.getBomId());/**To Do later*/
+        Map<String, Object> paramsMap = new HashMap<>();
+        populateCient();
+        EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);
+        return response;
+    }
     /**
      * Create a trust manager that does not validate certificate chains.
      * 

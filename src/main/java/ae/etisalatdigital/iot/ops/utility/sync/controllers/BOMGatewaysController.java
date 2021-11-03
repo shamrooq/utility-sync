@@ -199,6 +199,7 @@ public class BOMGatewaysController implements Serializable {
 
     public BOMGatewayEstDTO saveGatewayEstimation(BOMGatewayEstDTO gatewayItem) {
         LOGGER.info("BOMGatewayEstDTO.saveGatewayEstimation called");
+        this.
         gatewayEstBus.updateGatewayDetails(gatewayItem);
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"", "Details successfully updated for gateway with id -> "+

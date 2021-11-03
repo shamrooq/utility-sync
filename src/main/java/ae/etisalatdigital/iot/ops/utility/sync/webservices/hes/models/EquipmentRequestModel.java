@@ -5,6 +5,9 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author appadmin
@@ -16,7 +19,10 @@ public class EquipmentRequestModel {
     private String code;
     private String serialNumber;
     private String parent_code;
-
+    private Long protocolId;
+    private String measuringPoint;
+    private Long accountNumber;
+    private List<Property> properties;
     public Long getUtility_id() {
         return utility_id;
     }
@@ -68,7 +74,40 @@ public class EquipmentRequestModel {
     public void setParent_code(String parent_code) {
         this.parent_code = parent_code;
     }
-    
-    
-    
+
+    public Long getProtocolId() {
+        return protocolId;
+    }
+
+    public void setProtocolId(Long protocolId) {
+        this.protocolId = protocolId;
+    }
+
+    public String getMeasuringPoint() {
+        return measuringPoint;
+    }
+
+    public void setMeasuringPoint(String measuringPoint) {
+        this.measuringPoint = measuringPoint;
+    }
+
+    public Long getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(Long accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public List<Property> getProperties() {
+        if(this.properties == null){
+            this.properties = new ArrayList<>();
+        }
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
 }
