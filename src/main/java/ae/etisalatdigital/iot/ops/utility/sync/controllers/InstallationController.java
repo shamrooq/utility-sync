@@ -220,7 +220,7 @@ public class InstallationController implements Serializable  {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return event.getOldStep();
             }
-            if(event.getNewStep().equals("semanticsTab")){
+            if("semanticsTab".equals(event.getNewStep())){
                 fetchGatewayMetersSemantics(this.selectedRequest.getActiveBom());
             }
 
