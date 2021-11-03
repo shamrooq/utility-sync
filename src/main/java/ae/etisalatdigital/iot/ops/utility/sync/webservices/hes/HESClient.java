@@ -10,8 +10,10 @@ import ae.etisalatdigital.commonUtils.ws.rest.RestClient;
 import ae.etisalatdigital.commonUtils.ws.rest.RestClientFilter;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.CommunicationEquipmentModel;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentRequestModel;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.Property;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -104,6 +106,19 @@ public class HESClient extends RestClient {
         return response;
     }
     
+    public EquipmentResponseModel addNewSimOnHES(BOMGatewayEstDTO gateway){
+        String resourceURL = "/communicationsEquipment";
+        CommunicationEquipmentModel request = new CommunicationEquipmentModel();
+        request.setCode(gateway.getSimICCID().toString());
+        Property property = new Property();
+        property.setIp("");
+        property.setPort("");
+        Map<String, Object> paramsMap = new HashMap<>();
+        populateCient();
+        EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);
+        return response;
+    }
+
     public EquipmentResponseModel addNewGatewayOnHES(BOMGatewayEstDTO gateway){
         String resourceURL = "/equipment";
         EquipmentRequestModel request = new EquipmentRequestModel();

@@ -12,6 +12,9 @@ package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 public class EquipmentResponseModel {
     private Long code;
     private String description;
+    private Long errorNumber;
+    private String errorCode;
+    private String stackTrace;
 
     public Long getCode() {
         return code;
@@ -27,6 +30,30 @@ public class EquipmentResponseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getErrorNumber() {
+        return errorNumber;
+    }
+
+    public void setErrorNumber(Long errorNumber) {
+        this.errorNumber = errorNumber;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getStackTrace() {
+        return stackTrace;
+    }
+
+    public void setStackTrace(String stackTrace) {
+        this.stackTrace = stackTrace;
     }
     
     

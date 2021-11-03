@@ -7,6 +7,8 @@ package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMGatewayEstBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -20,6 +22,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
+import org.primefaces.event.CloseEvent;
 
 /**
  *
@@ -63,7 +66,9 @@ public class BOMGatewaysController implements Serializable {
 
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
-
+    @Inject
+    private HESClient hesClient;
+    
     public static Logger getLOGGER() {
         return LOGGER;
     }
@@ -199,14 +204,33 @@ public class BOMGatewaysController implements Serializable {
 
     public BOMGatewayEstDTO saveGatewayEstimation(BOMGatewayEstDTO gatewayItem) {
         LOGGER.info("BOMGatewayEstDTO.saveGatewayEstimation called");
-        this.
         gatewayEstBus.updateGatewayDetails(gatewayItem);
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"", "Details successfully updated for gateway with id -> "+
                 gatewayItem.getId()));
         return gatewayItem;
     }
-
+    
+    public void handleSimDialogClose(CloseEvent event) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Adding SIM completed.");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    
+    public void addSIMWithHES(BOMGatewayEstDTO gateway){
+        BigInteger simIccid = gateway.getSimICCID();
+        EquipmentResponseModel equipmentResponseModel = hesClient.addNewSimOnHES(gateway);
+        if(null!=equipmentResponseModel){
+            if(equipmentResponseModel.getCode()==200){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "SIM added with HES");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            else if(null!=equipmentResponseModel.getErrorNumber()){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, equipmentResponseModel.getErrorCode(), 
+                        equipmentResponseModel.getStackTrace());
+                FacesContext.getCurrentInstance().addMessage(simIccid.toString(), message);
+            }
+        }
+    }    
     /**
      *
      * @return string gatewaysType

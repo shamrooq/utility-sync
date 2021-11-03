@@ -279,8 +279,24 @@
                                                     <f:validateLength minimum = "19"/>
                                                 </h:inputText>
                                                 <input type="hidden" value="#{gatewayItem.simICCID}" id="itemSimICCID#{gatewayItem.id}"/>
+                                                <p:toolbar style="width:5%">
+                                                    <p:toolbarGroup>
+                                                        <b:commandButton id="btnCreateSIMHES" look="info" onclick="PF('createSimHESWdg').show();" update="mainform:dtEstimation"  >
+                                                            <i class="icon-eye-open"></i>
+                                                        </b:commandButton>
+                                                    </p:toolbarGroup>
+                                                </p:toolbar>
                                             </p:column>
-                                        <p:column headerText="Floor" selectRow="false" style="width:5%">
+                                            <p:dialog id="createSimHESForm" widgetVar="createSimHESWdg" header="Create SIM with HES" resizable="false">
+                                                <p:ajax event="close" update="growl" listener="#{bomGatewaysController.handleSimDialogClose}" />
+                                                <p:inputText value="#{gatewayItem.simICCID}" placeholder="SIM ICCID"/>
+                                                <p:inputText value="" label="channelGroup" />
+                                                <p:inputText value="" label="Communication Equipment Type"/>
+                                                <p:inputText value="" placeholder="IP"/>
+                                                <p:inputText value="" placeholder="Port"/>
+                                                <p:commandButton value="Add SIM" action="#{bomGatewaysController.addSIMWithHES(gateway)}" />
+                                            </p:dialog>
+                                            <p:column headerText="Floor" selectRow="false" style="width:5%">
                                                 <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}" />
                                             </p:column>
                                             <p:column headerText="Room" selectRow="false" style="width:5%">
