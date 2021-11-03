@@ -58,18 +58,18 @@
                         </p:growl>
                         <f:metadata>
                         </f:metadata>
-                        <p:wizard flowListener="#{preconfigurationViewController.onFlowProcess}" widgetVar="wiz" backLabel="prev">
+                        <p:wizard flowListener="#{installationController.onFlowProcess}" widgetVar="wiz" backLabel="prev">
                             <p:tab title="REQUEST DETAILS" id="reqWizard" titleStyleClass="firstTab">
                                 <p></p>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <center>
                                             <p:panelGrid style="background: transparent;border-color: transparent" columns="3" >
-                                                <b:inputText id="itUtilityNumber" value="#{preconfigurationViewController.utilityNumber}" placeholder="e.g UN-10123456789"  style="width: 220px"/>
+                                                <b:inputText id="itUtilityNumber" value="#{installationController.utilityNumber}" placeholder="e.g UN-10123456789"  style="width: 220px"/>
                                                 <b:commandButton id="btnLookup" look="warning" styleClass="ui-button-flat p-ml-2" value="SEARCH" update="wizardform:pnlSurveyInitialDetails wizardform:pnlBOMDetails" style="width: 100px;font-size:1.5rem;"  >
-                                                    <f:actionListener binding="#{preconfigurationViewController.updateSelected()}"/> 
-                                                <f:actionListener binding="#{bomGatewaysController.updateGtwEstimation(preconfigurationViewController.selectedRequest.activeBom)}"/>
-                                                    <f:actionListener binding="#{bomMetersController.fetchBomMetersWithMeterModel(preconfigurationViewController.selectedRequest.activeBom)}"/>
+                                                    <f:actionListener binding="#{installationController.updateSelected()}"/> 
+                                                <f:actionListener binding="#{bomGatewaysController.updateGtwEstimation(installationController.selectedRequest.activeBom)}"/>
+                                                    <f:actionListener binding="#{bomMetersController.fetchBomMetersWithMeterModel(installationController.selectedRequest.activeBom)}"/>
                                                 </b:commandButton>
                                             </p:panelGrid>
                                         </center>
@@ -89,13 +89,13 @@
                                                         <p:outputLabel    value="Emirate:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="otEmirate" value="#{preconfigurationViewController.selectedRequest.emirateName}"/>
+                                                        <p:outputLabel id="otEmirate" value="#{installationController.selectedRequest.emirateName}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel    value="Premise Primary Contact:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="otContactPrimary" value="#{preconfigurationViewController.selectedRequest.contactNumberPrimary}"/>
+                                                        <p:outputLabel id="otContactPrimary" value="#{installationController.selectedRequest.contactNumberPrimary}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel   value="Survey Permit Number:"/>
@@ -109,19 +109,19 @@
                                                         <p:outputLabel    value="Region:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="otRegion" value="#{preconfigurationViewController.selectedRequest.emirateRegionName}"/>
+                                                        <p:outputLabel id="otRegion" value="#{installationController.selectedRequest.emirateRegionName}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel    value="Additional Contact:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="otContactAdditional" value="#{preconfigurationViewController.selectedRequest.contactNumberSecondary}"/>
+                                                        <p:outputLabel id="otContactAdditional" value="#{installationController.selectedRequest.contactNumberSecondary}"/>
                                                     </p:column> 
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel value="Sub Station Number:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="itSubstationNumber" value="#{preconfigurationViewController.selectedRequest.premiseSubStationNumber}"/>
+                                                        <p:outputLabel id="itSubstationNumber" value="#{installationController.selectedRequest.premiseSubStationNumber}"/>
                                                     </p:column>
                                                 </p:row>
                                                 <p:row>
@@ -130,7 +130,7 @@
 
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="itBuildingName" value="#{preconfigurationViewController.selectedRequest.premiseBuildingName}" />
+                                                        <p:outputLabel id="itBuildingName" value="#{installationController.selectedRequest.premiseBuildingName}" />
 
 
                                                     </p:column>
@@ -139,7 +139,7 @@
 
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="itPremiseID" value="#{preconfigurationViewController.selectedRequest.premiseId}" />
+                                                        <p:outputLabel id="itPremiseID" value="#{installationController.selectedRequest.premiseId}" />
 
 
                                                     </p:column>
@@ -148,7 +148,7 @@
 
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="somCustomer" value="#{preconfigurationViewController.selectedRequest.customerCompany}" />
+                                                        <p:outputLabel id="somCustomer" value="#{installationController.selectedRequest.customerCompany}" />
 
                                                     </p:column>
                                                 </p:row>
@@ -158,20 +158,20 @@
 
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="itPlotNumber" value="#{preconfigurationViewController.selectedRequest.premisePlotNumber}" />
+                                                        <p:outputLabel id="itPlotNumber" value="#{installationController.selectedRequest.premisePlotNumber}" />
                                                     </p:column>
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel   value="Premise Type:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="somPremiseType" value="#{preconfigurationViewController.selectedRequest.premiseType}" />
+                                                        <p:outputLabel id="somPremiseType" value="#{installationController.selectedRequest.premiseType}" />
                                                     </p:column>
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel   value="Vendor:"/>
 
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="otVendor" value="#{preconfigurationViewController.selectedRequest.venodrName}" />
+                                                        <p:outputLabel id="otVendor" value="#{installationController.selectedRequest.venodrName}" />
 
                                                     </p:column>
                                                 </p:row>
@@ -195,7 +195,7 @@
                                                         <p:outputLabel   value="Address:"/>
                                                     </p:column>
                                                     <p:column colspan="5">
-                                                        <b:inputTextarea readonly="true" id="itAddress" value="#{preconfigurationViewController.selectedRequest.premiseAddress}" rows="1" />
+                                                        <b:inputTextarea readonly="true" id="itAddress" value="#{installationController.selectedRequest.premiseAddress}" rows="1" />
                                                     </p:column>
                                                 </p:row>
 
@@ -229,13 +229,13 @@
                                                         <p:outputLabel   value="BOM Id:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="olBOMId" value="#{preconfigurationViewController.selectedRequest.activeBom}"/>
+                                                        <p:outputLabel id="olBOMId" value="#{installationController.selectedRequest.activeBom}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
                                                         <p:outputLabel   value="BOM Status:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
-                                                        <p:outputLabel id="olBOMStatus" value="#{preconfigurationViewController.selectedRequest.requestStatus}"/>
+                                                        <p:outputLabel id="olBOMStatus" value="#{installationController.selectedRequest.requestStatus}"/>
                                                     </p:column>
                                                 </p:row>
                                             </p:panelGrid>
@@ -324,20 +324,20 @@
                                 <p:panel header="Semantic Diagram - Gateway and Meters" collapsed="false" 
                                          id="semanticsPanel">
                                     <p:tree id="tree"
-                                            value="#{preconfigurationViewController.installationSemanticView.rootNode}"
+                                            value="#{installationController.installationSemanticView.rootNode}"
                                             var="treeNode" draggable="true" orientation="horizontal" selectionMode="multiple"
-                                            selection="#{preconfigurationViewController.installationSemanticView.selection}"
+                                            selection="#{installationController.installationSemanticView.selection}"
                                             >
                                         <p:treeNode type="root" icon="fa fa-sitemap">
-                                            <b:label value="#{treeNode.toString()}" tooltip="#{preconfigurationViewController.installationSemanticView.premiseType}"/>
+                                            <b:label value="#{treeNode.toString()}" tooltip="#{installationController.installationSemanticView.premiseType}"/>
                                         </p:treeNode>
-                                        <p:treeNode type="#{preconfigurationViewController.installationSemanticView.premiseType}"
-                                                    styleClass="#{preconfigurationViewController.installationSemanticView.premiseType}" >
-                                            <b:label value="#{treeNode}" tooltip="#{preconfigurationViewController.installationSemanticView.premiseType}"/>
+                                        <p:treeNode type="#{installationController.installationSemanticView.premiseType}"
+                                                    styleClass="#{installationController.installationSemanticView.premiseType}" >
+                                            <b:label value="#{treeNode}" tooltip="#{installationController.installationSemanticView.premiseType}"/>
                                         </p:treeNode>
                                         <p:treeNode type="floor" styleClass="floor-grid-blue-bg">
-                                            <b:label value="#{treeNode}" tooltip="#{preconfigurationViewController.installationSemanticView.getFloorNodeDetails(treeNode)}" />
-                                            <p:diagram value="#{preconfigurationViewController.installationSemanticView.getFloorElements(treeNode)}" styleClass="diagram-panel">
+                                            <b:label value="#{treeNode}" tooltip="#{installationController.installationSemanticView.getFloorNodeDetails(treeNode)}" />
+                                            <p:diagram value="#{installationController.installationSemanticView.getFloorElements(treeNode)}" styleClass="diagram-panel">
                                             </p:diagram>
                                         </p:treeNode>
                                     </p:tree>
