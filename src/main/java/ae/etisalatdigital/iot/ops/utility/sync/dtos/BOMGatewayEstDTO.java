@@ -5,6 +5,7 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Objects;
@@ -50,7 +51,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     private Double cableLength;
     private String gatewayFloor;
     private String gatewayRoom;
-
+    
+    private SimDetailsDTO simDetailsDTO;
+    
     public BOMGatewayEstDTO() {
     }
 
@@ -104,7 +107,7 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.cableLength = cableLength; 
     }
     public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel,
-                            String serialNumber,BigInteger simICCID,String gatewayFloor,String gatewayRoom) {
+                            String serialNumber,SimDetails simDetails,String gatewayFloor,String gatewayRoom) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
@@ -117,7 +120,11 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewaysDaisychain = gatewaysDaisychain;
         this.gatewaysChainLabel = gatewaysChainLabel;
         this.serialNumber=serialNumber;
-        this.simICCID=simICCID;
+        if(simDetails !=null){
+            simDetailsDTO = new SimDetailsDTO(simDetails.getId(),simDetails.getSimICCID(),simDetails.getCommunicationEquipmentType(),
+                    simDetails.getIp(),simDetails.getPort());
+            this.simICCID=simDetails.getSimICCID();
+        }
         this.gatewayFloor=gatewayFloor;
         this.gatewayRoom=gatewayRoom;
     }
@@ -177,6 +184,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     }
 
     public BigInteger getSimICCID() {
+        if(this.simICCID==null && this.simDetailsDTO!=null){
+            this.simICCID = this.simDetailsDTO.getSimICCID();
+        }
         return simICCID;
     }
 
@@ -349,5 +359,13 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     @Override
     public int compareTo(BOMGatewayEstDTO t) {
         return this.id.compareTo(t.getId());
+    }
+
+    public SimDetailsDTO getSimDetailsDTO() {
+        return simDetailsDTO;
+    }
+
+    public void setSimDetailsDTO(SimDetailsDTO simDetailsDTO) {
+        this.simDetailsDTO = simDetailsDTO;
     }
 }

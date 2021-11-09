@@ -25,6 +25,7 @@
     <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom</class>
     <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer</class>
     <class>ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel</class>
+    <class>ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.cache.shared.default" value="false"/>

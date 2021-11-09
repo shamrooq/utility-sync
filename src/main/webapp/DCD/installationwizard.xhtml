@@ -53,7 +53,7 @@
                 <b:container id="maincontainer" fluid="true">
 
                     <h:form id="wizardform">
-                        <p:growl id="growl" sticky="true" showDetail="true" showSummary="true" widgetVar="growlWV">
+                        <p:growl id="growl" sticky="true" showDetail="true" showSummary="true" widgetVar="growlWV" >
                             <p:autoUpdate disabled="false"/>
                         </p:growl>
                         <f:metadata>
@@ -86,19 +86,19 @@
                                             <p:panelGrid style="width: 100%">
                                                 <p:row>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="Emirate:"/>
+                                                        <p:outputLabel value="Emirate:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="otEmirate" value="#{installationController.selectedRequest.emirateName}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="Premise Primary Contact:"/>
+                                                        <p:outputLabel value="Premise Primary Contact:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="otContactPrimary" value="#{installationController.selectedRequest.contactNumberPrimary}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Survey Permit Number:"/>
+                                                        <p:outputLabel value="Survey Permit Number:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                     <p:outputLabel id="itSurveyPermit" value=""/>
@@ -106,13 +106,13 @@
                                                 </p:row>
                                                 <p:row>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="Region:"/>
+                                                        <p:outputLabel value="Region:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="otRegion" value="#{installationController.selectedRequest.emirateRegionName}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="Additional Contact:"/>
+                                                        <p:outputLabel value="Additional Contact:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="otContactAdditional" value="#{installationController.selectedRequest.contactNumberSecondary}"/>
@@ -126,82 +126,68 @@
                                                 </p:row>
                                                 <p:row>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel  value="Premise / Building Name:"/>
-
+                                                        <p:outputLabel value="Premise / Building Name:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="itBuildingName" value="#{installationController.selectedRequest.premiseBuildingName}" />
-
-
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Premise ID:"/>
-
+                                                        <p:outputLabel value="Premise ID:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="itPremiseID" value="#{installationController.selectedRequest.premiseId}" />
-
-
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="Customer / Business:"/>
-
+                                                        <p:outputLabel value="Customer / Business:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="somCustomer" value="#{installationController.selectedRequest.customerCompany}" />
-
                                                     </p:column>
                                                 </p:row>
                                                 <p:row>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Plot Number:"/>
-
+                                                        <p:outputLabel value="Plot Number:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="itPlotNumber" value="#{installationController.selectedRequest.premisePlotNumber}" />
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Premise Type:"/>
+                                                        <p:outputLabel value="Premise Type:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="somPremiseType" value="#{installationController.selectedRequest.premiseType}" />
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Vendor:"/>
-
+                                                        <p:outputLabel value="Vendor:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="otVendor" value="#{installationController.selectedRequest.venodrName}" />
-
                                                     </p:column>
                                                 </p:row>
                                                 <p:row>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Location Coordinates:"/>
+                                                        <p:outputLabel value="Location Coordinates:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:panelGrid columns="2">
-                                                            <p:inplace  editor="true" id="itLatitude" style="width: 100px" >
+                                                            <p:inplace editor="true" id="itLatitude" style="width: 100px" >
                                                                 <p:ajax event="save" listener="#{ussurveyController.saveGPSInplace()}" update="itLatitude "/>
                                                                 <p:inputText value="0.0" label="text"/>
                                                             </p:inplace>    
-                                                            <p:inplace  editor="true" id="itLongitude" style="width: 100px">
+                                                            <p:inplace editor="true" id="itLongitude" style="width: 100px">
                                                                 <p:ajax event="save" listener="#{ussurveyController.saveGPSInplace()}" update="itLongitude "/>
                                                                 <p:inputText value="0.0" label="text"/>
                                                             </p:inplace>
                                                         </p:panelGrid>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="Address:"/>
+                                                        <p:outputLabel value="Address:"/>
                                                     </p:column>
                                                     <p:column colspan="5">
                                                         <b:inputTextarea readonly="true" id="itAddress" value="#{installationController.selectedRequest.premiseAddress}" rows="1" />
                                                     </p:column>
                                                 </p:row>
-
-
                                             </p:panelGrid>
-
                                         </b:panel>
                                     </div>
                                 </div>
@@ -214,25 +200,25 @@
                                             <p:panelGrid>
                                                 <p:row>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="No Of Meters:"/>
+                                                        <p:outputLabel value="No Of Meters:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="olMeters" value="#{bomMetersController.getTotalMeters()}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel    value="No Of Gateways:"/>
+                                                        <p:outputLabel value="No Of Gateways:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="olGateways" value="#{bomGatewaysController.estimation.size()}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="BOM Id:"/>
+                                                        <p:outputLabel value="BOM Id:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="olBOMId" value="#{installationController.selectedRequest.activeBom}"/>
                                                     </p:column>
                                                     <p:column style="text-align: right">
-                                                        <p:outputLabel   value="BOM Status:"/>
+                                                        <p:outputLabel value="BOM Status:"/>
                                                     </p:column>
                                                     <p:column colspan="3">
                                                         <p:outputLabel id="olBOMStatus" value="#{installationController.selectedRequest.requestStatus}"/>
@@ -272,39 +258,55 @@
                                             </p:column>
                                             <p:column headerText="Serial Number" selectRow="false">
                                                 <h:inputText id="itemSerialNumber" value="#{gatewayItem.serialNumber}" required="true" requiredMessage="Serial Number is Required" rendererType="gwItemSaveBtn" class="datatable-input-text"/>
-                                                <input type="hidden" value="#{gatewayItem.serialNumber}" id="itemSerialNumber#{gatewayItem.id}"/>
+                                                <h:inputHidden value="#{gatewayItem.serialNumber}" />
                                             </p:column>
-                                            <p:column headerText="SIM ICCID" selectRow="false">
+                                            <p:column headerText="SIM ICCID" selectRow="false" style="width: 20%">
                                                 <h:inputText id="itemSimICCID" value="#{gatewayItem.simICCID}" converterMessage="SIM ICCID - please enter digits only!" validatorMessage="SIM ICCID - minimum allowable is 19 digits" class="datatable-input-text">
                                                     <f:validateLength minimum = "19"/>
                                                 </h:inputText>
-                                                <input type="hidden" value="#{gatewayItem.simICCID}" id="itemSimICCID#{gatewayItem.id}"/>
-                                                <p:toolbar style="width:5%">
-                                                    <p:toolbarGroup>
-                                                        <b:commandButton id="btnCreateSIMHES" look="info" onclick="PF('createSimHESWdg').show();" update="mainform:dtEstimation"  >
-                                                            <i class="icon-eye-open"></i>
-                                                        </b:commandButton>
-                                                    </p:toolbarGroup>
-                                                </p:toolbar>
+                                                <h:inputHidden value="#{gatewayItem.simICCID}"/>
+                                                <b:icon name="sim" process="@this wizardform:tblGateways" class="fa fa-envelope-open-o" tooltip="Add Sim With HES" id="btnCreateSIMHES" style="cursor: pointer;" onclick="PF('createSimHESWdg#{gatewayItem.id}').show();" update="itemSimICCID"/>
+                                                <p:dialog id="createSimHESForm" widgetVar="createSimHESWdg#{gatewayItem.id}" header="Create SIM with HES" resizable="true" closeOnEscape="true" responsive="true">
+                                                    <p class="p-field">
+                                                        <p:outputLabel value="SIM ICCID: " style="width: 50%">
+                                                            <p:inputText value="#{gatewayItem.simDetailsDTO.simICCID}"/>
+                                                        </p:outputLabel>
+                                                        <p:outputLabel value="Channel Group: " style="width: 50%">
+                                                            <p:inputText value="#{gatewayItem.simDetailsDTO.channelGroup}" />
+                                                        </p:outputLabel>
+                                                    </p>
+                                                    <p class="p-field">
+                                                        <p:outputLabel value="Communication Equipment Type: " style="width: 50%">
+                                                            <p:inputText value="#{gatewayItem.simDetailsDTO.communicationEquipmentType}"/>
+                                                        </p:outputLabel>
+                                                        <p:outputLabel value="IP: " style="width: 50%">
+                                                            <p:inputText value="#{gatewayItem.simDetailsDTO.ip}"/>
+                                                        </p:outputLabel>
+                                                    </p>
+                                                    <p class="p-field">
+                                                        <p:outputLabel value="Port: " style="width: 50%">
+                                                            <p:inputText value="#{gatewayItem.simDetailsDTO.port}"/>
+                                                        </p:outputLabel>
+                                                    </p>
+                                                    <p:ajax event="close" listener="#{bomGatewaysController.handleSimDialogClose}" />
+                                                    <p:commandButton class="btn btn-info" value="Add SIM" action="#{bomGatewaysController.addSIMWithHES(gatewayItem)}"/>
+                                                </p:dialog>
                                             </p:column>
-                                            <p:dialog id="createSimHESForm" widgetVar="createSimHESWdg" header="Create SIM with HES" resizable="false">
-                                                <p:ajax event="close" update="growl" listener="#{bomGatewaysController.handleSimDialogClose}" />
-                                                <p:inputText value="#{gatewayItem.simICCID}" placeholder="SIM ICCID"/>
-                                                <p:inputText value="" label="channelGroup" />
-                                                <p:inputText value="" label="Communication Equipment Type"/>
-                                                <p:inputText value="" placeholder="IP"/>
-                                                <p:inputText value="" placeholder="Port"/>
-                                                <p:commandButton value="Add SIM" action="#{bomGatewaysController.addSIMWithHES(gateway)}" />
-                                            </p:dialog>
-                                            <p:column headerText="Floor" selectRow="false" style="width:5%">
-                                                <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}" />
+                                            <p:column headerText="Floor" selectRow="false" style="width: 5%">
+                                                <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayFloor}"/>
                                             </p:column>
-                                            <p:column headerText="Room" selectRow="false" style="width:5%">
+                                            <p:column headerText="Room" selectRow="false" style="width: 5%">
                                                 <h:outputText class="text-uppercase" value="#{gatewayItem.gatewayRoom}" />
                                             </p:column>
                                             <p:column headerText="Action" selectRow="false">
-                                                <p:commandButton id="gwItemSaveBtn" title="Save" icon="fa fa-save" class="button-warning p-mr-2 center-block" update="wizardform:tblGateways" process="@this wizardform:tblGateways itemSerialNumber itemSimICCID" actionListener="#{bomGatewaysController.saveGatewayEstimation(gatewayItem)}">
-                                                </p:commandButton>
+                                                <p:toolbar style="border:none;background: none;">
+                                                    <p:toolbarGroup>
+                                                        <p:commandButton id="gwItemSaveHES" style="margin-left: 2em;margin-right: 1em;" icon="fa fa-external-link" title="Add Gateway with HES" class="button-warning p-mr-2" update="wizardform:tblGateways" 
+                                                                         type="button" process="@this wizardform:tblGateways itemSerialNumber itemSimICCID" actionListener="#{bomGatewaysController.addGatewayEstWithHES(gatewayItem)}"/>
+                                                        <p:commandButton id="gwItemSaveBtn" style="margin-left: 2em;margin-right: 1em;" icon="fa fa-save" title="Save Gateway Definition" class="button-warning p-mr-2" 
+                                                                         type="button" update="wizardform:tblGateways" process="@this wizardform:tblGateways itemSerialNumber itemSimICCID" actionListener="#{bomGatewaysController.saveGatewayEstimation(gatewayItem)}"/>
+                                                    </p:toolbarGroup>
+                                                </p:toolbar>
                                             </p:column>
                                             <p:rowExpansion id="meterRowExpansion" >
                                                 <div class="card">
@@ -342,21 +344,19 @@
                                     <p:tree id="tree"
                                             value="#{installationController.installationSemanticView.rootNode}"
                                             var="treeNode" draggable="true" orientation="horizontal" selectionMode="multiple"
-                                            selection="#{installationController.installationSemanticView.selection}"
-                                            >
+                                            selection="#{installationController.installationSemanticView.selection}">
                                         <p:treeNode type="root" icon="fa fa-sitemap">
                                             <b:label value="#{treeNode.toString()}" tooltip="#{installationController.installationSemanticView.premiseType}"/>
                                         </p:treeNode>
-                                        <p:treeNode type="#{installationController.installationSemanticView.premiseType}"
-                                                    styleClass="#{installationController.installationSemanticView.premiseType}" >
+                                        <p:treeNode type="#{installationController.installationSemanticView.premiseType}" class="#{installationController.installationSemanticView.premiseType}">
                                             <b:label value="#{treeNode}" tooltip="#{installationController.installationSemanticView.premiseType}"/>
                                         </p:treeNode>
-                                        <p:treeNode type="floor" styleClass="floor-grid-blue-bg">
+                                        <p:treeNode type="floor" styleClass="floor">
                                             <b:label value="#{treeNode}" tooltip="#{installationController.installationSemanticView.getFloorNodeDetails(treeNode)}" />
                                             <p:diagram value="#{installationController.installationSemanticView.getFloorElements(treeNode)}" styleClass="diagram-panel">
                                             </p:diagram>
                                         </p:treeNode>
-                                    </p:tree>
+                                        </p:tree>
                                 </p:panel>
                             </p:tab>
                             <p:tab title="ACCEPT" id="acceptTab" titleStyleClass="middleTab">
@@ -392,9 +392,7 @@
                                     </center>
                                 </h:form>
                             </p:tab> 
-
                         </p:wizard>
-
                     </h:form>
                 </b:container>
 
@@ -636,39 +634,33 @@
         ui-wizard-nav-back {
             display: inline-block;
         }
-        /*        
-        .button.ui-wizard-nav-back {
-            display:  !important;
-        }
-
-        .ui-wizard-nav-back {
-            display: none !important;
-        }*/
-
         .ui-wizard-step-titles{
             margin: 0 auto;
             max-width: 1200px;
         }
-
-        #tblGateways,tbody,tr.ui-datatable-even{
+        .ui-column-unselectable{
+            width: auto;
+            text-align: center;
+        }
+        table tbody tr.ui-datatable-even{
             background: none repeat scroll 0 0 beige;
             color: darkblue;
         }
-        #tblGateways,tbody,tr.ui-datatable-even td input{
+        table tbody tr.ui-datatable-even td input{
             background-color: beige;
         }
-        #tblGateways,tbody,tr.ui-datatable-odd{
+        table tbody tr.ui-datatable-odd{
             background: none repeat scroll 0 0 cadetblue;
             color: beige;
         }
-        #tblGateways,tbody,tr.ui-datatable-odd td input{
+        table tbody tr.ui-datatable-odd td input{
             background-color: cadetblue;
         }
 
-        table,tbody,tr,td,div.ui-icon-circle-triangle-e{
+        table tbody tr td div.ui-icon-circle-triangle-e{
             background-position: 0 -192px;
         }
-        table,tbody,tr,td,div.ui-icon-circle-triangle-s{
+        table tbody tr td div.ui-icon-circle-triangle-s{
             background-position: -16px -192px;
         }
         div.ui-row-toggler{
@@ -691,10 +683,7 @@
             min-height: 105px;
             min-width: inherit;
         }
-/*        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
-            background-color: #FFFFFF;
-            border: none;
-        }*/
+
         .ui-tree .ui-treenode.root {
             background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/1.1.Location.png');
             background-size: contain;
@@ -713,20 +702,13 @@
             line-height: 0.85;
         }
         .ui-tree .ui-treenode.floor{
-            background: -moz-linear-gradient(top, #93e7ff 0%, #007efc 100%);
-            background: -webkit-linear-gradient(top, #93e7ff 0%, #007efc 100%);
-            background: linear-gradient(to bottom, #93e7ff 0%, #007efc 100%);
-            background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/greenmarker.png');
+            /*background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/greenmarker.png');*/
             background-size: contain;
             line-height: 0.85;
             min-height: 105px;
             background-repeat: no-repeat;
         }
         .ui-tree .ui-treenode.gateway {
-            background: #93e7ff;
-            background: -moz-linear-gradient(top, #93e7ff 0%, #007efc 100%);
-            background: -webkit-linear-gradient(top, #93e7ff 0%, #007efc 100%);
-            background: linear-gradient(to bottom, #93e7ff 0%, #007efc 100%);
             background-image: url('/UtilitySync/faces/login.xhtml/faces/javax.faces.resource/images/5.4.GW.png');
             background-size: contain;
             line-height: 0.85;
@@ -734,20 +716,12 @@
         }
 
         .ui-tree .ui-treenode.electric {
-            background: #88c048;
-            background: -moz-linear-gradient(top, #88c048 0%, #69a038 100%);
-            background: -webkit-linear-gradient(top, #88c048 0%, #69a038 100%);
-            background: linear-gradient(to bottom, #88c048 0%, #69a038 100%);
             background-image: url('../resources/images/5.2.ElectricMeter.png');
             background-size: contain;
             line-height: 0.85;
             background-repeat: no-repeat;
         }
         .ui-tree .ui-treenode.water {
-            background: #88c048;
-            background: -moz-linear-gradient(top, #88c048 0%, #69a038 100%);
-            background: -webkit-linear-gradient(top, #88c048 0%, #69a038 100%);
-            background: linear-gradient(to bottom, #88c048 0%, #69a038 100%);
             background-image: url('../resources/images/5.1.WaterMeter.png');
             background-size: contain;
             line-height: 0.85;
@@ -766,10 +740,10 @@
             margin-top: -9px;
         }
         .datatable-input-text{
-            width: 100%;
+            margin-right: 1em;
         }
         .diagram-gateway-box {
-/*            border:1px solid #aaa;*/
+            border:1px solid #aaa;
             width:80px;
             height:30px;
             padding:10px;
@@ -805,8 +779,8 @@
             margin: 0 auto;
             height:240px;
             width:420%;
-            background-color: cadetblue;
-            /*border: 1px solid darkgray;*/
+            border:1px;
+/*            background-color: cadetblue;*/
         }
         .floor-grid-blue-bg{
             background-color: cadetblue;

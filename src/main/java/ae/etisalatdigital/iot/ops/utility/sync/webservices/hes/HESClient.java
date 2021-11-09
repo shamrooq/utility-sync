@@ -111,8 +111,19 @@ public class HESClient extends RestClient {
         CommunicationEquipmentModel request = new CommunicationEquipmentModel();
         request.setCode(gateway.getSimICCID().toString());
         Property property = new Property();
-        property.setIp("");
-        property.setPort("");
+        if(null!=gateway.getSimDetailsDTO()){
+            request.setDescription(gateway.getSimDetailsDTO().getDescription());
+            request.setCommunicationsEquipmentType(gateway.getSimDetailsDTO().getCommunicationEquipmentType());
+            request.setChannelGroup(gateway.getSimDetailsDTO().getChannelGroup());
+            property.setIp(gateway.getSimDetailsDTO().getIp());
+            property.setPort(gateway.getSimDetailsDTO().getPort());
+        }
+        else{
+            request.setDescription("new sim for gateway for gateway with SN : "+gateway.getSerialNumber());
+            request.setCommunicationsEquipmentType(gateway.getSimDetailsDTO().getCommunicationEquipmentType());
+            property.setIp("1.1.1.1");
+            property.setPort("8080");
+        }
         Map<String, Object> paramsMap = new HashMap<>();
         populateCient();
         EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);

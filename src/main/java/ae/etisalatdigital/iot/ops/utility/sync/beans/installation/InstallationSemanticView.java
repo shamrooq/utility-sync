@@ -244,7 +244,7 @@ public class InstallationSemanticView implements Serializable {
                         meterDto.getBomMeterType()+HYPHEN_STR+meterDto.getMeterManufacturer()+HYPHEN_STR+meterDto.getMeterModel()+HYPHEN_STR+meterDto.getMeterRoom(),type);*/
                 TreeNode meterNode = new DefaultTreeNode(type,
                         meterDto.getMeterSerial(), parent);
-                System.out.println(" meter :"+meterNode.getData());
+                //System.out.println(" meter :"+meterNode.getData());
                 meterMap.put(meterDto.getMeterSerial(), meterDto);
                 meterNode.setSelectable(true);
             }

@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -28,10 +29,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "BOM_Gateways_Est")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.mstRoom.id, m.mstFloor.id, m.cableLength ) FROM BOMGatewaysEst m")
-        ,@NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.mstRoom.id, m.mstRoom.id, m.cableLength ) FROM BOMGatewaysEst m where m.bomId = :bomId")
+    @NamedQuery(name = "BOMGatewaysEst.findAll", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simDetails.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.mstRoom.id, m.mstFloor.id, m.cableLength ) FROM BOMGatewaysEst m")
+        ,@NamedQuery(name = "BOMGatewaysEst.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel, m.serialNumber, m.simDetails.simICCID, m.powerIntruption, m.signalStrength, m.signalStrengthIndicator, m.antenaRequired, m.mstRoom.id, m.mstRoom.id, m.cableLength ) FROM BOMGatewaysEst m where m.bomId = :bomId")
         , @NamedQuery(name = "BOMGatewaysEst.DELETE", query = "DELETE FROM BOMGatewaysEst m WHERE m.id = :id")
-        ,@NamedQuery(name = "BOMGatewaysEst.findSomeByBomId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simICCID,m.mstFloor.floorCode,m.mstRoom.roomCode) FROM BOMGatewaysEst m where m.bomId = :bomId")
+        ,@NamedQuery(name = "BOMGatewaysEst.findSomeByBomId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO(m.id,m.bomId,m.gatewaysType,m.gatewaysTypeProposed,m.gatewaysRequired,m.metersPerGateway,m.EstimatedCableLength, m.gatewaysVendor, m.gatewaysLocation, m.gatewaysDaisychain, m.gatewaysChainLabel,m.serialNumber,m.simDetails,m.mstFloor.floorCode,m.mstRoom.roomCode) FROM BOMGatewaysEst m where m.bomId = :bomId")
  })
 public class BOMGatewaysEst implements Serializable {
 
@@ -65,8 +66,9 @@ public class BOMGatewaysEst implements Serializable {
     
     @Column(name = "Serial_Number")
     private String serialNumber;
-    @Column(name = "SIM_ICCID")
-    private BigInteger simICCID;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="SIM_ICCID")
+    private SimDetails simDetails;
     @Column(name = "Power_Intruption")
     private Boolean powerIntruption;
     @Column(name = "Signal_Strength")
@@ -95,7 +97,7 @@ public class BOMGatewaysEst implements Serializable {
     private String gatewayFloor;
     @Column(name="Gtw_Room")
     private String gatewayRoom;
-
+    
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -245,12 +247,12 @@ public class BOMGatewaysEst implements Serializable {
         this.cableLength = cableLength;
     }
 
-    public BigInteger getSimICCID() {
-        return simICCID;
+    public SimDetails getSimICCID() {
+        return simDetails;
     }
 
-    public void setSimICCID(BigInteger simICCID) {
-        this.simICCID = simICCID;
+    public void setSimICCID(SimDetails simICCID) {
+        this.simDetails = simICCID;
     }
 
     public String getGatewayFloor() {
