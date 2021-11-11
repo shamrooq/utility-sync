@@ -4,10 +4,14 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  *
  * @author shamr
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommunicationEquipmentModel {
     private String code;
 
@@ -17,6 +21,7 @@ public class CommunicationEquipmentModel {
 
     private String communicationsEquipmentType;
     
+    @JsonProperty("properties")
     private Property property;
     
     public void setCode(String code){

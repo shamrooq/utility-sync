@@ -32,6 +32,8 @@ public class SimDetails implements Serializable{
     private String communicationEquipmentType;
     private String ip;
     private String port;
+    @Column(name = "sim_description")
+    private String description;
 
     public BigInteger getId() {
         return id;
@@ -87,5 +89,13 @@ public class SimDetails implements Serializable{
 
     public void setGateway(BOMGatewaysEst gateway) {
         this.gateway = gateway;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

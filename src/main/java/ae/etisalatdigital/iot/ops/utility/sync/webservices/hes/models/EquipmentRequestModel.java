@@ -5,6 +5,7 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  *
  * @author appadmin
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EquipmentRequestModel {
     private Long utility_id;
     private Long type_id;

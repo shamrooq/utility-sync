@@ -9,6 +9,7 @@ import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGatewayMeterSemantics;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
@@ -66,7 +67,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         query = entityManager.createNamedQuery("BOMMeters.findAllByBomIdAndBomMetertype", BOMMeterDTO.class);
         query.setParameter("bomId", bomId);
         query.setParameter("bomMeterType", bomMeterType);
-              return  query.getResultList();
+        return query.getResultList();
     }
     
     @Override
@@ -184,8 +185,8 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         });
         deleteDTOs.stream().map(bommdto -> {
             BOMMeters bomMeter=getEntity(bommdto.getId());
-            if (null != bomMeter.getMeterGtwId()) {//if meter is already defined, only then remove the mapping
-                bomMeter.setMeterGtwId(null);
+            if (null != bomMeter.getMeterGateway()) {//if meter is already defined, only then remove the mapping
+                bomMeter.setMeterGateway(null);
                 bomMeter.setModifiedDate(DateTime.now().toDate());
                 return bomMeter;
             }
@@ -200,8 +201,11 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     private BOMMeters mapAddMeters(BOMMeterDTO bommdto) {
         BOMMeters bomMeter=getEntity(bommdto.getId());
         //if meter is not defined with the given gateway, only then add the mapping
-        if (null == bomMeter.getMeterGtwId() || !bomMeter.getMeterGtwId().equals(bommdto.getMeterGtwId())) {
-            bomMeter.setMeterGtwId(bommdto.getMeterGtwId());
+        if (null == bomMeter.getMeterGateway() || !bomMeter.getMeterGateway().getId().equals(bommdto.getMeterGtwId())) {
+            if(null==bomMeter.getMeterGateway()){
+                bomMeter.setMeterGateway(new BOMGatewaysEst());
+            }
+            bomMeter.getMeterGateway().setId(bommdto.getMeterGateway().getId());
             bomMeter.setModifiedDate(DateTime.now().toDate());
             return bomMeter;
         } else {

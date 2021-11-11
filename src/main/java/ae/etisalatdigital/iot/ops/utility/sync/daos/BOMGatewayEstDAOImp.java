@@ -62,7 +62,7 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
     }
     
     private BOMGatewaysEst getEntity(BigInteger id) {
-        BOMGatewaysEst entity = null;
+        BOMGatewaysEst entity;
         
         try {
             entity = entityManager.find(BOMGatewaysEst.class, id);

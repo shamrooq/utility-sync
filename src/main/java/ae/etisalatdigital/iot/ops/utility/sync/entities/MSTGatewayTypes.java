@@ -6,6 +6,7 @@
 package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,7 +33,7 @@ public class MSTGatewayTypes implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "GATEWAY_TYPE_ID", nullable = false)
+    @Column(name = "GATEWAY_TYPE_ID", nullable = false,updatable = false)
     private Long id;
     
     @Column(name = "GATEWAY_TYPE_Code", length = 10)
@@ -42,7 +44,16 @@ public class MSTGatewayTypes implements Serializable {
     
     @Column(name = "GATEWAY_TYPE_Description", length = 300)
     private String gatewayTypeDescription;
+    
+    @Column(name = "GATEWAY_MODEL_ID")
+    private Long gatewayModelId;
+    
+    @Column(name = "GATEWAY_MANUFACTURER")
+    private String gatewayManufacturer;
 
+    @OneToMany(mappedBy = "gatewayModel")
+    private List<BOMGatewaysEst> gateway;
+    
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -79,6 +90,30 @@ public class MSTGatewayTypes implements Serializable {
 
     public void setPremiseTypeDescription(String gatewayTypeDescription) {
         this.gatewayTypeDescription = gatewayTypeDescription;
+    }
+
+    public List<BOMGatewaysEst> getGateway() {
+        return gateway;
+    }
+
+    public void setGateway(List<BOMGatewaysEst> gateway) {
+        this.gateway = gateway;
+    }
+
+    public Long getGatewayModelId() {
+        return gatewayModelId;
+    }
+
+    public void setGatewayModelId(Long gatewayModelId) {
+        this.gatewayModelId = gatewayModelId;
+    }
+
+    public String getGatewayManufacturer() {
+        return gatewayManufacturer;
+    }
+
+    public void setGatewayManufacturer(String gatewayManufacturer) {
+        this.gatewayManufacturer = gatewayManufacturer;
     }
     
     

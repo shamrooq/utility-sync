@@ -1,38 +1,44 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
  *
  * @author shamr
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TelemetryConfiguration {
- private String communicationaddress;
- private String communicationsEquipment;
- List<Object> configuration;
 
+    private String communicationaddress;
+    private String communicationsEquipment;
+    @JsonProperty("configuration")
+    List<Property> configuration;
 
- // Getter Methods 
+    // Getter Methods 
+    public String getCommunicationaddress() {
+        return communicationaddress;
+    }
 
- public String getCommunicationaddress() {
-  return communicationaddress;
- }
+    public String getCommunicationsEquipment() {
+        return communicationsEquipment;
+    }
 
- public String getCommunicationsEquipment() {
-  return communicationsEquipment;
- }
+    // Setter Methods 
+    public void setCommunicationaddress(String communicationaddress) {
+        this.communicationaddress = communicationaddress;
+    }
 
- // Setter Methods 
+    public void setCommunicationsEquipment(String communicationsEquipment) {
+        this.communicationsEquipment = communicationsEquipment;
+    }
 
- public void setCommunicationaddress(String communicationaddress) {
-  this.communicationaddress = communicationaddress;
- }
+    public List<Property> getConfiguration() {
+        return configuration;
+    }
 
- public void setCommunicationsEquipment(String communicationsEquipment) {
-  this.communicationsEquipment = communicationsEquipment;
- }
+    public void setConfiguration(List<Property> configuration) {
+        this.configuration = configuration;
+    }
 }

@@ -5,10 +5,13 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  *
  * @author appadmin
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EquipmentResponseModel {
     private Long code;
     private String description;
