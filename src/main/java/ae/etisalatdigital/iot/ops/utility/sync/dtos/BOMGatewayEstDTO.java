@@ -23,7 +23,6 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     private String gatewaysType;
     private MSTGatewayTypeDTO gatewayModel;
     private String gatewaysTypeProposed;
-    private Long gatewayModelId;
 
     private int gatewaysRequired;
     private int metersPerGateway;
@@ -66,7 +65,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
         this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
-        this.gatewayModelId=gatewaysTypeProposed.getGatewayModelId();
+        this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
+        gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+        this.gatewayModel.setGatewayHESModelId(gatewaysTypeProposed.getGatewayModelId());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
@@ -90,7 +91,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
         this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
-        this.gatewayModelId=gatewaysTypeProposed.getGatewayModelId();
+        this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
+        gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+        this.gatewayModel.setGatewayHESModelId(gatewaysTypeProposed.getGatewayModelId());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
@@ -397,6 +400,10 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     }
 
     public SimDetailsDTO getSimDetailsDTO() {
+        if(null==simDetailsDTO)
+        {
+            simDetailsDTO = new SimDetailsDTO();
+        }
         return simDetailsDTO;
     }
 
@@ -404,11 +411,4 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.simDetailsDTO = simDetailsDTO;
     }
 
-    public Long getGatewayModelId() {
-        return gatewayModelId;
-    }
-
-    public void setGatewayModelId(Long gatewayModelId) {
-        this.gatewayModelId = gatewayModelId;
-    }
 }

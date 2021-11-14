@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,6 +28,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.inputtext.InputText;
 import org.primefaces.event.CloseEvent;
 
 /**
@@ -242,6 +246,18 @@ public class BOMGatewaysController implements Serializable {
     }
     
     public void handleSimDialogClose(CloseEvent event) {
+        UIComponent dialog = (org.primefaces.component.dialog.Dialog)event.getSource();
+        if(null!=dialog.getParent().getChildren().get(0))
+        {
+            try{
+                HtmlInputText text = (HtmlInputText)dialog.getParent().getChildren().get(0);
+                InputText simIccidTextField=((InputText)dialog.getChildren().get(1).getChildren().get(0));
+                text.setValue(simIccidTextField.getValue());
+            }
+            catch(Exception e){
+                LOGGER.error("Exception ",e);
+            }
+        }
         //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Adding SIM completed.");
         //FacesContext.getCurrentInstance().addMessage(null, message);
     }
@@ -253,7 +269,8 @@ public class BOMGatewaysController implements Serializable {
         try{
             equipmentResponseModel = hesClient.addNewSimOnHES(gateway);
             if (equipmentResponseModel != null) {
-                if (null != equipmentResponseModel.getCode() && Long.valueOf(200).equals(equipmentResponseModel.getCode())) {
+                if ( (null != equipmentResponseModel.getCode() && Long.valueOf(200).equals(equipmentResponseModel.getCode()))
+                        || (null!=equipmentResponseModel.getStackTrace() && equipmentResponseModel.getStackTrace().contains("already exists"))) {
                     simDetailsBus.addNewSimDetails(simDetailsDTO);
                     if (null != gateway.getSimICCID() && !(gateway.getSimICCID().equals(gateway.getSimDetailsDTO().getSimICCID()))) {
                         gateway.setSimICCID(gateway.getSimDetailsDTO().getSimICCID());

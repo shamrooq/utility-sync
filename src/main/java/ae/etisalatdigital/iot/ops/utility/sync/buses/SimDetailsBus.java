@@ -35,4 +35,7 @@ public class SimDetailsBus {
     public void addNewSimDetails(SimDetailsDTO simDetailsDTO){
         simDetailsDAO.addNewSimDetails(simDetailsDTO);
     }
+    public SimDetailsDTO findByIdOrSimIccid(SimDetailsDTO simDetailsDTO){
+        return simDetailsDAO.findByIdorSimIccid(simDetailsDTO);
+    }
 }

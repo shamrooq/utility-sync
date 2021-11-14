@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "BOMMeters.findAll", query = "SELECT m FROM BOMMeters m")
         ,@NamedQuery(name = "BOMMeters.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bom.id,m.meterStatus,m.meterType,m.meterCorrelationID,m.meterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterManufacturerId, m.meterModelId, m.meterProtocolId, m.mstRoom.id, m.mstFloor.id, m.meterManufacturerModel ) FROM BOMMeters m where m.bom.id = :bomId and m.meterStatus <> 'DELETED'")
-        ,@NamedQuery(name = "BOMMeters.findAllByBomIdAndBomMetertype", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bom.id,m.meterStatus,m.meterType,m.meterCorrelationID,m.bomMeterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterProtocolId, m.mstRoom, m.mstFloor, m.meterManufacturerModel, m.mstMeterModel, m.meterGateway,m.meterGateway.bom.id) FROM BOMMeters m where m.bom.id = :bomId and m.bomMeterType = :bomMeterType and m.meterStatus <> 'DELETED'")
+        ,@NamedQuery(name = "BOMMeters.findAllByBomIdAndBomMetertype", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bom.id,m.meterStatus,m.meterType,m.meterCorrelationID,m.bomMeterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterProtocolId, m.mstRoom, m.mstFloor, m.meterManufacturerModel, m.mstMeterModel, m.meterGateway) FROM BOMMeters m where m.bom.id = :bomId and m.bomMeterType = :bomMeterType and m.meterStatus <> 'DELETED'")
         , @NamedQuery(name = "BOMMeters.DELETE", query = "DELETE FROM BOMMeters m WHERE m.id = :id")
  })
 public class BOMMeters implements Serializable {
@@ -32,7 +32,7 @@ public class BOMMeters implements Serializable {
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="BOM_ID")
+    @JoinColumn(name="BOM_ID",updatable = true,insertable = true)
     private Boms bom;
     
     
@@ -100,7 +100,10 @@ public class BOMMeters implements Serializable {
     private MSTMeterModel mstMeterModel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="METER_GTW_ID")
+    @JoinColumns({
+        @JoinColumn(name = "METER_GTW_ID",updatable = true,insertable = true),
+        @JoinColumn(name="BOM_ID",referencedColumnName = "BOM_ID", updatable = false,insertable = false)
+            })
     private BOMGatewaysEst meterGateway;
 
     public Long getId() {

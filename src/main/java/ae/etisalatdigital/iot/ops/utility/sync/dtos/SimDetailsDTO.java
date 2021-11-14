@@ -18,7 +18,7 @@ public class SimDetailsDTO implements Serializable{
     private BigInteger simICCID;
     private String communicationEquipmentType;
     private String description;
-    private String channelGroup;
+    private String channelType;
     private String ip;
     private String port;
 
@@ -68,12 +68,12 @@ public class SimDetailsDTO implements Serializable{
         this.description = description;
     }
 
-    public String getChannelGroup() {
-        return channelGroup;
+    public String getChannelType() {
+        return channelType;
     }
 
-    public void setChannelGroup(String channelGroup) {
-        this.channelGroup = channelGroup;
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
 
     public String getIp() {

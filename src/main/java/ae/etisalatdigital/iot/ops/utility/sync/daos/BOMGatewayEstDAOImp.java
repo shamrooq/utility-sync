@@ -6,11 +6,15 @@
 package ae.etisalatdigital.iot.ops.utility.sync.daos;
 
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
+import ae.etisalatdigital.iot.ops.utility.sync.buses.SimDetailsBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.SimDetailsDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -27,7 +31,8 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
     
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager entityManager;
-    
+    @Inject
+    private SimDetailsBus simDetailsBus;
     @Override
     public List<BOMGatewayEstDTO> findAll() {
         return entityManager.createNamedQuery("BOMGatewaysEst.findAll", BOMGatewayEstDTO.class).getResultList();
@@ -56,8 +61,18 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
         if(entity == null) {
             throw new DataAccessException("Incident not found");
         }
-        new ModelMapper().map(dto, entity);
-        
+        entity.setSerialNumber(dto.getSerialNumber());
+        //entity.
+        if(null!=dto.getSimDetailsDTO().getSimICCID())
+        {
+            SimDetailsDTO simDetailsExists = simDetailsBus.findByIdOrSimIccid(dto.getSimDetailsDTO());
+            SimDetails simDetailsNew = new ModelMapper().map(dto.getSimDetailsDTO(), SimDetails.class);
+            if(simDetailsExists!=null){
+                simDetailsNew.setId(simDetailsExists.getId());
+                entity.setSimDetails(simDetailsNew);
+            }
+        }
+        //new ModelMapper().map(dto, entity);
         entityManager.merge(entity);
     }
     

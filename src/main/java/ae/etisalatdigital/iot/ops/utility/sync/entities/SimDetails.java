@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Table(name = "sim_details")
 public class SimDetails implements Serializable{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
     @Column(name = "sim_iccid",unique = true)
     private BigInteger simICCID;

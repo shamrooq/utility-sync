@@ -8,13 +8,13 @@ package ae.etisalatdigital.iot.ops.utility.sync.daos;
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.SimDetailsDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
-import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -44,7 +44,7 @@ public class SimDetailsDAOImpl implements SimDetailsDAO {
         return query.getResultList();
     }
 
-    private SimDetails getEntity(BigInteger id) {
+    private SimDetails findByIdorSimIccid(BigInteger id) {
         try {
             this.entity = entityManager.find(SimDetails.class, id);
         } catch (NoResultException ex) {
@@ -54,22 +54,40 @@ public class SimDetailsDAOImpl implements SimDetailsDAO {
     }
     
     @Override
-    public void addNewSimDetails(SimDetailsDTO simDetailsDTO){
-        if(simEntryExists(simDetailsDTO)){
-            new ModelMapper().map(simDetailsDTO, entity);
-            entityManager.merge(entity);
+    public SimDetailsDTO findByIdorSimIccid(SimDetailsDTO dto) {
+        try {
+            if(null!=dto.getId()){
+                this.entity = entityManager.find(SimDetails.class, dto.getId());
+            }
+            else if(null!=dto.getSimICCID()){
+               TypedQuery<SimDetails> query = entityManager.createQuery("SELECT s FROM SimDetails s where s.simICCID=:simICCID",SimDetails.class);
+               query.setParameter("simICCID", dto.getSimICCID());
+               this.entity = query.getSingleResult();
+            }
+        } catch (NoResultException ex) {
+            return null;
         }
-        else{
-            this.entity= new SimDetails();
-            new ModelMapper().map(simDetailsDTO, entity);
-            entityManager.persist(entity);
+        return new ModelMapper().map(this.entity, SimDetailsDTO.class);
+    }
+
+    @Override
+    public void addNewSimDetails(SimDetailsDTO simDetailsDTO){
+        try{
+            if(simEntryExists(simDetailsDTO)){
+                update(simDetailsDTO);
+            }
+            else{
+                insert(simDetailsDTO);
+            }
+            logger.info("Sim with ICCID "+simDetailsDTO.getSimICCID() + "successfully added");
+        }
+        catch(PersistenceException e){
+            logger.error("Sim with ICCID "+simDetailsDTO.getSimICCID() + "could not be added",e);
         }
     }
     private boolean simEntryExists(SimDetailsDTO simDetailsDTO){
         try {
-            if (null != simDetailsDTO.getId()) {
-                this.entity = getEntity(simDetailsDTO.getId());
-            }
+            findByIdorSimIccid(simDetailsDTO);
         } catch (Exception e) {
             logger.error("Entity with id "+simDetailsDTO.getId() + "not found",e);
             return false;
@@ -78,11 +96,21 @@ public class SimDetailsDAOImpl implements SimDetailsDAO {
     }
     @Override
     public void updateSimDetails(SimDetailsDTO dto) throws DataAccessException{
-        SimDetails entity = getEntity(dto.getId());
-        if (entity == null) {
+        simEntryExists(dto);
+        if (this.entity == null) {
             throw new DataAccessException("Entity with id "+dto.getId() + "not found");
         }
-        new ModelMapper().map(dto, entity);
-        entityManager.merge(entity);
+        update(dto);
     }
+    private void insert(SimDetailsDTO simDetailsDTO) throws PersistenceException{
+        entity = new ModelMapper().map(simDetailsDTO, SimDetails.class);
+        entityManager.persist(entity);
+        logger.info("Sim with Id "+entity.getId() + "successfully added");
+    }
+    private void update(SimDetailsDTO simDetailsDTO) throws PersistenceException{
+        this.entity = new ModelMapper().map(simDetailsDTO, SimDetails.class);
+        this.entity = entityManager.merge(entity);
+        logger.info("Sim with Id "+entity.getId() + "successfully updated");
+   }
 }
+ 

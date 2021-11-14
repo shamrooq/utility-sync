@@ -127,7 +127,7 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
             String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX,
             Date modifiedDate, String meterAmi, Long meterProtocolId, 
                        MSTRoom mstRoom, MSTFloor mstFloor, MSTMeterManufacturer meterManufacturerModel,
-                       MSTMeterModel mstMeterModel,BOMGatewaysEst meterGateway,Long gtwBomId) {
+                       MSTMeterModel mstMeterModel,BOMGatewaysEst meterGateway) {
         this.id = id;
         this.bomId = bomId;
         this.meterStatus = meterStatus;
@@ -148,12 +148,14 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
         this.meterModel=mstMeterModel==null?"":mstMeterModel.getModelTitle();
         this.meterManufacturerId = meterManufacturerModel==null?null:meterManufacturerModel.getId();
         this.meterModelId = mstMeterModel==null?null:mstMeterModel.getId();
-        ModelMapper mapper = new ModelMapper();
-        this.meterGateway = new BOMGatewayEstDTO.Builder(meterGateway.getId(),meterGateway.getBom().getId())
-                .type(meterGateway.getGatewaysType())
-                .model(mapper.map(meterGateway.getGatewayModel(),MSTGatewayTypeDTO.class))
-                .build();
-        this.meterGtwId = this.meterGateway.getId();
+        if(meterGateway!=null){
+            ModelMapper mapper = new ModelMapper();
+            this.meterGateway = new BOMGatewayEstDTO.Builder(meterGateway.getId(),meterGateway.getBom().getId())
+                    .type(meterGateway.getGatewaysType())
+                    .model(mapper.map(meterGateway.getGatewayModel(),MSTGatewayTypeDTO.class))
+                    .build();
+            this.meterGtwId = this.meterGateway.getId();
+        }
         this.meterFloor=mstFloor==null?"":mstFloor.getFloorCode();
         this.meterRoom=mstRoom==null?"":mstRoom.getRoomCode();
     }

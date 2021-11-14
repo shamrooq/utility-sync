@@ -20,4 +20,5 @@ public interface SimDetailsDAO {
     abstract List<SimDetailsDTO> findBySimICCID(BigInteger simICCID);
     abstract void addNewSimDetails(SimDetailsDTO simDetailsDTO) throws BusinessException;
     abstract void updateSimDetails(SimDetailsDTO simDetailsDTO);
+    abstract SimDetailsDTO findByIdorSimIccid(SimDetailsDTO simDetailsDTO);
 }

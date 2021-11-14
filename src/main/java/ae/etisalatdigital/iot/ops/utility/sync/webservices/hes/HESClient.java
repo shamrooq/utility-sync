@@ -16,6 +16,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.Communicat
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentRequestModel;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.Property;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -23,6 +24,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -120,8 +123,8 @@ public class HESClient extends RestClient {
         return response;
     }
 
-    public List<EquipmentResponseModel> addNewMeterOnHES(BOMGatewayEstDTO gateway, List<BOMMeterDTO> meters) throws Exception{
-        String resourceURL = "/equipment";
+    public List<EquipmentResponseModel> addNewMeterOnHES(BOMGatewayEstDTO gateway, List<BOMMeterDTO> meters) {
+        String resourceURL = "/equipment/";
         EquipmentRequestModel request;
         List<EquipmentResponseModel> responseModelList=new ArrayList<>();
         EquipmentResponseModel response;
@@ -130,8 +133,16 @@ public class HESClient extends RestClient {
             request.setCode(meter.getMeterSerial());
             request.setSerialNumber(meter.getMeterSerial());
             request.setParent_code(gateway.getSerialNumber());
-            response = sendPut(SERVICE_URL+resourceURL,request,EquipmentResponseModel.class);
-            responseModelList.add(response);
+            try{
+                response = sendPut(SERVICE_URL+resourceURL+"/"+meter.getMeterSerial(),request,EquipmentResponseModel.class);
+            }
+            catch(IOException ioe){
+                response = new EquipmentResponseModel();
+                response.setErrorCode(ioe.getMessage());
+                response.setErrorNumber(Long.valueOf(HttpStatus.SC_INTERNAL_SERVER_ERROR));
+                response.setStackTrace(Arrays.toString(ioe.getStackTrace()));
+                responseModelList.add(response);
+            }
         }
         return responseModelList;
     }
@@ -144,8 +155,8 @@ public class HESClient extends RestClient {
             request.setCode(gateway.getSimDetailsDTO().getSimICCID().toString());
             request.setDescription(gateway.getSimDetailsDTO().getDescription());
             request.setCommunicationsEquipmentType(gateway.getSimDetailsDTO().getCommunicationEquipmentType());
-            if(!gateway.getSimDetailsDTO().getChannelGroup().isEmpty()){
-                request.setChannelGroup(gateway.getSimDetailsDTO().getChannelGroup());
+            if(!gateway.getSimDetailsDTO().getChannelType().isEmpty()){
+                request.setChannelGroup(gateway.getSimDetailsDTO().getChannelType());
             }
             property.setIp(gateway.getSimDetailsDTO().getIp());
             property.setPort(gateway.getSimDetailsDTO().getPort());
@@ -179,7 +190,7 @@ public class HESClient extends RestClient {
             request.setType_id(Long.valueOf(1997));
             request.setUtility_id(Long.valueOf(1));
         }
-        request.setModel_id(gateway.getGatewayModelId());
+        request.setModel_id(gateway.getGatewayModel().getGatewayHESModelId());
         /* 
         Map<String, Object> paramsMap = new HashMap<>();
         populateCient();
@@ -256,38 +267,42 @@ public class HESClient extends RestClient {
         }
     }
 
-    private <T> T sendPut(String url, Object requestBody, Class<T> responseType) throws Exception {
+    private <T> T sendPut(String url, Object requestBody, Class<T> responseType) throws JsonProcessingException,IOException {
         httpClient = new OkHttpClient();
-        // form parameters
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(requestBody);
-        LOGGER.info("Request json string is "+json);
-        RequestBody formBody = RequestBody.create(json, MediaType.get(javax.ws.rs.core.MediaType.APPLICATION_JSON));
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("User-Agent", "OkHttp Bot")
-                .addHeader(HttpHeaders.CONTENT_TYPE, javax.ws.rs.core.MediaType.APPLICATION_JSON)
-                .addHeader("Authorization", Credentials.basic(SERVICE_USER_NAME, SERVICE_PASSWORD))
-                .put(formBody)
-                .build();
-        T t =null;
-        try (Response response = httpClient.newCall(request).execute()) {
-            if (null == response || !response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-            ResponseBody responseBody = response.body();
-            try {
-                if(null!=responseBody){
-                    json = responseBody.string();
-                    LOGGER.info("Response json string is "+json);
-                    objectMapper = new ObjectMapper();
-                    t = objectMapper.readValue(json, responseType);
+        T t = null;
+        try{
+            String json = objectMapper.writeValueAsString(requestBody);
+            LOGGER.info("Request json string is " + json);
+            RequestBody formBody = RequestBody.create(json, MediaType.get(javax.ws.rs.core.MediaType.APPLICATION_JSON));
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("User-Agent", "OkHttp Bot")
+                    .addHeader(HttpHeaders.CONTENT_TYPE, javax.ws.rs.core.MediaType.APPLICATION_JSON)
+                    .addHeader("Authorization", Credentials.basic(SERVICE_USER_NAME, SERVICE_PASSWORD))
+                    .put(formBody)
+                    .build();
+            try (Response response = httpClient.newCall(request).execute()) {
+                if (null == response || !response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
                 }
-            } catch (IOException ex) {
-                LOGGER.error("Exception caught" , ex);
-                throw new IOException("Unexpected code " + response);
+                ResponseBody responseBody = response.body();
+                try {
+                    if (null != responseBody) {
+                        json = responseBody.string();
+                        LOGGER.info("Response json string is " + json);
+                        objectMapper = new ObjectMapper();
+                        t = objectMapper.readValue(json, responseType);
+                    }
+                } catch (IOException ex) {
+                    LOGGER.error("Exception caught", ex);
+                    throw new IOException("Unexpected code " + response);
+                }
             }
-            return t;
         }
+        catch(JsonProcessingException jpe){
+            throw new IOException(jpe);
+        }
+        return t;
     }
 }
