@@ -6,20 +6,31 @@
 package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMGatewayEstBus;
+import ae.etisalatdigital.iot.ops.utility.sync.buses.SimDetailsBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.SimDetailsDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.Requests;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.inputtext.InputText;
+import org.primefaces.event.CloseEvent;
 
 /**
  *
@@ -34,6 +45,7 @@ public class BOMGatewaysController implements Serializable {
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager em;
     private BOMGatewayEstDTO gatewayEstRecord;
+    private SimDetailsDTO simDetailsDTO;
     private String utilityNumber;
     private Long bomId;
     private String errorMessage;
@@ -55,6 +67,8 @@ public class BOMGatewaysController implements Serializable {
     private Boolean antenaRequired;
 
     List<BOMGatewayEstDTO> estimation;
+    
+    List<SimDetailsDTO> simDetailList;
 
     private Long gatewayRoomId;
     private Long gatewayFloorId;
@@ -63,7 +77,11 @@ public class BOMGatewaysController implements Serializable {
 
     @Inject
     private BOMGatewayEstBus gatewayEstBus;
-
+    @Inject
+    private HESClient hesClient;
+    @Inject
+    private SimDetailsBus simDetailsBus;
+    
     public static Logger getLOGGER() {
         return LOGGER;
     }
@@ -103,6 +121,7 @@ public class BOMGatewaysController implements Serializable {
         if (estimation == null) {
             List<BOMGatewayEstDTO> list = new ArrayList<>();
             estimation = list;
+            
         }
         if (estimation.size() >= 20) {
             rowsPerPageTemplate = "10,20," + estimation.size();
@@ -157,7 +176,7 @@ public class BOMGatewaysController implements Serializable {
      public void addNewGatewayEst(){
 
          String errormsg = "Gateway Added Successfully";
-         FacesMessage msg = null;
+         FacesMessage msg;
          gatewaysRequired = 1;
 
          if(gatewaysType.isEmpty()){
@@ -197,15 +216,76 @@ public class BOMGatewaysController implements Serializable {
         gatewayEstBus.updateGatewayDetails(gateway);
     }
 
-    public BOMGatewayEstDTO saveGatewayEstimation(BOMGatewayEstDTO gatewayItem) {
-        LOGGER.info("BOMGatewayEstDTO.saveGatewayEstimation called");
-        gatewayEstBus.updateGatewayDetails(gatewayItem);
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"", "Details successfully updated for gateway with id -> "+
-                gatewayItem.getId()));
-        return gatewayItem;
+    public int addGatewayEstWithHES(Requests utilityReq, BOMGatewayEstDTO gatewayItem) {
+        LOGGER.info("BOMGatewayEstDTO.addGatewayEstWithHES called");
+        EquipmentResponseModel equipmentResponseModel=null;
+        try{
+            equipmentResponseModel = hesClient.addNewGatewayOnHES(utilityReq,gatewayItem);
+        }
+        catch (Exception e) {
+            addMessage(null, null, e.getMessage());
+        }
+        return addMessage(null,equipmentResponseModel, "Gateway defined with HES");
     }
-
+    
+    /**
+     * add gateway with HES and if successful store the definition in our local database.
+     * @param utilityReq 
+     * @param gatewayItem
+     *
+     */
+    public void saveGatewayEstimation(Requests utilityReq, BOMGatewayEstDTO gatewayItem) {
+        int httpStatusCode = addGatewayEstWithHES(utilityReq,gatewayItem);
+        if (httpStatusCode == HttpStatus.SC_OK) {
+            LOGGER.info("BOMGatewayEstDTO.saveGatewayEstimation called");
+            gatewayEstBus.updateGatewayDetails(gatewayItem);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", 
+                    "Gateway with serial number -> "+gatewayItem.getSerialNumber()+" successfully defined with HES"));
+        }
+    }
+    
+    public void handleSimDialogClose(CloseEvent event) {
+        UIComponent dialog = (org.primefaces.component.dialog.Dialog)event.getSource();
+        if(null!=dialog.getParent().getChildren().get(0))
+        {
+            try{
+                HtmlInputText text = (HtmlInputText)dialog.getParent().getChildren().get(0);
+                InputText simIccidTextField=((InputText)dialog.getChildren().get(1).getChildren().get(0));
+                text.setValue(simIccidTextField.getValue());
+            }
+            catch(Exception e){
+                LOGGER.error("Exception ",e);
+            }
+        }
+        //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Adding SIM completed.");
+        //FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    
+    public void addSIMWithHES(BOMGatewayEstDTO gateway) {
+        //BigInteger simIccid = gateway.getSimICCID();
+        this.simDetailsDTO = gateway.getSimDetailsDTO();
+        EquipmentResponseModel equipmentResponseModel;
+        try{
+            equipmentResponseModel = hesClient.addNewSimOnHES(gateway);
+            if (equipmentResponseModel != null) {
+                if ( (null != equipmentResponseModel.getCode() && Long.valueOf(200).equals(equipmentResponseModel.getCode()))
+                        || (null!=equipmentResponseModel.getStackTrace() && equipmentResponseModel.getStackTrace().contains("already exists"))) {
+                    simDetailsBus.addNewSimDetails(simDetailsDTO);
+                    if (null != gateway.getSimICCID() && !(gateway.getSimICCID().equals(gateway.getSimDetailsDTO().getSimICCID()))) {
+                        gateway.setSimICCID(gateway.getSimDetailsDTO().getSimICCID());
+                    }
+                    addMessage("createSimHESWdg" + gateway.getId(), equipmentResponseModel, "SIM added with HES");
+                } else {
+                    addMessage("createSimHESForm", equipmentResponseModel, null);
+                }
+            } else {
+                addMessage(null, null, null);
+            }
+        } catch (Exception e) {
+            addMessage(null, null, e.getMessage());
+        }
+    }    
     /**
      *
      * @return string gatewaysType
@@ -344,5 +424,43 @@ public class BOMGatewaysController implements Serializable {
 
     public void setRowsPerPageTemplate(String rowsPerPageTemplate) {
         this.rowsPerPageTemplate = rowsPerPageTemplate;
+    }
+    
+    /**
+     * add message on JSF view
+     * @param clientId
+     * @param equipmentResponseModel
+     * @param message 
+     * @return status code
+     */
+    private int addMessage(String clientId,EquipmentResponseModel equipmentResponseModel,String message) {
+        FacesMessage facesMessage;
+        if (null != equipmentResponseModel) {
+            if (Long.valueOf(200).equals(equipmentResponseModel.getCode())) {
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, "", message==null?
+                        equipmentResponseModel.getDescription():message);
+                FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
+            } else if (null != equipmentResponseModel.getErrorNumber()) {
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, String.valueOf(equipmentResponseModel.getErrorNumber()),
+                        Optional.ofNullable(equipmentResponseModel.getErrorCode()).orElse("").concat(
+                        equipmentResponseModel.getStackTrace()==null?"":equipmentResponseModel.getStackTrace()));
+                FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
+                return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+            }
+        } else {
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, ""+HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    message==null?"Internal Server Error":message);
+            FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
+            return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+        }
+        return HttpStatus.SC_OK;
+    }
+
+    public SimDetailsDTO getSimDetailsDTO() {
+        return simDetailsDTO;
+    }
+
+    public void setSimDetailsDTO(SimDetailsDTO simDetailsDTO) {
+        this.simDetailsDTO = simDetailsDTO;
     }
 }

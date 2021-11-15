@@ -5,6 +5,8 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTGatewayTypes;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Objects;
@@ -15,10 +17,13 @@ import java.util.Objects;
  */
 public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDTO>{
     
+    private static final long serialVersionUID = 7654321L;
     private BigInteger id;
     private Long bomId; 
     private String gatewaysType;
+    private MSTGatewayTypeDTO gatewayModel;
     private String gatewaysTypeProposed;
+
     private int gatewaysRequired;
     private int metersPerGateway;
     private String EstimatedCableLength;
@@ -49,42 +54,20 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     private Double cableLength;
     private String gatewayFloor;
     private String gatewayRoom;
-
+    
+    private SimDetailsDTO simDetailsDTO;
+    
     public BOMGatewayEstDTO() {
     }
 
-    /*
-    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength) {
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, MSTGatewayTypes gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel, String serialNumber, BigInteger simICCID, Boolean powerIntruption, Long signalStrength, String signalStrengthIndicator, Boolean antenaRequired, Long gatewayRoomId, Long gatewayFloorId, Double cableLength) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
-        this.gatewaysTypeProposed = gatewaysTypeProposed;
-        this.gatewaysRequired = gatewaysRequired;
-        this.metersPerGateway = metersPerGateway;
-        this.EstimatedCableLength = EstimatedCableLength;
-    }
-
-    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel) {
-        this.id = id;
-        this.bomId = bomId;
-        this.gatewaysType = gatewaysType;
-        this.gatewaysTypeProposed = gatewaysTypeProposed;
-        this.gatewaysRequired = gatewaysRequired;
-        this.metersPerGateway = metersPerGateway;
-        this.EstimatedCableLength = EstimatedCableLength;
-        
-        this.gatewaysVendor = gatewaysVendor;
-        this.gatewaysLocation = gatewaysLocation;
-        this.gatewaysDaisychain = gatewaysDaisychain;
-        this.gatewaysChainLabel = gatewaysChainLabel;
-    }
-    */
-    
-    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel, String serialNumber, BigInteger simICCID, Boolean powerIntruption, Long signalStrength, String signalStrengthIndicator, Boolean antenaRequired, Long gatewayRoomId, Long gatewayFloorId, Double cableLength) {
-        this.id = id;
-        this.bomId = bomId;
-        this.gatewaysType = gatewaysType;
-        this.gatewaysTypeProposed = gatewaysTypeProposed;
+        this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
+        this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
+        gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+        this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
@@ -102,12 +85,15 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewayRoomId = gatewayRoomId;
         this.cableLength = cableLength; 
     }
-    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, String gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel,
-                            String serialNumber,BigInteger simICCID,String gatewayFloor,String gatewayRoom) {
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, MSTGatewayTypes gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel,
+                            String serialNumber,SimDetails simDetails,String gatewayFloor,String gatewayRoom) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
-        this.gatewaysTypeProposed = gatewaysTypeProposed;
+        this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
+        this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
+        gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+        this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
@@ -116,16 +102,68 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewaysDaisychain = gatewaysDaisychain;
         this.gatewaysChainLabel = gatewaysChainLabel;
         this.serialNumber=serialNumber;
-        this.simICCID=simICCID;
+        if(simDetails !=null){
+            simDetailsDTO = new SimDetailsDTO(simDetails.getId(),simDetails.getSimICCID(),simDetails.getCommunicationEquipmentType(),
+                    simDetails.getIp(),simDetails.getPort());
+            simDetailsDTO.setDescription(simDetails.getDescription());
+            this.simICCID=simDetails.getSimICCID();
+        }
         this.gatewayFloor=gatewayFloor;
         this.gatewayRoom=gatewayRoom;
     }
-
-    
-    
-    
-    
-
+    private BOMGatewayEstDTO(Builder builder){
+        this.id=builder.id;
+        this.bomId=builder.bomId;
+        this.gatewaysType=builder.gatewaysType;
+        this.serialNumber=builder.serialNumber;
+        this.gatewayModel=builder.gatewayModel;
+        if(null!=builder.floorDTO)
+        {
+            this.gatewayFloorId=builder.floorDTO.getId();
+            this.gatewayFloor=builder.floorDTO.getFloorCode();
+        }
+        if(null!=builder.roomDTO){
+            this.gatewayRoom=builder.roomDTO.getRoomCode();
+            this.gatewayRoomId=builder.roomDTO.getId();
+        }
+    }
+    public static class Builder{
+        private BigInteger id;
+        private Long bomId; 
+        private String gatewaysType;
+        private MSTGatewayTypeDTO gatewayModel;
+        private String serialNumber;
+        private MSTFloorDTO floorDTO;
+        private MSTRoomDTO roomDTO;
+        public Builder(BigInteger id,Long bomId){
+            this.id=id;
+            this.bomId=bomId;
+        }
+        public Builder type(String gatewaysType){
+            this.gatewaysType=gatewaysType;
+            return this;
+        }
+        public Builder model(MSTGatewayTypeDTO gatewayTypeDTO){
+            this.gatewayModel = gatewayTypeDTO;
+            return this;
+        }
+        public Builder serialNumber(String serialNumber){
+            this.serialNumber=serialNumber;
+            return this;
+        }
+        public Builder floor(MSTFloorDTO floorDTO){
+            this.floorDTO = floorDTO;
+            return this;
+        }
+        public Builder room(MSTRoomDTO roomDTO){
+            this.roomDTO = roomDTO;
+            return this;
+        }
+        public BOMGatewayEstDTO build(){
+            BOMGatewayEstDTO bomGatewayEstDTO = new BOMGatewayEstDTO(this);
+            return bomGatewayEstDTO;
+        }
+    }
     public BigInteger getId() {
         return id;
     }
@@ -176,6 +214,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     }
 
     public BigInteger getSimICCID() {
+        if(this.simICCID==null && this.simDetailsDTO!=null){
+            this.simICCID = this.simDetailsDTO.getSimICCID();
+        }
         return simICCID;
     }
 
@@ -311,6 +352,14 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewayRoom = gatewayRoom;
     }
 
+    public MSTGatewayTypeDTO getGatewayModel() {
+        return gatewayModel;
+    }
+
+    public void setGatewayModel(MSTGatewayTypeDTO gatewayModel) {
+        this.gatewayModel = gatewayModel;
+    }
+
     public void handleKeyEvent() {
         if(signalStrength <= -111){
             signalStrengthIndicator = "LOW";
@@ -349,4 +398,17 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     public int compareTo(BOMGatewayEstDTO t) {
         return this.id.compareTo(t.getId());
     }
+
+    public SimDetailsDTO getSimDetailsDTO() {
+        if(null==simDetailsDTO)
+        {
+            simDetailsDTO = new SimDetailsDTO();
+        }
+        return simDetailsDTO;
+    }
+
+    public void setSimDetailsDTO(SimDetailsDTO simDetailsDTO) {
+        this.simDetailsDTO = simDetailsDTO;
+    }
+
 }

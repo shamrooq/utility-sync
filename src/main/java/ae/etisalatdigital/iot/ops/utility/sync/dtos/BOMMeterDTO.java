@@ -5,22 +5,26 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
+import java.io.Serializable;
 
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
+import org.modelmapper.ModelMapper;
 
 
 /**
  *
  * @author au_mobility
  */
-public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
+public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
 
+    private static final long serialVersionUID = 1234567L;
     private Long id;
     
     private Long bomId;
@@ -58,6 +62,7 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
     private Long meterProtocolId;
     private MSTMeterManufacturer meterManufacturerModel;
 
+    private BOMGatewayEstDTO meterGateway;
     private BigInteger meterGtwId;
 
     public BOMMeterDTO(){}
@@ -122,7 +127,7 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
             String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX,
             Date modifiedDate, String meterAmi, Long meterProtocolId, 
                        MSTRoom mstRoom, MSTFloor mstFloor, MSTMeterManufacturer meterManufacturerModel,
-                       MSTMeterModel mstMeterModel,BigInteger meterGtwId) {
+                       MSTMeterModel mstMeterModel,BOMGatewaysEst meterGateway) {
         this.id = id;
         this.bomId = bomId;
         this.meterStatus = meterStatus;
@@ -143,15 +148,18 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         this.meterModel=mstMeterModel==null?"":mstMeterModel.getModelTitle();
         this.meterManufacturerId = meterManufacturerModel==null?null:meterManufacturerModel.getId();
         this.meterModelId = mstMeterModel==null?null:mstMeterModel.getId();
-        this.meterGtwId = meterGtwId;
+        if(meterGateway!=null){
+            ModelMapper mapper = new ModelMapper();
+            this.meterGateway = new BOMGatewayEstDTO.Builder(meterGateway.getId(),meterGateway.getBom().getId())
+                    .type(meterGateway.getGatewaysType())
+                    .model(mapper.map(meterGateway.getGatewayModel(),MSTGatewayTypeDTO.class))
+                    .build();
+            this.meterGtwId = this.meterGateway.getId();
+        }
         this.meterFloor=mstFloor==null?"":mstFloor.getFloorCode();
         this.meterRoom=mstRoom==null?"":mstRoom.getRoomCode();
     }
     
-    
-    
-    
-
     public Long getId() {
         return id;
     }
@@ -240,9 +248,6 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
         return meterManufacturerModel;
     }
 
-    
-    
-    
     /*
     *
     */
@@ -341,6 +346,14 @@ public class BOMMeterDTO implements Comparable<BOMMeterDTO>{
 
     public void setMeterGtwId(BigInteger meterGtwId) {
         this.meterGtwId = meterGtwId;
+    }
+
+    public BOMGatewayEstDTO getMeterGateway() {
+        return meterGateway;
+    }
+
+    public void setMeterGateway(BOMGatewayEstDTO meterGateway) {
+        this.meterGateway = meterGateway;
     }
 
     @Override

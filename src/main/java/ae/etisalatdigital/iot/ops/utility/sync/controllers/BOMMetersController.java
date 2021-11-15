@@ -6,11 +6,12 @@
 package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
-import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
+import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
 
+import org.primefaces.model.DualListModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,11 +22,11 @@ import javax.enterprise.context.SessionScoped;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.apache.log4j.Logger;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FlowEvent;
@@ -33,8 +34,10 @@ import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import java.io.File;
-import java.util.stream.Collectors;
 import java.math.BigInteger;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 
 /**
  *
@@ -99,7 +102,7 @@ public class BOMMetersController implements Serializable  {
     private Long emeterModelId;
     private Long wmeterManufacturerId;
     private Long emeterManufacturerId;
-
+    
     List<BOMMeterDTO> metersSource;
     List<BOMMeterDTO> metersTarget;
     private DualListModel<BOMMeterDTO> bomMeterModel;
@@ -723,16 +726,46 @@ public class BOMMetersController implements Serializable  {
         msg.setDetail(builder.toString());
         FacesContext.getCurrentInstance().addMessage(null, msg);*/
     }
-
-    public void updateGtwBomMeterMapping(BigInteger gtwId) {
+    
+    /**
+     * method to map meter with a parent gateway
+     */
+    private int addMeterMappingWithHES(BOMGatewayEstDTO gateway) {
+        List<EquipmentResponseModel> equipmentResponseModelList=null;
+        try{
+            equipmentResponseModelList = hesClient.addNewMeterOnHES(gateway,this.metersTarget);
+            equipmentResponseModelList.forEach(eq->{
+                addMessage(null, eq, null);
+            });
+            
+        } catch (Exception e) {
+            addMessage(null, null, e.getMessage());
+            return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+        }
+        for(EquipmentResponseModel eq : equipmentResponseModelList){
+            if(null!=eq.getErrorNumber()){
+                return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+            }
+        }
+        return HttpStatus.SC_OK;
+    }
+    
+    public void updateGtwBomMeterMapping(BOMGatewayEstDTO gateway) {
         if (this.metersTarget == null && this.metersTarget == null) {
             return;
         }
+        int response = addMeterMappingWithHES(gateway);
+        if(response==HttpStatus.SC_OK){
+            saveMeterMapping(gateway);
+        }
+    }
+    
+    private void saveMeterMapping(BOMGatewayEstDTO gateway){
         int i;
         for (BOMMeterDTO meterDTO : this.metersTarget) {
             i = meters.indexOf(meterDTO);
             if (i >= 0) {
-                ((BOMMeterDTO) meters.get(i)).setMeterGtwId(gtwId);
+                ((BOMMeterDTO) meters.get(i)).setMeterGtwId(gateway.getId());
             }
         }
         for (BOMMeterDTO meterDTO : this.metersSource) {
@@ -747,7 +780,7 @@ public class BOMMetersController implements Serializable  {
             for (BOMMeterDTO meterDTO : this.metersTarget) {
                 i = meters.indexOf(meterDTO);
                 if (i >= 0) {
-                    ((BOMMeterDTO) meters.get(i)).setMeterGtwId(gtwId);
+                    ((BOMMeterDTO) meters.get(i)).setMeterGtwId(gateway.getId());
                 }
             }
             for (BOMMeterDTO meterDTO : this.metersSource) {
@@ -756,13 +789,42 @@ public class BOMMetersController implements Serializable  {
                     ((BOMMeterDTO) meters.get(i)).setMeterGtwId(null);
                 }
             }
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Gateway - Meter mapping completed for gateway with id -> " + gtwId);
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Gateway - Meter mapping completed for gateway with id -> " + gateway.getId());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Error during Gateway - Meter mapping for gateway with id " + gtwId);
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Error during Gateway - Meter mapping for gateway with id " + gateway.getId());
             FacesContext.getCurrentInstance().addMessage(null, msg);
             LOGGER.error("Exception during sql update", e);
         }
     }
-
+    /**
+     * add message on JSF view
+     *
+     * @param clientId
+     * @param equipmentResponseModel
+     * @param message
+     * @return status code
+     */
+    private int addMessage(String clientId,EquipmentResponseModel equipmentResponseModel,String message) {
+        FacesMessage facesMessage;
+        if (null != equipmentResponseModel) {
+            if (Long.valueOf(200).equals(equipmentResponseModel.getCode())) {
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, "", message==null?
+                        equipmentResponseModel.getDescription():message);
+                FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
+            } else if (null != equipmentResponseModel.getErrorNumber()) {
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, String.valueOf(equipmentResponseModel.getErrorNumber()),
+                        Optional.ofNullable(equipmentResponseModel.getErrorCode()).orElse("").concat(
+                        equipmentResponseModel.getStackTrace()==null?"":equipmentResponseModel.getStackTrace()));
+                FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
+                return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+            }
+        } else {
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, ""+HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    message==null?"Internal Server Error":message);
+            FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
+            return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+        }
+        return HttpStatus.SC_OK;
+    }
 }

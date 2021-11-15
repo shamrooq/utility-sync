@@ -74,6 +74,14 @@ public class MSTRoom implements Serializable {
         this.roomDescription = roomDescription;
     }
 
+    public List<BOMGatewaysEst> getBomGatewayEstListRoomId() {
+        return bomGatewayEstListRoomId;
+    }
+
+    public void setBomGatewayEstListRoomId(List<BOMGatewaysEst> bomGatewayEstListRoomId) {
+        this.bomGatewayEstListRoomId = bomGatewayEstListRoomId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;

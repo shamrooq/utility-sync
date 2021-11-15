@@ -6,7 +6,6 @@
 package ae.etisalatdigital.iot.ops.utility.sync.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,8 +19,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "BOMMeters.findAll", query = "SELECT m FROM BOMMeters m")
-        ,@NamedQuery(name = "BOMMeters.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bomId,m.meterStatus,m.meterType,m.meterCorrelationID,m.meterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterManufacturerId, m.meterModelId, m.meterProtocolId, m.mstRoom.id, m.mstFloor.id, m.meterManufacturerModel ) FROM BOMMeters m where m.bomId = :bomId and m.meterStatus <> 'DELETED'")
-        ,@NamedQuery(name = "BOMMeters.findAllByBomIdAndBomMetertype", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bomId,m.meterStatus,m.meterType,m.meterCorrelationID,m.bomMeterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterProtocolId, m.mstRoom, m.mstFloor, m.meterManufacturerModel, m.mstMeterModel, m.meterGtwId) FROM BOMMeters m where m.bomId = :bomId and m.bomMeterType = :bomMeterType and m.meterStatus <> 'DELETED'")
+        ,@NamedQuery(name = "BOMMeters.findAllByBOMID", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bom.id,m.meterStatus,m.meterType,m.meterCorrelationID,m.meterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterManufacturerId, m.meterModelId, m.meterProtocolId, m.mstRoom.id, m.mstFloor.id, m.meterManufacturerModel ) FROM BOMMeters m where m.bom.id = :bomId and m.meterStatus <> 'DELETED'")
+        ,@NamedQuery(name = "BOMMeters.findAllByBomIdAndBomMetertype", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO(m.id,m.bom.id,m.meterStatus,m.meterType,m.meterCorrelationID,m.bomMeterType,m.meterSerial,m.meterLabelGTW,m.meterLabelCBL,m.meterLabelJBX,m.modifiedDate,m.meterAmi, m.meterProtocolId, m.mstRoom, m.mstFloor, m.meterManufacturerModel, m.mstMeterModel, m.meterGateway) FROM BOMMeters m where m.bom.id = :bomId and m.bomMeterType = :bomMeterType and m.meterStatus <> 'DELETED'")
         , @NamedQuery(name = "BOMMeters.DELETE", query = "DELETE FROM BOMMeters m WHERE m.id = :id")
  })
 public class BOMMeters implements Serializable {
@@ -32,8 +31,9 @@ public class BOMMeters implements Serializable {
     @Column(name = "BOM_METER_ID")
     private Long id;
     
-    @Column(name = "BOM_ID")
-    private Long bomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="BOM_ID",updatable = true,insertable = true)
+    private Boms bom;
     
     
     @Column(name = "METER_Status")
@@ -99,8 +99,12 @@ public class BOMMeters implements Serializable {
     @JoinColumn(name="METER_Model_Id", referencedColumnName = "MODEL_ID", insertable = false, updatable = false)
     private MSTMeterModel mstMeterModel;
 
-    @Column(name = "METER_GTW_ID")
-    private BigInteger meterGtwId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "METER_GTW_ID",updatable = true,insertable = true),
+        @JoinColumn(name="BOM_ID",referencedColumnName = "BOM_ID", updatable = false,insertable = false)
+            })
+    private BOMGatewaysEst meterGateway;
 
     public Long getId() {
         return id;
@@ -108,10 +112,6 @@ public class BOMMeters implements Serializable {
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public Long getBomId() {
-        return bomId;
     }
 
     public String getMeterStatus() {
@@ -208,10 +208,6 @@ public class BOMMeters implements Serializable {
         this.id = id;
     }
 
-    public void setBomId(Long bomId) {
-        this.bomId = bomId;
-    }
-
     public void setMeterStatus(String meterStatus) {
         this.meterStatus = meterStatus;
     }
@@ -294,12 +290,12 @@ public class BOMMeters implements Serializable {
         this.meterManufacturerModel = meterManufacturerModel;
     }
 
-    public BigInteger getMeterGtwId() {
-        return meterGtwId;
+    public BOMGatewaysEst getMeterGateway() {
+        return meterGateway;
     }
 
-    public void setMeterGtwId(BigInteger meterGtwId) {
-        this.meterGtwId = meterGtwId;
+    public void setMeterGateway(BOMGatewaysEst meterGateway) {
+        this.meterGateway = meterGateway;
     }
 
     public MSTMeterModel getMstMeterModel() {
@@ -324,6 +320,14 @@ public class BOMMeters implements Serializable {
 
     public void setMstFloor(MSTFloor mstFloor) {
         this.mstFloor = mstFloor;
+    }
+
+    public Boms getBom() {
+        return bom;
+    }
+
+    public void setBom(Boms bom) {
+        this.bom = bom;
     }
 
     @Override

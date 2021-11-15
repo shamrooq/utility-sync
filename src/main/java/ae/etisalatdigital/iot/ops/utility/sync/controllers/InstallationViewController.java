@@ -4,8 +4,6 @@
  *
  */
 package ae.etisalatdigital.iot.ops.utility.sync.controllers;
-import ae.etisalatdigital.commonUtils.exception.BusinessException;
-import ae.etisalatdigital.iot.ops.utility.sync.beans.OPDevice;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.Estimation;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTBusinessBus;
@@ -16,11 +14,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.buses.MSTVendorBus;
 
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.SurveyDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.Surveys;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.SurveyBus;
-import ae.etisalatdigital.iot.ops.utility.sync.dtos.MSTVendorDTO;
-        
-import ae.etisalatdigital.iot.ops.utility.sync.daos.MSTVendorDAO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTBusiness;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTEmirateRegions;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTEmirates;
@@ -30,10 +24,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTVendors;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.enterprise.context.SessionScoped;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
