@@ -22,8 +22,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import org.apache.log4j.Logger;
 
 import org.joda.time.DateTime;
 import org.modelmapper.ModelMapper;
@@ -34,7 +36,7 @@ import org.modelmapper.ModelMapper;
  */
 @Stateless
 public class BOMMeterDAOImp implements BOMMeterDAO {
-    
+    private static final Logger logger = Logger.getLogger(BOMGatewayEstDAOImp.class);
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager entityManager;
     private final String reqGtwMeterSemanticsQry="select b.utilityNumber utilityNumber,"
@@ -177,25 +179,32 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         return false;
     }
     @Override
-    public void updateMTRAll(List<BOMMeterDTO> deleteDTOs,List<BOMMeterDTO> addDTOs) throws DataAccessException {
-        addDTOs.stream().map(bommdto -> {
-            return mapAddMeters(bommdto);
-        }).filter(bomMeter -> bomMeter!=null).forEachOrdered(bomMeter -> {
-            entityManager.merge(bomMeter);
-        });
-        deleteDTOs.stream().map(bommdto -> {
-            BOMMeters bomMeter=getEntity(bommdto.getId());
-            if (null != bomMeter.getMeterGateway()) {//if meter is already defined, only then remove the mapping
-                bomMeter.setMeterGateway(null);
-                bomMeter.setModifiedDate(DateTime.now().toDate());
-                return bomMeter;
-            }
-            else{
-                return null;
-            }
-        }).filter(bomMeter -> null!=bomMeter).forEachOrdered(bomMeter -> {
-            entityManager.merge(bomMeter);
-        });
+    public void updateMTRAll(List<BOMMeterDTO> deleteDTOs,List<BOMMeterDTO> addDTOs) {
+        try{
+            //entityManager.getTransaction().begin();
+            addDTOs.stream().map(bommdto -> {
+                return mapAddMeters(bommdto);
+            }).filter(bomMeter -> bomMeter != null).forEachOrdered(bomMeter -> {
+                entityManager.merge(bomMeter);
+            });
+            deleteDTOs.stream().map(bommdto -> {
+                BOMMeters bomMeter = getEntity(bommdto.getId());
+                if (null != bomMeter.getMeterGateway()) {//if meter is already defined, only then remove the mapping
+                    bomMeter.setMeterGateway(null);
+                    bomMeter.setModifiedDate(DateTime.now().toDate());
+                    return bomMeter;
+                } else {
+                    return null;
+                }
+            }).filter(bomMeter -> null != bomMeter).forEachOrdered(bomMeter -> {
+                entityManager.merge(bomMeter);
+            });
+            //entityManager.getTransaction().commit();
+        }
+        catch(PersistenceException pe){
+            //entityManager.getTransaction().rollback();
+            logger.error("Exception "+pe.getMessage());
+        }
     }
 
     private BOMMeters mapAddMeters(BOMMeterDTO bommdto) {

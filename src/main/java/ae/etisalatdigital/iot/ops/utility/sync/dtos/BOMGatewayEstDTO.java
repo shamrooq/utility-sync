@@ -67,7 +67,7 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
         this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
         gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
-        this.gatewayModel.setGatewayHESModelId(gatewaysTypeProposed.getGatewayModelId());
+        this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
@@ -93,7 +93,7 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
         this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
         gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
-        this.gatewayModel.setGatewayHESModelId(gatewaysTypeProposed.getGatewayModelId());
+        this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;

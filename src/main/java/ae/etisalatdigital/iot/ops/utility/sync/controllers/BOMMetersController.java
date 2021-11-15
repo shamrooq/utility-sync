@@ -731,14 +731,21 @@ public class BOMMetersController implements Serializable  {
      * method to map meter with a parent gateway
      */
     private int addMeterMappingWithHES(BOMGatewayEstDTO gateway) {
+        List<EquipmentResponseModel> equipmentResponseModelList=null;
         try{
-            List<EquipmentResponseModel> equipmentResponseModelList = hesClient.addNewMeterOnHES(gateway,this.metersTarget);
+            equipmentResponseModelList = hesClient.addNewMeterOnHES(gateway,this.metersTarget);
             equipmentResponseModelList.forEach(eq->{
                 addMessage(null, eq, null);
             });
+            
         } catch (Exception e) {
             addMessage(null, null, e.getMessage());
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+        }
+        for(EquipmentResponseModel eq : equipmentResponseModelList){
+            if(null!=eq.getErrorNumber()){
+                return HttpStatus.SC_INTERNAL_SERVER_ERROR;
+            }
         }
         return HttpStatus.SC_OK;
     }
@@ -747,8 +754,10 @@ public class BOMMetersController implements Serializable  {
         if (this.metersTarget == null && this.metersTarget == null) {
             return;
         }
-        addMeterMappingWithHES(gateway);
-        saveMeterMapping(gateway);
+        int response = addMeterMappingWithHES(gateway);
+        if(response==HttpStatus.SC_OK){
+            saveMeterMapping(gateway);
+        }
     }
     
     private void saveMeterMapping(BOMGatewayEstDTO gateway){

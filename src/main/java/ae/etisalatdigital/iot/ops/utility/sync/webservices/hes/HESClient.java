@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -115,7 +116,7 @@ public class HESClient extends RestClient {
     public EquipmentResponseModel addNewMeterOnHES(BOMMeterDTO meter){
         String resourceURL = "/equipment";
         EquipmentRequestModel request = new EquipmentRequestModel();
-        request.setCode(meter.getMeterSerial());
+        request.setCode(String.valueOf(meter.getId()));
         request.setSerialNumber(meter.getMeterSerial());
         Map<String, Object> paramsMap = new HashMap<>();
         populateCient();
@@ -124,17 +125,17 @@ public class HESClient extends RestClient {
     }
 
     public List<EquipmentResponseModel> addNewMeterOnHES(BOMGatewayEstDTO gateway, List<BOMMeterDTO> meters) {
-        String resourceURL = "/equipment/";
+        String url = SERVICE_URL+"/"+"equipment"+"/";
         EquipmentRequestModel request;
         List<EquipmentResponseModel> responseModelList=new ArrayList<>();
         EquipmentResponseModel response;
         for(BOMMeterDTO meter:meters){
             request = new EquipmentRequestModel();
-            request.setCode(meter.getMeterSerial());
+            request.setCode(String.valueOf(meter.getId()));
             request.setSerialNumber(meter.getMeterSerial());
             request.setParent_code(gateway.getSerialNumber());
             try{
-                response = sendPut(SERVICE_URL+resourceURL+"/"+meter.getMeterSerial(),request,EquipmentResponseModel.class);
+                response = sendPut(url+meter.getMeterSerial(),request,EquipmentResponseModel.class);
             }
             catch(IOException ioe){
                 response = new EquipmentResponseModel();
@@ -148,7 +149,7 @@ public class HESClient extends RestClient {
     }
     
     public EquipmentResponseModel addNewSimOnHES(BOMGatewayEstDTO gateway) throws Exception{
-        String resourceURL = "/oum-ws/services/rest/EquipmentWebService/communicationsEquipment";
+        String apiURL = "communicationsEquipment";
         CommunicationEquipmentModel request = new CommunicationEquipmentModel();
         Property property = new Property();
         if(null!=gateway.getSimDetailsDTO()){
@@ -170,17 +171,17 @@ public class HESClient extends RestClient {
         request.setProperty(property);
         //Map<String, Object> paramsMap = new HashMap<>();
         //populateCient();
-        //EquipmentResponseModel response = //callPostMethod("http://10.0.109.224:8080", resourceURL,request, EquipmentResponseModel.class,paramsMap);
-        EquipmentResponseModel response = sendPost(SERVICE_URL+"/"+"communicationsEquipment",request,EquipmentResponseModel.class);
+        //EquipmentResponseModel response = //callPostMethod("http://10.0.109.224:8080", apiURL,request, EquipmentResponseModel.class,paramsMap);
+        EquipmentResponseModel response = sendPost(SERVICE_URL+"/"+apiURL,request,EquipmentResponseModel.class);
         return response;
     }
 
     public EquipmentResponseModel addNewGatewayOnHES(Requests utilityReq, BOMGatewayEstDTO gateway) throws Exception{
-        //String resourceURL = "/equipment";
+        //String apiURL = "/equipment";
         EquipmentRequestModel request = new EquipmentRequestModel();
         request.setAccountNumber(utilityReq.getAccountNumber());
-        //request.setCode(String.valueOf(gateway.getId()));
-        request.setCode(gateway.getSerialNumber());
+        request.setCode(String.valueOf(gateway.getId()));
+        //request.setCode(gateway.getSerialNumber());
         request.setSerialNumber(gateway.getSerialNumber());
         if(UtilityConstants.WATER_GATEWAY_STR.equalsIgnoreCase(gateway.getGatewaysType())){
             request.setType_id(Long.valueOf(1998));
@@ -190,11 +191,11 @@ public class HESClient extends RestClient {
             request.setType_id(Long.valueOf(1997));
             request.setUtility_id(Long.valueOf(1));
         }
-        request.setModel_id(gateway.getGatewayModel().getGatewayHESModelId());
+        request.setModel_id(gateway.getGatewayModel().getDeviceHESModelId());
         /* 
         Map<String, Object> paramsMap = new HashMap<>();
         populateCient();
-        EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);*/
+        EquipmentResponseModel response = callPostMethod(SERVICE_URL, apiURL,request, EquipmentResponseModel.class,paramsMap);*/
         EquipmentResponseModel response = sendPost(SERVICE_URL+"/"+"equipment",request,EquipmentResponseModel.class);
         return response;
     }
@@ -273,7 +274,7 @@ public class HESClient extends RestClient {
         T t = null;
         try{
             String json = objectMapper.writeValueAsString(requestBody);
-            LOGGER.info("Request json string is " + json);
+            LOGGER.info("Request json string is " + json + "/n url is "+url);
             RequestBody formBody = RequestBody.create(json, MediaType.get(javax.ws.rs.core.MediaType.APPLICATION_JSON));
             Request request = new Request.Builder()
                     .url(url)
@@ -284,7 +285,7 @@ public class HESClient extends RestClient {
                     .build();
             try (Response response = httpClient.newCall(request).execute()) {
                 if (null == response || !response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
+                    throw new IOException("Exception " + response);
                 }
                 ResponseBody responseBody = response.body();
                 try {
@@ -296,7 +297,7 @@ public class HESClient extends RestClient {
                     }
                 } catch (IOException ex) {
                     LOGGER.error("Exception caught", ex);
-                    throw new IOException("Unexpected code " + response);
+                    throw new IOException("Exception " + response);
                 }
             }
         }
