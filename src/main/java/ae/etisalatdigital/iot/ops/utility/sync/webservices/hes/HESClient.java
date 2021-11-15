@@ -141,8 +141,8 @@ public class HESClient extends RestClient {
                 response.setErrorCode(ioe.getMessage());
                 response.setErrorNumber(Long.valueOf(HttpStatus.SC_INTERNAL_SERVER_ERROR));
                 response.setStackTrace(Arrays.toString(ioe.getStackTrace()));
-                responseModelList.add(response);
             }
+            responseModelList.add(response);
         }
         return responseModelList;
     }
