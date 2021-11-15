@@ -45,10 +45,10 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             + "bm.bomMeterType meterType," +
         "bm.mstMeterModel meterModel,bm.meterManufacturerModel meterManufacture,bm.mstRoom meterRoom,"
             + "bm.mstFloor meterFloor," +
-        "bm.meterGtwId meterGtwId from "
+        "bm.meterGateway.id meterGtwId from "
             + "Boms b join BOMGatewaysEst bge on b.id=bge.bomId join "
             + "BOMMeters bm on bge.bomId=bm.bomId and "+
-        "bge.id=bm.meterGtwId where b.id = ?1 order by bge.mstFloor.id";
+        "bge.id=bm.meterGateway.id where b.id = ?1 order by bge.mstFloor.id";
 
     @Override
     public List<BOMMeters> findAll() {
