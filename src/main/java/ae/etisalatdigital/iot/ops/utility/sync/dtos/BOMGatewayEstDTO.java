@@ -64,10 +64,12 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
-        this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
-        this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
-        gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
-        this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
+        if(null!=gatewaysTypeProposed){
+            this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
+            this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
+            gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+            this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
+        }
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
