@@ -263,7 +263,7 @@
                                                     <f:validateLength minimum = "19"/>
                                                 </h:inputText>
                                                 <h:inputHidden value="#{null==gatewayItem.simDetailsDTO||null==gatewayItem.simDetailsDTO.simICCID?'':gatewayItem.simDetailsDTO.simICCID}"/>
-                                                <b:icon name="sim" class="fa fa-envelope-open-o" tooltip="Add Sim With HES" id="btnCreateSIMHES" style="cursor: pointer;" onclick="PF('createSimHESWdg#{gatewayItem.id}').show();" update="itemSimICCID"/>
+                                                <b:icon name="sim" class="fa fa-envelope-o" tooltip="Add Sim With HES" id="btnCreateSIMHES" style="cursor: pointer;" onclick="PF('createSimHESWdg#{gatewayItem.id}').show();" update="itemSimICCID"/>
                                                 <p:dialog id="createSimHESForm" widgetVar="createSimHESWdg#{gatewayItem.id}" header="Create SIM with HES" resizable="true" closeOnEscape="true" responsive="true" dynamic="true">
                                                     <p class="p-field">
                                                         <p:outputLabel value="SIM ICCID: " style="width: 50%">

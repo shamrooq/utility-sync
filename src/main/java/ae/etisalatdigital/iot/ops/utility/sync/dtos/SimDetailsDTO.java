@@ -77,6 +77,9 @@ public class SimDetailsDTO implements Serializable{
     }
 
     public String getIp() {
+        if(null==ip){
+            ip="2.2.2.2";
+        }
         return ip;
     }
 
@@ -85,6 +88,9 @@ public class SimDetailsDTO implements Serializable{
     }
 
     public String getPort() {
+        if(null==port){
+            ip="9090";
+        }
         return port;
     }
 

@@ -56,7 +56,7 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
     }
     
     @Override
-    public void updateGatewayDetail(BOMGatewayEstDTO dto)throws DataAccessException {
+    public BOMGatewaysEst updateGatewayDetail(BOMGatewayEstDTO dto)throws DataAccessException {
         BOMGatewaysEst entity = getEntity(dto.getId());
         if(entity == null) {
             throw new DataAccessException("Incident not found");
@@ -73,7 +73,7 @@ public class BOMGatewayEstDAOImp implements BOMGatewayEstDAO {
             }
         }
         //new ModelMapper().map(dto, entity);
-        entityManager.merge(entity);
+        return entityManager.merge(entity);
     }
     
     private BOMGatewaysEst getEntity(BigInteger id) {

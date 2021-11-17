@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.controllers;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMMeterBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
+import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.COMMA_STR;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
 
@@ -705,21 +706,21 @@ public class BOMMetersController implements Serializable  {
         if (event.isAdd()) {
             metersToTarget = (List<BOMMeterDTO>) event.getItems();
             for (BOMMeterDTO item : metersToTarget) {
-                builder.append(item.getId()).append(File.separator);
+                builder.append(item.getId()).append(COMMA_STR);
             }
             this.metersSource.removeAll(metersToTarget);
             this.metersTarget.addAll(metersToTarget);
         } else {
             metersToSource = (List<BOMMeterDTO>) event.getItems();
             for (BOMMeterDTO item : metersToSource) {
-                builder.append(item.getId()).append(File.separator);
+                builder.append(item.getId()).append(COMMA_STR);
             }
             this.metersSource.addAll(metersToSource);
             this.metersTarget.removeAll(metersToSource);
         }
         model.setSource(this.metersTarget);
         model.setTarget(this.metersSource);
-        LOGGER.info("Items transferred " + builder.toString());
+        LOGGER.debug("Items transferred " + builder.deleteCharAt(builder.lastIndexOf(COMMA_STR)).toString());
         /*FacesMessage msg = new FacesMessage();
         msg.setSeverity(FacesMessage.SEVERITY_INFO);
         msg.setSummary("Items Transferred");
@@ -730,10 +731,10 @@ public class BOMMetersController implements Serializable  {
     /**
      * method to map meter with a parent gateway
      */
-    private int addMeterMappingWithHES(BOMGatewayEstDTO gateway) {
+    private int updateMeterMappingWithHES(BOMGatewayEstDTO gateway) {
         List<EquipmentResponseModel> equipmentResponseModelList=null;
         try{
-            equipmentResponseModelList = hesClient.addNewMeterOnHES(gateway,this.metersTarget);
+            equipmentResponseModelList = hesClient.updateGtwToMeterMappingOnHES(gateway,this.metersTarget);
             equipmentResponseModelList.forEach(eq->{
                 addMessage(null, eq, null);
             });
@@ -754,7 +755,7 @@ public class BOMMetersController implements Serializable  {
         if (this.metersTarget == null && this.metersTarget == null) {
             return;
         }
-        int response = addMeterMappingWithHES(gateway);
+        int response = updateMeterMappingWithHES(gateway);
         if(response==HttpStatus.SC_OK){
             saveMeterMapping(gateway);
         }
@@ -776,7 +777,7 @@ public class BOMMetersController implements Serializable  {
         }
         FacesMessage msg;
         try {
-            bomMetersBus.updateMeterAll(this.metersSource, this.metersTarget);
+            bomMetersBus.updateMeterAll(gateway, this.metersSource, this.metersTarget);
             for (BOMMeterDTO meterDTO : this.metersTarget) {
                 i = meters.indexOf(meterDTO);
                 if (i >= 0) {

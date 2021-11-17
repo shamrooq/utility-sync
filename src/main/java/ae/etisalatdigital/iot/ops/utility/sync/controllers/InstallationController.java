@@ -205,25 +205,24 @@ public class InstallationController implements Serializable  {
     }
     
     public String onFlowProcess(FlowEvent event) throws WebException, DataAccessException, BusinessException {
-        
-        String errormsg = null;
-        FacesMessage msg = null;
-        
+        String errormsg;
+        FacesMessage msg;
         try{
-            if(selectedRequest.getRequestStatus().equalsIgnoreCase("Survey Completed")){
-                msg = new FacesMessage("Thanks Survey was completed.");
-                msg.setSeverity(FacesMessage.SEVERITY_INFO);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-            }else{
-                msg = new FacesMessage("Please complete Survey First.");
-                msg.setSeverity(FacesMessage.SEVERITY_FATAL);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-                return event.getOldStep();
+            if ("configureTab".equals(event.getNewStep())) {
+                if ("Survey Completed".equalsIgnoreCase(selectedRequest.getRequestStatus())) {
+                    msg = new FacesMessage("Thanks Survey was completed.");
+                    msg.setSeverity(FacesMessage.SEVERITY_INFO);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } else {
+                    msg = new FacesMessage("Please complete Survey First.");
+                    msg.setSeverity(FacesMessage.SEVERITY_FATAL);
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return event.getOldStep();
+                }
             }
-            if("semanticsTab".equals(event.getNewStep())){
+            else if("semanticsTab".equals(event.getNewStep())){
                 fetchGatewayMetersSemantics(this.selectedRequest.getActiveBom());
             }
-
         }catch(Exception exc){
             LOGGER.error("Error in wizard flow process", exc);
             errormsg = "System Error, Contact System Administrator";

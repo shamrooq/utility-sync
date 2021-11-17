@@ -44,7 +44,7 @@ public class BOMGatewaysEst implements Serializable {
     @Column(name = "EST_GTW_ID")
     private BigInteger id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="BOM_ID")
+    @JoinColumn(name="BOM_ID",nullable = false)
     private Boms bom;
     
     @Column(name = "EST_BOM_GTW_Type")

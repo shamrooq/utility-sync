@@ -25,9 +25,6 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class BOMGatewayEstBus {
     
-    @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
-    private EntityManager entityManager;
-    
     @Inject
     private BOMGatewayEstDAO bomDao;
     
@@ -85,8 +82,8 @@ public class BOMGatewayEstBus {
         return null;
     }
     
-    public void updateGatewayDetails(BOMGatewayEstDTO dto){
-        bomDao.updateGatewayDetail(dto);
+    public BOMGatewaysEst updateGatewayDetails(BOMGatewayEstDTO dto){
+        return bomDao.updateGatewayDetail(dto);
     }
   
 }
