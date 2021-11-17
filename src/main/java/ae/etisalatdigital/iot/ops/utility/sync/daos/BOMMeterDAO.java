@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.daos;
 
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGatewayMeterSemantics;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
 import java.util.List;
@@ -32,7 +33,7 @@ public interface BOMMeterDAO {
     
     abstract Boolean delete(Long id);
     
-    abstract void updateMTRAll(List<BOMMeterDTO> deleteDTOs,List<BOMMeterDTO> addDTOs);
+    abstract void updateMTRAll(BOMGatewayEstDTO gateway, List<BOMMeterDTO> deleteDTOs, List<BOMMeterDTO> addDTOs);
     
     abstract UtilityGatewayMeterSemantics findGtwAndMtrSemanticsByBomId(Long bomId);
 }

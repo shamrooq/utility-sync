@@ -9,6 +9,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.buses.BOMGatewayEstBus;
 import ae.etisalatdigital.iot.ops.utility.sync.buses.SimDetailsBus;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.SimDetailsDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.Requests;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
@@ -28,7 +29,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
-import org.primefaces.PrimeFaces;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.event.CloseEvent;
 
@@ -216,11 +216,11 @@ public class BOMGatewaysController implements Serializable {
         gatewayEstBus.updateGatewayDetails(gateway);
     }
 
-    public int addGatewayEstWithHES(Requests utilityReq, BOMGatewayEstDTO gatewayItem) {
-        LOGGER.info("BOMGatewayEstDTO.addGatewayEstWithHES called");
+    public int updateGatewayEstWithHES(Requests utilityReq, BOMGatewayEstDTO gatewayItem) {
+        LOGGER.info("updateGatewayEstWithHES called");
         EquipmentResponseModel equipmentResponseModel=null;
         try{
-            equipmentResponseModel = hesClient.addNewGatewayOnHES(utilityReq,gatewayItem);
+            equipmentResponseModel = hesClient.updateGatewayOnHES(utilityReq,gatewayItem);
         }
         catch (Exception e) {
             addMessage(null, null, e.getMessage());
@@ -235,7 +235,7 @@ public class BOMGatewaysController implements Serializable {
      *
      */
     public void saveGatewayEstimation(Requests utilityReq, BOMGatewayEstDTO gatewayItem) {
-        int httpStatusCode = addGatewayEstWithHES(utilityReq,gatewayItem);
+        int httpStatusCode = updateGatewayEstWithHES(utilityReq,gatewayItem);
         if (httpStatusCode == HttpStatus.SC_OK) {
             LOGGER.info("BOMGatewayEstDTO.saveGatewayEstimation called");
             gatewayEstBus.updateGatewayDetails(gatewayItem);
@@ -265,13 +265,17 @@ public class BOMGatewaysController implements Serializable {
     public void addSIMWithHES(BOMGatewayEstDTO gateway) {
         //BigInteger simIccid = gateway.getSimICCID();
         this.simDetailsDTO = gateway.getSimDetailsDTO();
+        simDetailsBus.addNewSimDetails(simDetailsDTO);
+        BOMGatewaysEst gatewayEntity = gatewayEstBus.updateGatewayDetails(gateway);
         EquipmentResponseModel equipmentResponseModel;
         try{
+            if(null!=gatewayEntity){
+                gateway.getSimDetailsDTO().setId(gatewayEntity.getSimDetails().getId());
+            }
             equipmentResponseModel = hesClient.addNewSimOnHES(gateway);
             if (equipmentResponseModel != null) {
                 if ( (null != equipmentResponseModel.getCode() && Long.valueOf(200).equals(equipmentResponseModel.getCode()))
                         || (null!=equipmentResponseModel.getStackTrace() && equipmentResponseModel.getStackTrace().contains("already exists"))) {
-                    simDetailsBus.addNewSimDetails(simDetailsDTO);
                     if (null != gateway.getSimICCID() && !(gateway.getSimICCID().equals(gateway.getSimDetailsDTO().getSimICCID()))) {
                         gateway.setSimICCID(gateway.getSimDetailsDTO().getSimICCID());
                     }

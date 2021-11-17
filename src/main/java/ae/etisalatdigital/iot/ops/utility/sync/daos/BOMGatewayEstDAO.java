@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.daos;
 
 import ae.etisalatdigital.commonUtils.exception.DataAccessException;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public interface BOMGatewayEstDAO {
         
     abstract Boolean addNewGatewayEstByBomId(Long bomId, String gatewayBomType, String proposedGateType, int noOfGateways, int metersPerGateway,Double cableLength,Long gatewayRoomId, Long gatewayFloorId, Boolean powerIntruption, Long signalStrength,Boolean antenaRequired);
 
-    abstract void updateGatewayDetail(BOMGatewayEstDTO dto)throws DataAccessException;
+    abstract BOMGatewaysEst updateGatewayDetail(BOMGatewayEstDTO dto)throws DataAccessException;
     
     abstract void updateRequestStatus(String mmsReference, Integer status);
     

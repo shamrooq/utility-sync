@@ -179,11 +179,11 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         return false;
     }
     @Override
-    public void updateMTRAll(List<BOMMeterDTO> deleteDTOs,List<BOMMeterDTO> addDTOs) {
+    public void updateMTRAll(BOMGatewayEstDTO gateway, List<BOMMeterDTO> deleteDTOs, List<BOMMeterDTO> addDTOs) {
         try{
             //entityManager.getTransaction().begin();
             addDTOs.stream().map(bommdto -> {
-                return mapAddMeters(bommdto);
+                return mapAddMeters(gateway,bommdto);
             }).filter(bomMeter -> bomMeter != null).forEachOrdered(bomMeter -> {
                 entityManager.merge(bomMeter);
             });
@@ -207,21 +207,22 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         }
     }
 
-    private BOMMeters mapAddMeters(BOMMeterDTO bommdto) {
+    private BOMMeters mapAddMeters(BOMGatewayEstDTO gateway, BOMMeterDTO bommdto) {
         BOMMeters bomMeter=getEntity(bommdto.getId());
         //if meter is not defined with the given gateway, only then add the mapping
         if (null == bomMeter.getMeterGateway() || !bomMeter.getMeterGateway().getId().equals(bommdto.getMeterGtwId())) {
             if(null==bomMeter.getMeterGateway()){
                 bomMeter.setMeterGateway(new BOMGatewaysEst());
             }
-            bomMeter.getMeterGateway().setId(bommdto.getMeterGateway().getId());
+            bomMeter.getMeterGateway().setId(gateway.getId());
             bomMeter.setModifiedDate(DateTime.now().toDate());
             return bomMeter;
         } else {
             return null;
         }
     }
-    @Override
+
+    /*@Override
     public UtilityGatewayMeterSemantics findGtwAndMtrSemanticsByBomId(Long bomId) {
         //Query query = entityManager.createNativeQuery(reqGtwMeterSemanticsQry);
         Query query = entityManager.createQuery(reqGtwMeterSemanticsQry);
@@ -315,6 +316,57 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             }
         }
         gatewayMetersSemantics.setGtwMeterMap(gtwMeterMap);
+        return gatewayMetersSemantics;
+    }*/
+
+    @Override
+    public UtilityGatewayMeterSemantics findGtwAndMtrSemanticsByBomId(Long bomId) {
+        //Query query = entityManager.createNativeQuery(reqGtwMeterSemanticsQry);
+        TypedQuery<BOMGatewaysEst> query = entityManager.createQuery("select bge FROM BOMGatewaysEst bge where bge.bom.id = ?1 order by bge.mstFloor.id",BOMGatewaysEst.class);
+        query.setParameter(1, bomId);
+        List<BOMGatewaysEst> gatewayMetersSemanticsList = query.getResultList();
+        //Set<BigInteger> gtwIds = new TreeSet<>();
+        BOMGatewayEstDTO bomGtwDTO;
+        //BOMMeterDTO bomMeterDTO;
+        Set<BOMGatewayEstDTO> gatewayEstDTOSet = new TreeSet<>();
+        //Set<BOMMeterDTO> meterDTOs = new TreeSet<>();
+        UtilityGatewayMeterSemantics gatewayMetersSemantics = new UtilityGatewayMeterSemantics();
+        Map<Long,Set<BOMGatewayEstDTO>> floorGtwMap=new HashMap<>();
+        Map<String,MSTFloor> floorMap=new HashMap<>();
+        for (BOMGatewaysEst gateway : gatewayMetersSemanticsList) {
+            if (null != gateway.getBom()) {
+                gatewayMetersSemantics.setUtilityNumber(gateway.getBom().getUtilityNumber());
+            }
+            bomGtwDTO = new BOMGatewayEstDTO.Builder(gateway.getId(), gateway.getBom().getId())
+                    .serialNumber(gateway.getSerialNumber())
+                    .floor(gateway.getMstFloor())
+                    .room(gateway.getMstRoom())
+                    .meters(gateway.getBomMeterList())
+                    .build();
+            //gtwIds.add(gateway.getId());
+            if (null != gateway.getMstFloor()) {
+                MSTFloor mstFloor = gateway.getMstFloor();
+                if(floorGtwMap.get(mstFloor.getId())==null){
+                    floorGtwMap.put(mstFloor.getId(),new TreeSet<>());
+                    floorMap.put(mstFloor.getFloorCode(), mstFloor);
+                }
+                bomGtwDTO.setGatewayFloor(mstFloor.getFloorCode());
+                bomGtwDTO.setGatewayFloorId(mstFloor.getId());
+                floorGtwMap.get(mstFloor.getId()).add(bomGtwDTO);
+            }
+            if (null != gateway.getMstRoom()) {
+                MSTRoom mstRoom = gateway.getMstRoom();
+                bomGtwDTO.setGatewayRoom(mstRoom.getRoomCode());
+                bomGtwDTO.setGatewayRoomId(mstRoom.getId());
+            }
+            gatewayEstDTOSet.add(bomGtwDTO);
+        }
+        if(floorMap.size()>0){
+            gatewayMetersSemantics.setFloorMap(floorMap);
+        }
+        gatewayMetersSemantics.setGatewayFloors(floorGtwMap);
+        gatewayMetersSemantics.setGatewaySet(gatewayEstDTOSet);
+        //Map gtwMeterMap = new TreeMap<BigInteger, Set<BOMMeterDTO>>();
         return gatewayMetersSemantics;
     }
 

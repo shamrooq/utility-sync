@@ -8,10 +8,9 @@ package ae.etisalatdigital.iot.ops.utility.sync.buses;
 import ae.etisalatdigital.commonUtils.exception.BusinessException;
 import ae.etisalatdigital.iot.ops.utility.sync.beans.installation.UtilityGatewayMeterSemantics;
 import ae.etisalatdigital.iot.ops.utility.sync.daos.BOMMeterDAO;
+import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
-import java.util.Date;
-
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -112,8 +111,8 @@ public class BOMMeterBus {
         bomDao.updateMTRDetail(dto);
     }
   
-    public void updateMeterAll(List<BOMMeterDTO> deleteDTOs,List<BOMMeterDTO> addDTOs){
-        bomDao.updateMTRAll(deleteDTOs,addDTOs);
+    public void updateMeterAll(BOMGatewayEstDTO gateway,List<BOMMeterDTO> deleteDTOs,List<BOMMeterDTO> addDTOs){
+        bomDao.updateMTRAll(gateway, deleteDTOs,addDTOs);
     }
     public UtilityGatewayMeterSemantics findGatewayAndMeterSemanticsByBomId(Long bomId){
         return bomDao.findGtwAndMtrSemanticsByBomId(bomId);

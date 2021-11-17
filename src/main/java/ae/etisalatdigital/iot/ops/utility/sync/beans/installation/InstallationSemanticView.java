@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.beans.installation;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
+import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.HYPHEN_STR_SPACE;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,6 @@ public class InstallationSemanticView implements Serializable {
     private TreeNode rootNode;
     //private OrganigramNode selection;
     private TreeNode selection;
-    private static final String HYPHEN_STR = " - ";
     private boolean zoom = false;
     private String style = "width: 1200px";
     private int leafNodeConnectorHeight = 12;
@@ -65,7 +65,7 @@ public class InstallationSemanticView implements Serializable {
     //private InstallationSemanticsTreeView view;
     private DefaultDiagramModel model;
     private final int gxCoordinate=40;
-    private int gyCoordinate=15;
+    private final int gyCoordinate=15;
     private int mxCoordinate=gxCoordinate+100;
     private int myCoordinate=-gyCoordinate;
 
@@ -207,7 +207,7 @@ public class InstallationSemanticView implements Serializable {
         element.setStyleClass("diagram-gateway-box");
         gatewayMap.put(gtw.getSerialNumber(), gtw);
         mxCoordinate=gxCoordinate+100;
-        addMeterNodes(diagram,element,this.semantics.getGtwMeterMap().get(gtw.getId()));
+        addMeterNodes(diagram,element,gtw.getBomMeterList());
     }
     /**
      * method to add each meterDto node to its parent gateway node
@@ -262,8 +262,8 @@ public class InstallationSemanticView implements Serializable {
                    className="diagram-meter-electric-box"; 
                 }
                 element.setStyleClass(className);
-                element.setTitle(meterDto.getBomMeterType()+HYPHEN_STR+meterDto.getMeterManufacturer()+HYPHEN_STR+
-                        meterDto.getMeterModel()+HYPHEN_STR+meterDto.getMeterRoom());
+                element.setTitle(meterDto.getBomMeterType()+HYPHEN_STR_SPACE+meterDto.getMeterManufacturer()+HYPHEN_STR_SPACE+
+                        meterDto.getMeterModel()+HYPHEN_STR_SPACE+meterDto.getMeterRoom()+HYPHEN_STR_SPACE+meterDto.getMeterLabelCBL());
                 diagram.addElement(element);
                 //appending a dot at left of gateway node
                 DotEndPoint p1 = new DotEndPoint();
@@ -479,7 +479,7 @@ public class InstallationSemanticView implements Serializable {
     }
     public String getNodeGateway(String key) {
         this.gateway = (BOMGatewayEstDTO)gatewayMap.get(key);
-        return gateway.getGatewayFloor() + InstallationSemanticView.HYPHEN_STR+gateway.getGatewayRoom();
+        return gateway.getGatewayFloor() + HYPHEN_STR_SPACE+gateway.getGatewayRoom();
     }
 
     public String getFloorNodeDetails(String key) {
@@ -489,8 +489,8 @@ public class InstallationSemanticView implements Serializable {
 
     public String getNodeMeter(String key) {
         this.meter = (BOMMeterDTO)meterMap.get(key);
-        return this.meter.getMeterManufacturer() + InstallationSemanticView.HYPHEN_STR+meter.getMeterModel()+
-                InstallationSemanticView.HYPHEN_STR+meter.getMeterFloor()+InstallationSemanticView.HYPHEN_STR+
+        return this.meter.getMeterManufacturer() + HYPHEN_STR_SPACE+meter.getMeterModel()+
+                HYPHEN_STR_SPACE+meter.getMeterFloor()+HYPHEN_STR_SPACE+
                 meter.getMeterRoom();
     }
 

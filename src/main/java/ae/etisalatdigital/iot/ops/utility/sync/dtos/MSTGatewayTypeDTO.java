@@ -28,11 +28,10 @@ public class MSTGatewayTypeDTO {
     public MSTGatewayTypeDTO() {
     }
 
-    public MSTGatewayTypeDTO(Long id, String gatewayTypeCode, String gatewayTypeName, String gatewayTypeDescription) {
+    public MSTGatewayTypeDTO(Long id, String gatewayTypeCode, String gatewayTypeName) {
         this.id = id;
         this.gatewayTypeCode = gatewayTypeCode;
         this.gatewayTypeName = gatewayTypeName;
-        this.gatewayTypeDescription = gatewayTypeDescription;
     }
 
     public Long getId() {

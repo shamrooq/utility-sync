@@ -6,6 +6,7 @@
 package ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,26 +16,30 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EquipmentRequestModel {
-    private Long utility_id;
-    private Long type_id;
-    private Long model_id;
+    @JsonProperty("utility_id")
+    private Long utilityId;
+    @JsonProperty("type_id")
+    private Long typeId;
+    @JsonProperty("model_id")
+    private Long modelId;
     private String code;
     private String serialNumber;
-    private String parent_code;
+    @JsonProperty("parent_code")
+    private String parentCode;
     private Long protocolId;
     private String measuringPoint;
     private Long accountNumber;
     private List<Property> properties;
-    public Long getUtility_id() {
-        return utility_id;
+    public Long getUtilityId() {
+        return utilityId;
     }
 
-    public Long getType_id() {
-        return type_id;
+    public Long getTypeId() {
+        return typeId;
     }
 
-    public Long getModel_id() {
-        return model_id;
+    public Long getModelId() {
+        return modelId;
     }
 
     public String getCode() {
@@ -45,24 +50,24 @@ public class EquipmentRequestModel {
         return serialNumber;
     }
 
-    public String getParent_code() {
-        return parent_code;
+    public String getParentCode() {
+        return parentCode;
     }
     
     /**
      * 
      * @param utility_id 
      */
-    public void setUtility_id(Long utility_id) {
-        this.utility_id = utility_id;
+    public void setUtilityId(Long utility_id) {
+        this.utilityId = utility_id;
     }
 
-    public void setType_id(Long type_id) {
-        this.type_id = type_id;
+    public void setTypeId(Long type_id) {
+        this.typeId = type_id;
     }
 
-    public void setModel_id(Long model_id) {
-        this.model_id = model_id;
+    public void setModelId(Long model_id) {
+        this.modelId = model_id;
     }
 
     public void setCode(String code) {
@@ -73,8 +78,8 @@ public class EquipmentRequestModel {
         this.serialNumber = serialNumber;
     }
 
-    public void setParent_code(String parent_code) {
-        this.parent_code = parent_code;
+    public void setParentCode(String parent_code) {
+        this.parentCode = parent_code;
     }
 
     public Long getProtocolId() {

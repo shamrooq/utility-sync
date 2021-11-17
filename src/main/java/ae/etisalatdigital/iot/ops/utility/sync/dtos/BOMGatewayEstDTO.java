@@ -5,11 +5,19 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTGatewayTypes;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import org.modelmapper.ModelMapper;
 
 /**
  *
@@ -28,20 +36,14 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     private int metersPerGateway;
     private String EstimatedCableLength;
     
-    
-    
-    
     private String gatewaysVendor;
     private String gatewaysLocation;
     private String gatewaysDaisychain;
     private String gatewaysChainLabel;
     
-    
     private String serialNumber;
     private BigInteger simICCID;
     
-    
-   
     private Boolean powerIntruption;
     private Long signalStrength;
     private String signalStrengthIndicator;
@@ -57,6 +59,8 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     
     private SimDetailsDTO simDetailsDTO;
     
+    private Set<BOMMeterDTO> bomMeterList;
+    
     public BOMGatewayEstDTO() {
     }
 
@@ -67,8 +71,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         if(null!=gatewaysTypeProposed){
             this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
             this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
-            gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+            gatewaysTypeProposed.getGatewayTypeName());
             this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
+            this.gatewayModel.setGatewayTypeDescription(gatewaysTypeProposed.getGatewayTypeDescription());
         }
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
@@ -94,8 +99,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewaysType = gatewaysType;
         this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
         this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
-        gatewaysTypeProposed.getGatewayTypeName(),gatewaysTypeProposed.getGatewayTypeDescription());
+        gatewaysTypeProposed.getGatewayTypeName());
         this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
+        this.gatewayModel.setGatewayTypeDescription(gatewaysTypeProposed.getGatewayTypeDescription());
         this.gatewaysRequired = gatewaysRequired;
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
@@ -128,6 +134,9 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
             this.gatewayRoom=builder.roomDTO.getRoomCode();
             this.gatewayRoomId=builder.roomDTO.getId();
         }
+        if(null!=builder.meterList){
+            this.bomMeterList = builder.meterList;
+        }
     }
     public static class Builder{
         private BigInteger id;
@@ -137,6 +146,7 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         private String serialNumber;
         private MSTFloorDTO floorDTO;
         private MSTRoomDTO roomDTO;
+        private Set<BOMMeterDTO> meterList;
         public Builder(BigInteger id,Long bomId){
             this.id=id;
             this.bomId=bomId;
@@ -149,6 +159,10 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
             this.gatewayModel = gatewayTypeDTO;
             return this;
         }
+        public Builder model(MSTGatewayTypes gatewayType){
+            this.gatewayModel = new ModelMapper().map(gatewayType, MSTGatewayTypeDTO.class);
+            return this;
+        }
         public Builder serialNumber(String serialNumber){
             this.serialNumber=serialNumber;
             return this;
@@ -157,8 +171,25 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
             this.floorDTO = floorDTO;
             return this;
         }
+        public Builder floor(MSTFloor floor){
+            this.floorDTO = new MSTFloorDTO(floor.getId(),floor.getFloorCode(),floor.getFloorDescription());
+            return this;
+        }
         public Builder room(MSTRoomDTO roomDTO){
             this.roomDTO = roomDTO;
+            return this;
+        }
+        public Builder room(MSTRoom room){
+            this.roomDTO = new ModelMapper().map(room, MSTRoomDTO.class);
+            return this;
+        }
+        public Builder meters(List<BOMMeters> bomMeters){
+            if(bomMeters!=null && bomMeters.size()>0){
+                this.meterList = new TreeSet<>();
+            }
+            for(BOMMeters meter: bomMeters){
+                this.meterList.add(new ModelMapper().map(meter, BOMMeterDTO.class));
+            }
             return this;
         }
         public BOMGatewayEstDTO build(){
@@ -372,6 +403,27 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         }
         
     }
+
+    public Set<BOMMeterDTO> getBomMeterList() {
+        return bomMeterList;
+    }
+
+    public void setBomMeterList(Set<BOMMeterDTO> bomMeterList) {
+        this.bomMeterList = bomMeterList;
+    }
+    
+    public SimDetailsDTO getSimDetailsDTO() {
+        if(null==simDetailsDTO)
+        {
+            simDetailsDTO = new SimDetailsDTO();
+        }
+        return simDetailsDTO;
+    }
+
+    public void setSimDetailsDTO(SimDetailsDTO simDetailsDTO) {
+        this.simDetailsDTO = simDetailsDTO;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -396,21 +448,10 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         }
         return true;
     }
+    
     @Override
     public int compareTo(BOMGatewayEstDTO t) {
         return this.id.compareTo(t.getId());
-    }
-
-    public SimDetailsDTO getSimDetailsDTO() {
-        if(null==simDetailsDTO)
-        {
-            simDetailsDTO = new SimDetailsDTO();
-        }
-        return simDetailsDTO;
-    }
-
-    public void setSimDetailsDTO(SimDetailsDTO simDetailsDTO) {
-        this.simDetailsDTO = simDetailsDTO;
     }
 
 }
