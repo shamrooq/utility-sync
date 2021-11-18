@@ -8,7 +8,6 @@ package ae.etisalatdigital.iot.ops.utility.sync.beans.installation;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
-import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.HYPHEN_STR_SPACE;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +35,7 @@ import org.primefaces.model.diagram.Element;
 import org.primefaces.model.diagram.connector.StraightConnector;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
+import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.*;
 
 /**
  *
@@ -151,7 +151,7 @@ public class InstallationSemanticView implements Serializable {
      * @param gatewayEstDTOList
      */
     protected void addFloorAndGtwNodes(OrganigramNode parent, String floorCode, Set<BOMGatewayEstDTO> gatewayEstDTOList) {
-        OrganigramNode divisionNode = new DefaultOrganigramNode("floor",
+        OrganigramNode divisionNode = new DefaultOrganigramNode(FLR_NODE_NAME,
                 floorCode, parent);
         divisionNode.setDroppable(true);
         divisionNode.setDraggable(true);
@@ -159,8 +159,7 @@ public class InstallationSemanticView implements Serializable {
         divisionNode.setExpanded(false);
         if (gatewayEstDTOList != null) {
             for (BOMGatewayEstDTO gtw : gatewayEstDTOList) {
-                String type = "gateway";
-                OrganigramNode gatewayNode = new DefaultOrganigramNode(type,
+                OrganigramNode gatewayNode = new DefaultOrganigramNode(GTW_NODE_NAME,
                         gtw.getSerialNumber(), divisionNode);
                 gatewayNode.setExpanded(false);
                 gatewayNode.setDraggable(true);
@@ -182,7 +181,7 @@ public class InstallationSemanticView implements Serializable {
         if(mstfloor!=null){
             data = mstfloor.getFloorCode();
         }
-        TreeNode floorNode = new DefaultTreeNode("floor", data, parent);
+        TreeNode floorNode = new DefaultTreeNode(FLR_NODE_NAME, data, parent);
         floorNode.setSelectable(Boolean.TRUE);
         floorNode.setExpanded(Boolean.TRUE);
         if (gatewayEstDTOList != null) {
@@ -201,7 +200,7 @@ public class InstallationSemanticView implements Serializable {
 
     protected void addGatewayAndMeterNodes(DefaultDiagramModel diagram, BOMGatewayEstDTO gtw){
         diagram.setMaxConnections(-1);
-        Element element = new Element(gtw.getSerialNumber(),gxCoordinate+"px",gyCoordinate+"px");
+        Element element = new Element(gtw.getSerialNumber(),gxCoordinate+DIAGRAM_PXL_SIZE_UNIT,gyCoordinate+DIAGRAM_PXL_SIZE_UNIT);
         diagram.addElement(element);
         element.setDraggable(false);
         element.setStyleClass("diagram-gateway-box");
@@ -219,7 +218,7 @@ public class InstallationSemanticView implements Serializable {
         gatewayMap.put(gtwNode.getSerialNumber(), gtwNode);
         if (meters != null) {
             for (BOMMeterDTO meterDto : meters) {
-                String type = null == meterDto.getBomMeterType() ? "water" : meterDto.getBomMeterType().toLowerCase();
+                String type = null == meterDto.getBomMeterType() ? WTR_MTR_NODE_NAME : meterDto.getBomMeterType().toLowerCase();
                 OrganigramNode meterNode = new DefaultOrganigramNode(type,
                         meterDto.getMeterSerial(), parent);
                 meterMap.put(meterDto.getMeterSerial(), meterDto);
@@ -239,7 +238,7 @@ public class InstallationSemanticView implements Serializable {
         gatewayMap.put(gtwNode.getSerialNumber(), gtwNode);
         if (meters != null) {
             for (BOMMeterDTO meterDto : meters) {
-                String type = null == meterDto.getBomMeterType() ? "water" : meterDto.getBomMeterType().toLowerCase();
+                String type = null == meterDto.getBomMeterType() ? WTR_MTR_NODE_NAME : meterDto.getBomMeterType().toLowerCase();
                 /*view = new InstallationSemanticsTreeView(meterDto.getMeterSerial(),
                         meterDto.getBomMeterType()+HYPHEN_STR+meterDto.getMeterManufacturer()+HYPHEN_STR+meterDto.getMeterModel()+HYPHEN_STR+meterDto.getMeterRoom(),type);*/
                 TreeNode meterNode = new DefaultTreeNode(type,
@@ -256,9 +255,9 @@ public class InstallationSemanticView implements Serializable {
             meters.forEach(meterDto->{
                 String className="diagram-meter-water-box";
                 meterMap.put(meterDto.getMeterSerial(), meterDto);
-                Element element = new Element(meterDto.getMeterSerial(),mxCoordinate+"px",myCoordinate+"px");
+                Element element = new Element(meterDto.getMeterSerial(),mxCoordinate+DIAGRAM_PXL_SIZE_UNIT,myCoordinate+DIAGRAM_PXL_SIZE_UNIT);
                 myCoordinate+=15;
-                if("ELECTRIC".equalsIgnoreCase(meterDto.getBomMeterType())){
+                if(ELECTRIC_METER_STR.equalsIgnoreCase(meterDto.getBomMeterType())){
                    className="diagram-meter-electric-box"; 
                 }
                 element.setStyleClass(className);
@@ -294,41 +293,39 @@ public class InstallationSemanticView implements Serializable {
     public void nodeSelectListener(OrganigramNodeSelectEvent event) {
         String detail;
         switch(event.getOrganigramNode().getType()){
-            case "gateway":
+            case GTW_NODE_NAME:
                 detail = "Gateway -> "+this.getNodeGateway(event.getOrganigramNode().getData().toString());
                 break;
-            case "water":
+            case WTR_MTR_NODE_NAME:
                 detail = "Water Meter -> "+this.getNodeMeter(event.getOrganigramNode().getData().toString());
                 break;
-            case "electric":
+            case ETC_MTR_NODE_NAME:
                 detail = "Electric Meter -> "+this.getNodeMeter(event.getOrganigramNode().getData().toString());
                 break;
             default:
                 detail = event.getOrganigramNode().getType();
         }
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,event.getOrganigramNode().
-                getData().toString(),detail);
-        FacesContext.getCurrentInstance().addMessage(event.getComponent().getClientId(), message);
+        addMessage(FacesMessage.SEVERITY_INFO, event.getOrganigramNode().
+                getData().toString(),detail,event.getComponent().getClientId());
     }
 
     public void onNodeSelect(NodeSelectEvent event) {
         String detail;
         switch(event.getTreeNode().getType()){
-            case "gateway":
+            case GTW_NODE_NAME:
                 detail = "Gateway -> "+this.getNodeGateway(event.getTreeNode().getData().toString());
                 break;
-            case "water":
+            case WTR_MTR_NODE_NAME:
                 detail = "Water Meter -> "+this.getNodeMeter(event.getTreeNode().getData().toString());
                 break;
-            case "electric":
+            case ETC_MTR_NODE_NAME:
                 detail = "Electric Meter -> "+this.getNodeMeter(event.getTreeNode().getData().toString());
                 break;
             default:
                 detail = event.getTreeNode().getType();
         }
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,event.getTreeNode().
-                getData().toString(),detail);
-        FacesContext.getCurrentInstance().addMessage(event.getComponent().getClientId(), message);
+        addMessage(FacesMessage.SEVERITY_INFO, event.getTreeNode().
+                getData().toString(),detail,null);
     }
 
     public void nodeCollapseListener(OrganigramNodeCollapseEvent event) {
@@ -362,7 +359,7 @@ public class InstallationSemanticView implements Serializable {
     /*public void removeDivision() {
         // re-evaluate selection - might be a differenct object instance if viewstate serialization is enabled
         OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-        setMessage(currentSelection.getData() + " will entfernt werden.", FacesMessage.SEVERITY_INFO);
+        addMessage(currentSelection.getData() + " will entfernt werden.", FacesMessage.SEVERITY_INFO);
     }*/
 
     
@@ -381,10 +378,8 @@ public class InstallationSemanticView implements Serializable {
         employee.setSelectable(true);
     }*/
 
-    private void setMessage(String msg, FacesMessage.Severity severity) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary(msg);
-        message.setSeverity(severity);
+    private void addMessage(FacesMessage.Severity severity,String msg, String detail,String clientId) {
+        FacesMessage message = new FacesMessage(severity,msg,detail);
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
