@@ -12,7 +12,6 @@ import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

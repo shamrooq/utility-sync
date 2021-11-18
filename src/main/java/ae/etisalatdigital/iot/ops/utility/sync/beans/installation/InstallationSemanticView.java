@@ -41,7 +41,7 @@ import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.*;
  *
  * @author appadmin
  */
-@Named(value = "installationSemanticView")
+@Named
 @ViewScoped
 public class InstallationSemanticView implements Serializable {
 
@@ -284,10 +284,9 @@ public class InstallationSemanticView implements Serializable {
     }
 
     public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' moved from " + event.getSourceOrganigramNode().getData() + " to '" + event.getTargetOrganigramNode().getData() + "'");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getOrganigramNode().getData() + "' moved from " + 
+                event.getSourceOrganigramNode().getData() + " to '" + event.getTargetOrganigramNode().getData() + "'", 
+                null, null);
     }
 
     public void nodeSelectListener(OrganigramNodeSelectEvent event) {
@@ -329,31 +328,19 @@ public class InstallationSemanticView implements Serializable {
     }
 
     public void nodeCollapseListener(OrganigramNodeCollapseEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' collapsed.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getOrganigramNode().getData() + "' collapsed.", null, null);
     }
 
     public void onNodeCollapse(NodeCollapseEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getTreeNode().getData() + "' collapsed.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getTreeNode().getData() + "' collapsed.", null, null);
     }
 
     public void nodeExpandListener(OrganigramNodeExpandEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getOrganigramNode().getData() + "' expanded.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getOrganigramNode().getData() + "' expanded.", null, null);
     }
 
     public void onNodeExpand(NodeExpandEvent event) {
-        FacesMessage message = new FacesMessage();
-        message.setSummary("Node '" + event.getTreeNode().getData() + "' expanded.");
-        message.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getTreeNode().getData() + "' expanded.", null, null);
     }
 
     /*public void removeDivision() {
