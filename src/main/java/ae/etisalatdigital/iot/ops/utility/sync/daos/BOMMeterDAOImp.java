@@ -12,12 +12,9 @@ import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMGatewaysEst;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterManufacturer;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTMeterModel;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
-
-import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -26,7 +23,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
-
 import org.joda.time.DateTime;
 import org.modelmapper.ModelMapper;
 
@@ -39,16 +35,16 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     private static final Logger logger = Logger.getLogger(BOMGatewayEstDAOImp.class);
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager entityManager;
-    private final String reqGtwMeterSemanticsQry="select b.utilityNumber utilityNumber,"
-            + "bge.serialNumber gatewaySerialNumber,bge.id gatewayId," +
-        "bge.mstFloor gtwFloor,bge.mstRoom gtwRoom,bm.id meterId,bm.meterSerial meterSerialNumber,"
-            + "bm.bomMeterType meterType," +
-        "bm.mstMeterModel meterModel,bm.meterManufacturerModel meterManufacture,bm.mstRoom meterRoom,"
-            + "bm.mstFloor meterFloor," +
-        "bm.meterGateway.id meterGtwId from "
-            + "Boms b join BOMGatewaysEst bge on b.id=bge.bomId join "
-            + "BOMMeters bm on bge.bomId=bm.bomId and "+
-        "bge.id=bm.meterGateway.id where b.id = ?1 order by bge.mstFloor.id";
+//    private final String reqGtwMeterSemanticsQry="select b.utilityNumber utilityNumber,"
+//            + "bge.serialNumber gatewaySerialNumber,bge.id gatewayId," +
+//        "bge.mstFloor gtwFloor,bge.mstRoom gtwRoom,bm.id meterId,bm.meterSerial meterSerialNumber,"
+//            + "bm.bomMeterType meterType," +
+//        "bm.mstMeterModel meterModel,bm.meterManufacturerModel meterManufacture,bm.mstRoom meterRoom,"
+//            + "bm.mstFloor meterFloor," +
+//        "bm.meterGateway.id meterGtwId from "
+//            + "Boms b join BOMGatewaysEst bge on b.id=bge.bomId join "
+//            + "BOMMeters bm on bge.bomId=bm.bomId and "+
+//        "bge.id=bm.meterGateway.id where b.id = ?1 order by bge.mstFloor.id";
 
     @Override
     public List<BOMMeters> findAll() {
@@ -362,8 +358,16 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             gatewayEstDTOSet.add(bomGtwDTO);
         }
         if(floorMap.size()>0){
+            floorMap = floorMap.entrySet().stream().sorted(Map.Entry.comparingByKey((t1, t2) -> {
+                return -1;
+            })).collect(Collectors.toMap(
+                Map.Entry::getKey,Map.Entry::getValue,(oldValue,newValue)-> oldValue,LinkedHashMap::new));
             gatewayMetersSemantics.setFloorMap(floorMap);
         }
+        floorGtwMap = floorGtwMap.entrySet().stream().sorted(Map.Entry.comparingByKey((t1, t2) -> {
+            return -1;
+        })).collect(Collectors.toMap(
+        Map.Entry::getKey,Map.Entry::getValue,(oldValue,newValue)-> oldValue,LinkedHashMap::new));
         gatewayMetersSemantics.setGatewayFloors(floorGtwMap);
         gatewayMetersSemantics.setGatewaySet(gatewayEstDTOSet);
         //Map gtwMeterMap = new TreeMap<BigInteger, Set<BOMMeterDTO>>();
