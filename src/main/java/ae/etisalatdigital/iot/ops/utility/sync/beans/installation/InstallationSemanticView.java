@@ -32,6 +32,7 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.diagram.Connection;
 import org.primefaces.model.diagram.DefaultDiagramModel;
 import org.primefaces.model.diagram.Element;
+import org.primefaces.model.diagram.connector.Connector;
 import org.primefaces.model.diagram.connector.StraightConnector;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
@@ -262,14 +263,14 @@ public class InstallationSemanticView implements Serializable {
                 }
                 element.setStyleClass(className);
                 element.setTitle(meterDto.getBomMeterType()+HYPHEN_STR_SPACE+meterDto.getMeterManufacturer()+HYPHEN_STR_SPACE+
-                        meterDto.getMeterModel()+HYPHEN_STR_SPACE+meterDto.getMeterRoom()+HYPHEN_STR_SPACE+meterDto.getMeterLabelCBL());
+                        meterDto.getMeterModel()+HYPHEN_STR_SPACE+meterDto.getMeterRoom().concat(null==meterDto.getMeterLabelCBL()?"":HYPHEN_STR_SPACE+meterDto.getMeterLabelCBL()));
                 diagram.addElement(element);
-                //appending a dot at left of gateway node
+                //appending a dot at right of gateway node
                 DotEndPoint p1 = new DotEndPoint();
                 p1.setAnchor(EndPointAnchor.RIGHT);
                 p1.setRadius(4);
                 parent.addEndPoint(p1);
-                //appending a dot to right
+                //appending a dot at the left of meter node
                 DotEndPoint p2 = new DotEndPoint();
                 p2.setAnchor(EndPointAnchor.LEFT);
                 p2.setRadius(4);
@@ -277,7 +278,9 @@ public class InstallationSemanticView implements Serializable {
                 Connection c = new Connection();
                 c.setSource(p1);
                 c.setTarget(p2);
-                c.setConnector(new StraightConnector());
+                StraightConnector ctr = new StraightConnector();
+                //ctr.setPaintStyle("{strokeStyle:'#C7B097',lineWidth:3}");
+                c.setConnector(ctr);
                 diagram.connect(c);
             });
         }
