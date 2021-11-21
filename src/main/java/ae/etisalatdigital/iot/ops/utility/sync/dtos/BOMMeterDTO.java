@@ -54,6 +54,16 @@ public class BOMMeterDTO {
     
     private MSTMeterManufacturer meterManufacturerModel;
     
+    /** HES Parameters **/
+    private String hesCode;
+    private String hesParentcode;
+    private String hesMeasuringPoint;
+    private Integer hesIdType;
+    private Integer hesIdModel;
+    private Integer hesIdUtility;
+    private Integer hesIdProtocol;
+    /** HES Parameters **/
+    
     public BOMMeterDTO(){}
 
     
@@ -204,6 +214,36 @@ public class BOMMeterDTO {
     public MSTMeterManufacturer getMeterManufacturerModel() {
         return meterManufacturerModel;
     }
+
+    public String getHesCode() {
+        return hesCode;
+    }
+
+    public String getHesParentcode() {
+        return hesParentcode;
+    }
+
+    public String getHesMeasuringPoint() {
+        return hesMeasuringPoint;
+    }
+
+    public Integer getHesIdType() {
+        return hesIdType;
+    }
+
+    public Integer getHesIdModel() {
+        return hesIdModel;
+    }
+
+    public Integer getHesIdUtility() {
+        return hesIdUtility;
+    }
+
+    public Integer getHesIdProtocol() {
+        return hesIdProtocol;
+    }
+    
+    
     
     
     
@@ -298,6 +338,34 @@ public class BOMMeterDTO {
 
     public void setMeterManufacturerModel(MSTMeterManufacturer meterManufacturerModel) {
         this.meterManufacturerModel = meterManufacturerModel;
+    }
+
+    public void setHesCode(String hesCode) {
+        this.hesCode = hesCode;
+    }
+
+    public void setHesParentcode(String hesParentcode) {
+        this.hesParentcode = hesParentcode;
+    }
+
+    public void setHesMeasuringPoint(String hesMeasuringPoint) {
+        this.hesMeasuringPoint = hesMeasuringPoint;
+    }
+
+    public void setHesIdType(Integer hesIdType) {
+        this.hesIdType = hesIdType;
+    }
+
+    public void setHesIdModel(Integer hesIdModel) {
+        this.hesIdModel = hesIdModel;
+    }
+
+    public void setHesIdUtility(Integer hesIdUtility) {
+        this.hesIdUtility = hesIdUtility;
+    }
+
+    public void setHesIdProtocol(Integer hesIdProtocol) {
+        this.hesIdProtocol = hesIdProtocol;
     }
     
     

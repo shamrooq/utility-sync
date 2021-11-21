@@ -18,6 +18,7 @@ public class MSTProtocolDTO {
     
     private Long id;
     
+    private Integer hesId;
     
     private String protocolCode;
     
@@ -39,8 +40,9 @@ public class MSTProtocolDTO {
     
     public MSTProtocolDTO(){}
 
-    public MSTProtocolDTO(Long id, String protocolCode, String protocolTitle, String protocolDescription, Date createdDate, Date modifiedDate, Boolean isDisabled) {
+    public MSTProtocolDTO(Long id,Integer hesId, String protocolCode, String protocolTitle, String protocolDescription, Date createdDate, Date modifiedDate, Boolean isDisabled) {
         this.id = id;
+        this.hesId = hesId;
         this.protocolCode = protocolCode;
         this.protocolTitle = protocolTitle;
         this.protocolDescription = protocolDescription;
@@ -85,6 +87,16 @@ public class MSTProtocolDTO {
         return isDisabled;
     }
 
+    public Integer getHesId() {
+        return hesId;
+    }
+    
+    
+    
+    /**
+     * 
+     * @param id 
+     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -116,10 +128,12 @@ public class MSTProtocolDTO {
     public void setIsDisabled(Boolean isDisabled) {
         this.isDisabled = isDisabled;
     }
+
+    public void setHesId(Integer hesId) {
+        this.hesId = hesId;
+    }
     
-    /**
-     * 
-     */
+    
     
     
     

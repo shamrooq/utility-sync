@@ -98,7 +98,12 @@ public class HESClient extends RestClient {
         String resourceURL = "/devices/type";
         EquipmentRequestModel request = new EquipmentRequestModel();
         request.setCode(meter.getMeterSerial());
-        request.setSerialNumber(meter.getMeterSerial());
+        request.setSerialNumber(meter.getHesCode());
+        request.setModel_id(meter.getHesIdModel());
+        request.setUtility_id(meter.getHesIdUtility());
+        request.setType_id(meter.getHesIdType());
+        request.setProtocolId(meter.getHesIdProtocol());
+        
         
         Map<String, Object> paramsMap = new HashMap<>();
         

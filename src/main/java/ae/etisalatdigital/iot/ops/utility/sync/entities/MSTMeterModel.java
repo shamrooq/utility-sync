@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MSTMeterModel.findAll", query = "SELECT m FROM MSTMeterModel m")
-   ,@NamedQuery(name = "MSTMeterModel.findAllByManufacturerId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.MSTMeterModelDTO(m.id,m.manufacturerId,m.modelCode,m.modelTitle,m.modelDescription) FROM MSTMeterModel m where m.manufacturerId = :manufacturerId")
+   ,@NamedQuery(name = "MSTMeterModel.findAllByManufacturerId", query = "SELECT new ae.etisalatdigital.iot.ops.utility.sync.dtos.MSTMeterModelDTO(m.id,m.hesId,m.manufacturerId,m.modelCode,m.modelTitle,m.modelDescription) FROM MSTMeterModel m where m.manufacturerId = :manufacturerId")
 })
 public class MSTMeterModel implements Serializable {
 
@@ -39,6 +39,9 @@ public class MSTMeterModel implements Serializable {
     
     @Column(name = "MANUFACTURER_ID")
     private Long manufacturerId;
+    
+    @Column(name = "MODEL_HES_ID")
+    private Integer hesId;
     
     @Column(name = "MODEL_Code", length = 100)
     private String modelCode;
@@ -81,10 +84,17 @@ public class MSTMeterModel implements Serializable {
     public Collection<MSTMeterManufacturer> getManufacturerCollection() {
         return manufacturerCollection;
     }
-    
-    
-    
 
+    public Integer getHesId() {
+        return hesId;
+    }
+    
+    
+    
+    /**
+     * 
+     * @param id 
+     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -109,6 +119,10 @@ public class MSTMeterModel implements Serializable {
 
     public void setManufacturerCollection(Collection<MSTMeterManufacturer> manufacturerCollection) {
         this.manufacturerCollection = manufacturerCollection;
+    }
+
+    public void setHesId(Integer hesId) {
+        this.hesId = hesId;
     }
     
     
