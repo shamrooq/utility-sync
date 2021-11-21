@@ -23,7 +23,7 @@ import org.modelmapper.ModelMapper;
  * @author au_mobility
  */
 public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
-
+    
     private static final long serialVersionUID = 1234567L;
     private Long id;
     
@@ -60,10 +60,21 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
     private Long meterManufacturerId;
     private Long meterModelId;
     private Long meterProtocolId;
+    
     private MSTMeterManufacturer meterManufacturerModel;
-
+    
     private BOMGatewayEstDTO meterGateway;
     private BigInteger meterGtwId;
+
+    /** HES Parameters **/
+    private String hesCode;
+    private String hesParentcode;
+    private String hesMeasuringPoint;
+    private Integer hesIdType;
+    private Integer hesIdModel;
+    private Integer hesIdUtility;
+    private Integer hesIdProtocol;
+    /** HES Parameters **/
 
     public BOMMeterDTO(){}
 
@@ -123,9 +134,9 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
         this.meterManufacturerModel = meterManufacturerModel;
     }
 
-    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID, 
+    public BOMMeterDTO(Long id, Long bomId, String meterStatus, String meterType, String meterCorrelationID,
             String bomMeterType, String meterSerial, String meterLabelGTW, String meterLabelCBL, String meterLabelJBX,
-            Date modifiedDate, String meterAmi, Long meterProtocolId, 
+            Date modifiedDate, String meterAmi, Long meterProtocolId,
                        MSTRoom mstRoom, MSTFloor mstFloor, MSTMeterManufacturer meterManufacturerModel,
                        MSTMeterModel mstMeterModel,BOMGatewaysEst meterGateway) {
         this.id = id;
@@ -159,7 +170,7 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
         this.meterFloor=mstFloor==null?"":mstFloor.getFloorCode();
         this.meterRoom=mstRoom==null?"":mstRoom.getRoomCode();
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -248,6 +259,39 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
         return meterManufacturerModel;
     }
 
+    public String getHesCode() {
+        return hesCode;
+    }
+
+    public String getHesParentcode() {
+        return hesParentcode;
+    }
+
+    public String getHesMeasuringPoint() {
+        return hesMeasuringPoint;
+    }
+
+    public Integer getHesIdType() {
+        return hesIdType;
+    }
+
+    public Integer getHesIdModel() {
+        return hesIdModel;
+    }
+
+    public Integer getHesIdUtility() {
+        return hesIdUtility;
+    }
+
+    public Integer getHesIdProtocol() {
+        return hesIdProtocol;
+    }
+
+
+
+
+    
+    
     /*
     *
     */
@@ -340,13 +384,34 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
         this.meterManufacturerModel = meterManufacturerModel;
     }
 
-    public BigInteger getMeterGtwId() {
-        return meterGtwId;
+    public void setHesCode(String hesCode) {
+        this.hesCode = hesCode;
     }
 
-    public void setMeterGtwId(BigInteger meterGtwId) {
-        this.meterGtwId = meterGtwId;
+    public void setHesParentcode(String hesParentcode) {
+        this.hesParentcode = hesParentcode;
     }
+
+    public void setHesMeasuringPoint(String hesMeasuringPoint) {
+        this.hesMeasuringPoint = hesMeasuringPoint;
+    }
+
+    public void setHesIdType(Integer hesIdType) {
+        this.hesIdType = hesIdType;
+    }
+
+    public void setHesIdModel(Integer hesIdModel) {
+        this.hesIdModel = hesIdModel;
+    }
+
+    public void setHesIdUtility(Integer hesIdUtility) {
+        this.hesIdUtility = hesIdUtility;
+    }
+
+    public void setHesIdProtocol(Integer hesIdProtocol) {
+        this.hesIdProtocol = hesIdProtocol;
+    }
+
 
     public BOMGatewayEstDTO getMeterGateway() {
         return meterGateway;

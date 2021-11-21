@@ -37,6 +37,9 @@ public class MSTProtocol implements Serializable {
     @Column(name = "PROTOCOL_ID")
     private Long id;
     
+    @Column(name = "PROTOCOL_HES_ID")
+    private Integer hesId;
+    
     @Column(name = "POTOCOL_Code")
     private String protocolCode;
     @Column(name = "PROTOCOL_Title")
@@ -86,6 +89,12 @@ public class MSTProtocol implements Serializable {
     public Boolean getIsDisabled() {
         return isDisabled;
     }
+
+    public Integer getHesId() {
+        return hesId;
+    }
+    
+    
     
     
 
@@ -116,6 +125,11 @@ public class MSTProtocol implements Serializable {
     public void setIsDisabled(Boolean isDisabled) {
         this.isDisabled = isDisabled;
     }
+
+    public void setHesId(Integer hesId) {
+        this.hesId = hesId;
+    }
+    
     
     
 

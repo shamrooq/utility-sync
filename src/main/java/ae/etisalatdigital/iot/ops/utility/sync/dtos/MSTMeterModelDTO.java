@@ -12,6 +12,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 public class MSTMeterModelDTO {
     
     private Long id;
+    private Integer hesId;
     private String modelCode;
     private String modelTitle;
     private String modelDescription;
@@ -21,8 +22,9 @@ public class MSTMeterModelDTO {
     public MSTMeterModelDTO() {
     }
 
-    public MSTMeterModelDTO(Long id, Long manufacturerId, String modelCode, String modelTitle, String modelDescription) {
+    public MSTMeterModelDTO(Long id,Integer hesId, Long manufacturerId, String modelCode, String modelTitle, String modelDescription) {
         this.id = id;
+        this.hesId = hesId;
         this.modelCode = modelCode;
         this.modelTitle = modelTitle;
         this.modelDescription = modelDescription;
@@ -50,6 +52,17 @@ public class MSTMeterModelDTO {
         return modelDescription;
     }
 
+    public Integer getHesId() {
+        return hesId;
+    }
+    
+    
+
+    
+    /**
+     * 
+     * @param id 
+     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -68,6 +81,10 @@ public class MSTMeterModelDTO {
 
     public void setManufacturerId(Long manufacturerId) {
         this.manufacturerId = manufacturerId;
+    }
+
+    public void setHesId(Integer hesId) {
+        this.hesId = hesId;
     }
     
     

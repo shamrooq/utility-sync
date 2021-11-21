@@ -18,30 +18,7 @@ import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentR
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.Property;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.ejb.Stateless;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import okhttp3.Credentials;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
@@ -50,12 +27,16 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.json.JSONArray;
+import javax.ejb.Stateless;
+import javax.net.ssl.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.*;
 import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.FWD_SLASH_STR;
-import java.util.Collections;
-import javax.net.ssl.SSLSocketFactory;
-import okhttp3.CipherSuite;
-import okhttp3.ConnectionSpec;
-import okhttp3.TlsVersion;
 
 /**
  *
@@ -69,7 +50,7 @@ public class HESClient extends RestClient {
     private static final String SERVICE_PASSWORD = "malik1";
     private static final String SERVICE_URL = "https://10.0.109.224:443/etisalat-digital/iot-ops/api-gw/hes-api/oum-ws/services/rest/EquipmentWebService";
     //"http://10.0.109.224:8080/oum-ws/services/rest/EquipmentWebService";
-
+    
     public HESClient(){
         
     }
@@ -117,15 +98,25 @@ public class HESClient extends RestClient {
         System.out.println("JSONARR : " + arr);
         
     }
-
+    
     public EquipmentResponseModel addNewMeterOnHES(BOMMeterDTO meter){
-        String resourceURL = "/equipment";
+        
+        
+        String resourceURL = "/devices/type";
         EquipmentRequestModel request = new EquipmentRequestModel();
-        request.setCode(String.valueOf(meter.getId()));
-        request.setSerialNumber(meter.getMeterSerial());
+        request.setCode(meter.getMeterSerial());
+        request.setSerialNumber(meter.getHesCode());
+        request.setModelId(meter.getHesIdModel());
+        request.setUtilityId(meter.getHesIdUtility());
+        request.setTypeId(meter.getHesIdType());
+        request.setProtocolId(meter.getHesIdProtocol());
+
+        
         Map<String, Object> paramsMap = new HashMap<>();
+        
         populateCient();
         EquipmentResponseModel response = callPostMethod(SERVICE_URL, resourceURL,request, EquipmentResponseModel.class,paramsMap);
+        
         return response;
     }
 
@@ -152,7 +143,7 @@ public class HESClient extends RestClient {
         }
         return responseModelList;
     }
-    
+
     public EquipmentResponseModel addNewSimOnHES(BOMGatewayEstDTO gateway) throws Exception{
         String apiURL = "communicationsEquipment";
         CommunicationEquipmentModel request = new CommunicationEquipmentModel();
@@ -197,7 +188,7 @@ public class HESClient extends RestClient {
             request.setUtilityId(Long.valueOf(1));
         }
         request.setModelId(gateway.getGatewayModel().getDeviceHESModelId());
-        /* 
+        /*
         Map<String, Object> paramsMap = new HashMap<>();
         populateCient();
         EquipmentResponseModel response = callPostMethod(SERVICE_URL, apiURL,request, EquipmentResponseModel.class,paramsMap);*/
@@ -305,10 +296,10 @@ public class HESClient extends RestClient {
         }
         catch (JsonProcessingException jpe) {
             throw new IOException(jpe);
-        }      
+        }
         return t;
     }
-    
+
     private OkHttpClient sslConfig(){
         OkHttpClient client = null;
         try{
