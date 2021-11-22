@@ -263,7 +263,7 @@
                                                     <f:validateLength minimum = "19"/>
                                                 </h:inputText>
                                                 <h:inputHidden value="#{null==gatewayItem.simDetailsDTO||null==gatewayItem.simDetailsDTO.simICCID?'':gatewayItem.simDetailsDTO.simICCID}"/>
-                                                <b:icon name="sim" class="fa fa-envelope-o" tooltip="Add Sim With HES" id="btnCreateSIMHES" style="cursor: pointer;" onclick="PF('createSimHESWdg#{gatewayItem.id}').show();" update="itemSimICCID"/>
+                                                <b:icon name="sim" class="fa fa-envelope-o" tooltip="Add Sim With HES" id="btnCreateSIMHES" style="cursor: pointer;" onclick="PF('createSimHESWdg#{gatewayItem.id}').show();changeEnvIcon(this);" update="itemSimICCID"/>
                                                 <p:dialog id="createSimHESForm" widgetVar="createSimHESWdg#{gatewayItem.id}" header="Create SIM with HES" resizable="true" closeOnEscape="true" responsive="true" dynamic="true">
                                                     <p class="p-field">
                                                         <p:outputLabel value="SIM ICCID: " style="width: 50%">
@@ -358,6 +358,7 @@
                                         <p:treeNode type="floor" styleClass="floor">
                                             <b:label value="#{treeNode}" tooltip="#{installationController.installationSemanticView.getFloorNodeDetails(treeNode)}" />
                                             <p:diagram value="#{installationController.installationSemanticView.getFloorElements(treeNode)}" styleClass="diagram-panel">
+
                                             </p:diagram>
                                         </p:treeNode>
                                         </p:tree>
@@ -492,6 +493,9 @@
                 }
             }
             return true;
+        }
+        function changeEnvIcon(htmlElement){
+            htmlElement.className="fa fa-envelope-open-o";
         }
         //window.addEventListener('online', updateOnlineStatus);
         //window.addEventListener('offline', updateOfflineStatus);
