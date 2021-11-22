@@ -21,7 +21,7 @@ public class MSTGatewayTypeDTO {
     
     private String gatewayTypeDescription;
 
-    private Long deviceHESModelId;
+    private Integer deviceHESModelId;
 
     private String gatewayManufacturer;
 
@@ -66,11 +66,11 @@ public class MSTGatewayTypeDTO {
         this.gatewayTypeDescription = gatewayTypeDescription;
     }
 
-    public Long getDeviceHESModelId() {
+    public Integer getDeviceHESModelId() {
         return deviceHESModelId;
     }
 
-    public void setDeviceHESModelId(Long deviceHESModelId) {
+    public void setDeviceHESModelId(Integer deviceHESModelId) {
         this.deviceHESModelId = deviceHESModelId;
     }
 
