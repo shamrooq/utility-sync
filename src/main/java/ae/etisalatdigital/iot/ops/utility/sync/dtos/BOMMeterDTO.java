@@ -384,6 +384,14 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
         this.meterManufacturerModel = meterManufacturerModel;
     }
 
+    public BigInteger getMeterGtwId() {
+        return meterGtwId;
+    }
+
+    public void setMeterGtwId(BigInteger meterGtwId) {
+        this.meterGtwId = meterGtwId;
+    }
+
     public void setHesCode(String hesCode) {
         this.hesCode = hesCode;
     }

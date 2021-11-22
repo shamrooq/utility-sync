@@ -17,28 +17,28 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EquipmentRequestModel {
     @JsonProperty("utility_id")
-    private Long utilityId;
+    private Integer utilityId;
     @JsonProperty("type_id")
-    private Long typeId;
+    private Integer typeId;
     @JsonProperty("model_id")
-    private Long modelId;
+    private Integer modelId;
     private String code;
     private String serialNumber;
     @JsonProperty("parent_code")
     private String parentCode;
-    private Long protocolId;
+    private Integer protocolId;
     private String measuringPoint;
     private Long accountNumber;
     private List<Property> properties;
-    public Long getUtilityId() {
+    public Integer getUtilityId() {
         return utilityId;
     }
 
-    public Long getTypeId() {
+    public Integer getTypeId() {
         return typeId;
     }
 
-    public Long getModelId() {
+    public Integer getModelId() {
         return modelId;
     }
 
@@ -58,15 +58,15 @@ public class EquipmentRequestModel {
      * 
      * @param utility_id 
      */
-    public void setUtilityId(Long utility_id) {
+    public void setUtilityId(Integer utility_id) {
         this.utilityId = utility_id;
     }
 
-    public void setTypeId(Long type_id) {
+    public void setTypeId(Integer type_id) {
         this.typeId = type_id;
     }
 
-    public void setModelId(Long model_id) {
+    public void setModelId(Integer model_id) {
         this.modelId = model_id;
     }
 
@@ -82,11 +82,11 @@ public class EquipmentRequestModel {
         this.parentCode = parent_code;
     }
 
-    public Long getProtocolId() {
+    public Integer getProtocolId() {
         return protocolId;
     }
 
-    public void setProtocolId(Long protocolId) {
+    public void setProtocolId(Integer protocolId) {
         this.protocolId = protocolId;
     }
 

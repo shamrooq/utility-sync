@@ -46,7 +46,7 @@ public class MSTGatewayTypes implements Serializable {
     private String gatewayTypeDescription;
     
     @Column(name = "GATEWAY_HES_MODEL_ID")
-    private Long deviceModelId;
+    private Integer deviceModelId;
     
     @Column(name = "GATEWAY_MANUFACTURER")
     private String gatewayManufacturer;
@@ -100,11 +100,11 @@ public class MSTGatewayTypes implements Serializable {
         this.gateway = gateway;
     }
 
-    public Long getDeviceModelId() {
+    public Integer getDeviceModelId() {
         return deviceModelId;
     }
 
-    public void setDeviceModelId(Long deviceModelId) {
+    public void setDeviceModelId(Integer deviceModelId) {
         this.deviceModelId = deviceModelId;
     }
 

@@ -180,12 +180,12 @@ public class HESClient extends RestClient {
         //request.setCode(gateway.getSerialNumber());
         request.setSerialNumber(gateway.getSerialNumber());
         if(UtilityConstants.WATER_GATEWAY_STR.equalsIgnoreCase(gateway.getGatewaysType())){
-            request.setTypeId(Long.valueOf(1998));
-            request.setUtilityId(Long.valueOf(2));
+            request.setTypeId(1998);
+            request.setUtilityId(2);
         }
         else if(UtilityConstants.ELECTRIC_GATEWAY_STR.equalsIgnoreCase(gateway.getGatewaysType())){
-            request.setTypeId(Long.valueOf(1997));
-            request.setUtilityId(Long.valueOf(1));
+            request.setTypeId(1997);
+            request.setUtilityId(1);
         }
         request.setModelId(gateway.getGatewayModel().getDeviceHESModelId());
         /*
