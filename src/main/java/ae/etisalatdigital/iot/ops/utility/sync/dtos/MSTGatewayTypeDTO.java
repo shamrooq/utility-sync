@@ -5,20 +5,22 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
+import java.io.Serializable;
+
 
 
 /**
  *
  * @author appadmin
  */
-public class MSTGatewayTypeDTO {
- 
+public class MSTGatewayTypeDTO implements Serializable{
+
     private Long id;
-      
+
     private String gatewayTypeCode;
-    
+
     private String gatewayTypeName;
-    
+
     private String gatewayTypeDescription;
 
     private Integer deviceHESModelId;
@@ -81,6 +83,6 @@ public class MSTGatewayTypeDTO {
     public void setGatewayManufacturer(String gatewayManufacturer) {
         this.gatewayManufacturer = gatewayManufacturer;
     }
-    
-    
+
+
 }

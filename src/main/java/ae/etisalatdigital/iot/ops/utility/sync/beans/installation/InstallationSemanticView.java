@@ -25,6 +25,7 @@ import org.primefaces.model.diagram.Element;
 import org.primefaces.model.diagram.connector.StraightConnector;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
+import org.primefaces.model.diagram.overlay.LabelOverlay;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -112,14 +113,14 @@ public class InstallationSemanticView implements Serializable {
                     entry.getValue());
         }
     }*/
-    
+
     public void init() {
         selection = rootNode;
         gatewayMap= new HashMap<>();
         meterMap = new HashMap<>();
         floorDiagramMap = new HashMap<>();
         for(Map.Entry<Long, Set<BOMGatewayEstDTO>> entry : this.semantics.getGatewayFloors().entrySet()){
-            BOMGatewayEstDTO firstElement = (BOMGatewayEstDTO)((TreeSet)entry.getValue()).first();
+            BOMGatewayEstDTO firstElement = ((TreeSet<BOMGatewayEstDTO>)entry.getValue()).first();
             addFloorNodes(this.rootNode, firstElement.getGatewayFloor(),
                     entry.getValue());
         }
@@ -137,7 +138,7 @@ public class InstallationSemanticView implements Serializable {
         this.model = model;
     }
     public DefaultDiagramModel getModel() {
-      return model;
+        return model;
     }
 
     /**
@@ -164,12 +165,12 @@ public class InstallationSemanticView implements Serializable {
             }
         }
     }
-    
+
     /**
-     * add all the floors associated with a Utility ref number to the tree 
+     * add all the floors associated with a Utility ref number to the tree
      * @param parent
      * @param floorCode
-     * @param gatewayEstDTOList 
+     * @param gatewayEstDTOList
      */
     protected void addFloorNodes(TreeNode parent, String floorCode, Set<BOMGatewayEstDTO> gatewayEstDTOList) {
         String data="";
@@ -182,9 +183,7 @@ public class InstallationSemanticView implements Serializable {
         floorNode.setExpanded(Boolean.TRUE);
         if (gatewayEstDTOList != null) {
             DefaultDiagramModel diagram = new DefaultDiagramModel();
-            gatewayEstDTOList.forEach(gtw -> {
-                addGatewayAndMeterNodes(diagram, gtw);
-            });
+            gatewayEstDTOList.forEach(gtw -> addGatewayAndMeterNodes(diagram, gtw));
             floorDiagramMap.put(floorCode,diagram);
         }
     }
@@ -249,17 +248,16 @@ public class InstallationSemanticView implements Serializable {
 
     protected void addMeterNodes(DefaultDiagramModel diagram, Element parent, Set<BOMMeterDTO> meters) {
         if (meters != null) {
-            meters.forEach(meterDto->{
-                String className="diagram-meter-water-box";
+            for(BOMMeterDTO meterDto : meters){
+                String className = "diagram-meter-water-box";
                 meterMap.put(meterDto.getMeterSerial(), meterDto);
-                Element element = new Element(meterDto.getMeterSerial(),mxCoordinate+DIAGRAM_PXL_SIZE_UNIT,myCoordinate+DIAGRAM_PXL_SIZE_UNIT);
-                myCoordinate+=15;
-                if(ELECTRIC_METER_STR.equalsIgnoreCase(meterDto.getBomMeterType())){
-                   className="diagram-meter-electric-box"; 
+                Element element = new Element(meterDto.getMeterSerial(), mxCoordinate + DIAGRAM_PXL_SIZE_UNIT, myCoordinate + DIAGRAM_PXL_SIZE_UNIT);
+                myCoordinate += 15;
+                if (ELECTRIC_METER_STR.equalsIgnoreCase(meterDto.getBomMeterType())) {
+                    className = "diagram-meter-electric-box";
                 }
                 element.setStyleClass(className);
-                element.setTitle(meterDto.getBomMeterType()+HYPHEN_STR_SPACE+meterDto.getMeterManufacturer()+HYPHEN_STR_SPACE+
-                        meterDto.getMeterModel()+HYPHEN_STR_SPACE+meterDto.getMeterRoom().concat(null==meterDto.getMeterLabelCBL()?"":HYPHEN_STR_SPACE+meterDto.getMeterLabelCBL()));
+                element.setDraggable(Boolean.TRUE);
                 diagram.addElement(element);
                 //appending a dot at right of gateway node
                 DotEndPoint p1 = new DotEndPoint();
@@ -271,20 +269,20 @@ public class InstallationSemanticView implements Serializable {
                 p2.setAnchor(EndPointAnchor.LEFT);
                 p2.setRadius(4);
                 element.addEndPoint(p2);
-                Connection c = new Connection();
-                c.setSource(p1);
-                c.setTarget(p2);
-                StraightConnector ctr = new StraightConnector();
-                //ctr.setPaintStyle("{strokeStyle:'#C7B097',lineWidth:3}");
+                StraightConnector ctr = new StraightConnector(4, 8);
+                Connection c = new Connection(p1, p2, ctr);
+                String label = null == meterDto.getMeterLabelCBL() ? (meterDto.getMeterManufacturer() == null ? "" : meterDto.getMeterManufacturer()) : meterDto.getMeterLabelCBL();
+                c.getOverlays().add(new LabelOverlay(label));
                 c.setConnector(ctr);
+                c.setDetachable(Boolean.TRUE);
                 diagram.connect(c);
-            });
+            }
         }
     }
 
     public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
-        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getOrganigramNode().getData() + "' moved from " + 
-                event.getSourceOrganigramNode().getData() + " to '" + event.getTargetOrganigramNode().getData() + "'", 
+        addMessage(FacesMessage.SEVERITY_INFO, "Node '" + event.getOrganigramNode().getData() + "' moved from " +
+                        event.getSourceOrganigramNode().getData() + " to '" + event.getTargetOrganigramNode().getData() + "'",
                 null, null);
     }
 
@@ -459,7 +457,7 @@ public class InstallationSemanticView implements Serializable {
         this.meterMap = meterMap;
     }
     public String getNodeGateway(String key) {
-        this.gateway = (BOMGatewayEstDTO)gatewayMap.get(key);
+        this.gateway = gatewayMap.get(key);
         return gateway.getGatewayFloor() + HYPHEN_STR_SPACE+gateway.getGatewayRoom();
     }
 
@@ -469,7 +467,7 @@ public class InstallationSemanticView implements Serializable {
     }
 
     public String getNodeMeter(String key) {
-        this.meter = (BOMMeterDTO)meterMap.get(key);
+        this.meter = meterMap.get(key);
         return this.meter.getMeterManufacturer() + HYPHEN_STR_SPACE+meter.getMeterModel()+
                 HYPHEN_STR_SPACE+meter.getMeterFloor()+HYPHEN_STR_SPACE+
                 meter.getMeterRoom();
