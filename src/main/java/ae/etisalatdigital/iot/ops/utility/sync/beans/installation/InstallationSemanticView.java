@@ -26,7 +26,6 @@ import org.primefaces.model.diagram.connector.StraightConnector;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -121,7 +120,7 @@ public class InstallationSemanticView implements Serializable {
         meterMap = new HashMap<>();
         floorDiagramMap = new HashMap<>();
         for(Map.Entry<Long, Set<BOMGatewayEstDTO>> entry : this.semantics.getGatewayFloors().entrySet()){
-            BOMGatewayEstDTO firstElement = (BOMGatewayEstDTO)((TreeSet)entry.getValue()).first();
+            BOMGatewayEstDTO firstElement = ((TreeSet<BOMGatewayEstDTO>)entry.getValue()).first();
             addFloorNodes(this.rootNode, firstElement.getGatewayFloor(),
                     entry.getValue());
         }
@@ -184,9 +183,7 @@ public class InstallationSemanticView implements Serializable {
         floorNode.setExpanded(Boolean.TRUE);
         if (gatewayEstDTOList != null) {
             DefaultDiagramModel diagram = new DefaultDiagramModel();
-            gatewayEstDTOList.forEach(gtw -> {
-                addGatewayAndMeterNodes(diagram, gtw);
-            });
+            gatewayEstDTOList.forEach(gtw -> addGatewayAndMeterNodes(diagram, gtw));
             floorDiagramMap.put(floorCode,diagram);
         }
     }
@@ -460,7 +457,7 @@ public class InstallationSemanticView implements Serializable {
         this.meterMap = meterMap;
     }
     public String getNodeGateway(String key) {
-        this.gateway = (BOMGatewayEstDTO)gatewayMap.get(key);
+        this.gateway = gatewayMap.get(key);
         return gateway.getGatewayFloor() + HYPHEN_STR_SPACE+gateway.getGatewayRoom();
     }
 
@@ -470,7 +467,7 @@ public class InstallationSemanticView implements Serializable {
     }
 
     public String getNodeMeter(String key) {
-        this.meter = (BOMMeterDTO)meterMap.get(key);
+        this.meter = meterMap.get(key);
         return this.meter.getMeterManufacturer() + HYPHEN_STR_SPACE+meter.getMeterModel()+
                 HYPHEN_STR_SPACE+meter.getMeterFloor()+HYPHEN_STR_SPACE+
                 meter.getMeterRoom();
