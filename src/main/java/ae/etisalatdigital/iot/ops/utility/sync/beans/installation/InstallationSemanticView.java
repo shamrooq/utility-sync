@@ -248,7 +248,7 @@ public class InstallationSemanticView implements Serializable {
 
     protected void addMeterNodes(DefaultDiagramModel diagram, Element parent, Set<BOMMeterDTO> meters) {
         if (meters != null) {
-            for(BOMMeterDTO meterDto : meters){
+            meters.stream().map(meterDto -> {
                 String className = "diagram-meter-water-box";
                 meterMap.put(meterDto.getMeterSerial(), meterDto);
                 Element element = new Element(meterDto.getMeterSerial(), mxCoordinate + DIAGRAM_PXL_SIZE_UNIT, myCoordinate + DIAGRAM_PXL_SIZE_UNIT);
@@ -274,9 +274,13 @@ public class InstallationSemanticView implements Serializable {
                 String label = null == meterDto.getMeterLabelCBL() ? (meterDto.getMeterManufacturer() == null ? "" : meterDto.getMeterManufacturer()) : meterDto.getMeterLabelCBL();
                 c.getOverlays().add(new LabelOverlay(label));
                 c.setConnector(ctr);
+                return c;
+            }).map(c -> {
                 c.setDetachable(Boolean.TRUE);
+                return c;
+            }).forEachOrdered(c -> {
                 diagram.connect(c);
-            }
+            });
         }
     }
 
