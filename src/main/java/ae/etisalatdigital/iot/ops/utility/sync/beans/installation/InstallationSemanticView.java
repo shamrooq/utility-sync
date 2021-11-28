@@ -8,6 +8,7 @@ package ae.etisalatdigital.iot.ops.utility.sync.beans.installation;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMGatewayEstDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.dtos.BOMMeterDTO;
 import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
+import org.apache.log4j.Logger;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -26,15 +27,13 @@ import org.primefaces.model.diagram.connector.StraightConnector;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.*;
 import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.*;
-import javax.enterprise.context.SessionScoped;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -43,7 +42,7 @@ import org.apache.log4j.Logger;
 @Named
 @SessionScoped
 public class InstallationSemanticView implements Serializable {
-    Logger logger = Logger.getLogger(InstallationSemanticView.class);
+    private static final Logger logger = Logger.getLogger(InstallationSemanticView.class);
     //private OrganigramNode rootNode;
     private TreeNode rootNode;
     //private OrganigramNode selection;
@@ -242,9 +241,9 @@ public class InstallationSemanticView implements Serializable {
                         meterDto.getBomMeterType()+HYPHEN_STR+meterDto.getMeterManufacturer()+HYPHEN_STR+meterDto.getMeterModel()+HYPHEN_STR+meterDto.getMeterRoom(),type);*/
                 TreeNode meterNode = new DefaultTreeNode(type,
                         meterDto.getMeterSerial(), parent);
-                //System.out.println(" meter :"+meterNode.getData());
                 meterMap.put(meterDto.getMeterSerial(), meterDto);
                 meterNode.setSelectable(true);
+                logger.debug("meter node : "+meterNode.getData().toString());
             }
         }
     }
@@ -276,6 +275,7 @@ public class InstallationSemanticView implements Serializable {
                 Connection c = new Connection(p1, p2, ctr);
                 String label = null == meterDto.getMeterLabelCBL() ? "" : meterDto.getMeterLabelCBL();
                 c.getOverlays().add(new LabelOverlay(label));
+                logger.debug("Cable Label : "+label);
                 c.setConnector(ctr);
                 return c;
             }).map(c -> {
