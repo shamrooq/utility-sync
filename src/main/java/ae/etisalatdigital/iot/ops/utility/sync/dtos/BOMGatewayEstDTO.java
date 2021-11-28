@@ -5,11 +5,8 @@
  */
 package ae.etisalatdigital.iot.ops.utility.sync.dtos;
 
-import ae.etisalatdigital.iot.ops.utility.sync.entities.BOMMeters;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTFloor;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTGatewayTypes;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.MSTRoom;
-import ae.etisalatdigital.iot.ops.utility.sync.entities.SimDetails;
+import ae.etisalatdigital.iot.ops.utility.sync.entities.*;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
@@ -63,7 +60,7 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
     public BOMGatewayEstDTO() {
     }
 
-    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, MSTGatewayTypes gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel, String serialNumber, BigInteger simICCID, Boolean powerIntruption, Long signalStrength, String signalStrengthIndicator, Boolean antenaRequired, Long gatewayRoomId, Long gatewayFloorId, Double cableLength) {
+    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, MSTGatewayTypes gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysDaisychain, String gatewaysChainLabel, String serialNumber, BigInteger simICCID, Boolean powerIntruption, Long signalStrength, String signalStrengthIndicator, Boolean antenaRequired, Long gatewayRoomId, Long gatewayFloorId, Double cableLength) {
         this.id = id;
         this.bomId = bomId;
         this.gatewaysType = gatewaysType;
@@ -78,7 +75,6 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.metersPerGateway = metersPerGateway;
         this.EstimatedCableLength = EstimatedCableLength;
         this.gatewaysVendor = gatewaysVendor;
-        this.gatewaysLocation = gatewaysLocation;
         this.gatewaysDaisychain = gatewaysDaisychain;
         this.gatewaysChainLabel = gatewaysChainLabel;
         this.serialNumber = serialNumber;
@@ -91,24 +87,34 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         this.gatewayRoomId = gatewayRoomId;
         this.cableLength = cableLength; 
     }
-    public BOMGatewayEstDTO(BigInteger id, Long bomId, String gatewaysType, MSTGatewayTypes gatewaysTypeProposed, int gatewaysRequired, int metersPerGateway, String EstimatedCableLength, String gatewaysVendor, String gatewaysLocation, String gatewaysDaisychain, String gatewaysChainLabel,
-                            String serialNumber,SimDetails simDetails,String gatewayFloor,String gatewayRoom) {
-        this.id = id;
-        this.bomId = bomId;
-        this.gatewaysType = gatewaysType;
-        this.gatewaysTypeProposed = gatewaysTypeProposed.getGatewayTypeCode();
-        this.gatewayModel=new MSTGatewayTypeDTO(gatewaysTypeProposed.getId(),gatewaysTypeProposed.getGatewayTypeCode(),
-        gatewaysTypeProposed.getGatewayTypeName());
-        this.gatewayModel.setDeviceHESModelId(gatewaysTypeProposed.getDeviceModelId());
-        this.gatewayModel.setGatewayTypeDescription(gatewaysTypeProposed.getGatewayTypeDescription());
-        this.gatewaysRequired = gatewaysRequired;
-        this.metersPerGateway = metersPerGateway;
-        this.EstimatedCableLength = EstimatedCableLength;
-        this.gatewaysVendor = gatewaysVendor;
-        this.gatewaysLocation = gatewaysLocation;
-        this.gatewaysDaisychain = gatewaysDaisychain;
-        this.gatewaysChainLabel = gatewaysChainLabel;
-        this.serialNumber=serialNumber;
+
+    /**
+     * this constructor will be called when the named query BOMGatewaysEst.findSomeByBomId is called
+     * @param gateway
+     * @param simDetails
+     * @param gatewayFloor
+     * @param gatewayRoom
+     */
+    public BOMGatewayEstDTO(BOMGatewaysEst gateway, SimDetails simDetails, String gatewayFloor, String gatewayRoom) {
+        this.id = gateway.getId();
+        this.bomId = gateway.getBom().getId();
+        this.gatewaysType = gateway.getGatewaysType();
+        if(null!=gateway.getGatewayModel()){
+            this.gatewayModel=new MSTGatewayTypeDTO(gateway.getGatewayModel().getId(),gateway.getGatewayModel().getGatewayTypeCode(),
+                    gateway.getGatewayModel().getGatewayTypeName());
+            this.gatewaysTypeProposed = gateway.getGatewayModel().getGatewayTypeCode();
+            this.gatewayModel.setDeviceHESModelId(gateway.getGatewayModel().getDeviceModelId());
+            this.gatewayModel.setGatewayTypeDescription(gateway.getGatewayModel().getGatewayTypeDescription());
+        }
+        this.gatewaysRequired = gateway.getGatewaysRequired();
+        this.metersPerGateway = gateway.getMetersPerGateway();
+        this.EstimatedCableLength = gateway.getEstimatedCableLength();
+        this.gatewaysVendor = gateway.getGatewaysVendor();
+        this.signalStrength = gateway.getSignalStrength();
+        this.signalStrengthIndicator = gateway.getSignalStrengthIndicator();
+        this.gatewaysDaisychain = gateway.getGatewaysDaisychain();
+        this.gatewaysChainLabel = gateway.getGatewaysChainLabel();
+        this.serialNumber=gateway.getSerialNumber();
         if(simDetails !=null){
             simDetailsDTO = new SimDetailsDTO(simDetails.getId(),simDetails.getSimICCID(),simDetails.getCommunicationEquipmentType(),
                     simDetails.getIp(),simDetails.getPort());
@@ -136,6 +142,12 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         if(null!=builder.meterList){
             this.bomMeterList = builder.meterList;
         }
+        if(null!=builder.signalStrength){
+            this.signalStrength=builder.signalStrength;
+        }
+        if(null!=builder.signalStrengthIndicator){
+            this.signalStrengthIndicator=builder.signalStrengthIndicator;
+        }
     }
     public static class Builder{
         private BigInteger id;
@@ -146,6 +158,8 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
         private MSTFloorDTO floorDTO;
         private MSTRoomDTO roomDTO;
         private Set<BOMMeterDTO> meterList;
+        private Long signalStrength;
+        private String signalStrengthIndicator;
         public Builder(BigInteger id,Long bomId){
             this.id=id;
             this.bomId=bomId;
@@ -189,6 +203,11 @@ public class BOMGatewayEstDTO implements Serializable,Comparable<BOMGatewayEstDT
             for(BOMMeters meter: bomMeters){
                 this.meterList.add(new ModelMapper().map(meter, BOMMeterDTO.class));
             }
+            return this;
+        }
+        public Builder signalStrength(Long strength,String strengthIndicator){
+            this.signalStrength=strength;
+            this.signalStrengthIndicator=strengthIndicator;
             return this;
         }
         public BOMGatewayEstDTO build(){

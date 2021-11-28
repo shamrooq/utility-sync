@@ -50,15 +50,15 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     public List<BOMMeters> findAll() {
         return entityManager.createNamedQuery("BOMMeters.findAll", BOMMeters.class).getResultList();
     }
-    
+
     @Override
     public List<BOMMeterDTO> findAllByBomId(Long bomId){
         TypedQuery<BOMMeterDTO> query;
         query = entityManager.createNamedQuery("BOMMeters.findAllByBOMID", BOMMeterDTO.class);
         query.setParameter("bomId", bomId);
-              return  query.getResultList();
+        return  query.getResultList();
     }
-    
+
     @Override
     public List<BOMMeterDTO> findAllByBomIdAndBomMeterType(Long bomId, String bomMeterType){
         TypedQuery<BOMMeterDTO> query;
@@ -67,7 +67,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         query.setParameter("bomMeterType", bomMeterType);
         return query.getResultList();
     }
-    
+
     @Override
     public void updateMTRDetail(BOMMeterDTO dto)throws DataAccessException {
         BOMMeters entity = getEntity(dto.getId());
@@ -75,41 +75,41 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             throw new DataAccessException("Incident not found");
         }
         new ModelMapper().map(dto, entity);
-        
+
         entityManager.merge(entity);
     }
-    
-    
-    
+
+
+
     private BOMMeters getEntity(Long id) {
         BOMMeters entity = null;
-        
+
         try {
             entity = entityManager.find(BOMMeters.class, id);
         } catch(NoResultException ex) {
             return null;
         }
-        
+
         return entity;
     }
-    
+
     /* ***
-    *
-    *
-    */
-    
+     *
+     *
+     */
+
     private BOMMeters getEntity(String utilityNumber) {
         BOMMeters entity = null;
-        
+
         try {
             entity = entityManager.find(BOMMeters.class, utilityNumber);
         } catch(NoResultException ex) {
             return null;
         }
-        
+
         return entity;
     }
-    
+
     @Override
     public void updateRequestStatus(String mmsReference, Integer status){
         TypedQuery<BOMMeters> query = entityManager.createNamedQuery("BOMMeters.updateRequestStatus", BOMMeters.class);
@@ -122,10 +122,10 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             throw new DataAccessException("Update Status failed");
         }
     }
-    
+
     @Override
     public Boolean addNewMeterByBomId(Long bomId, String meterBomType, String meterManufacturer, String meterSerial, String meterModel, String meterType){
-        
+
         try{
             entityManager.createNativeQuery("exec [dbo].[SP_InsertNewMeter] " + bomId + ",'"+meterBomType+"','"+meterManufacturer+"','"+meterModel+"',N'"+meterType+"','"+meterSerial+"',N'ACTIVE'").executeUpdate();
             return true;
@@ -171,7 +171,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
         }catch(Exception exp){
             System.out.println("add New Meter Failed:"+exp.getMessage());
         }
-        
+
         return false;
     }
     @Override
@@ -206,7 +206,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
     private BOMMeters mapAddMeters(BOMGatewayEstDTO gateway, BOMMeterDTO bommdto) {
         BOMMeters bomMeter=getEntity(bommdto.getId());
         //if meter is not defined with the given gateway, only then add the mapping
-        if (null == bomMeter.getMeterGateway() || !bomMeter.getMeterGateway().getId().equals(bommdto.getMeterGtwId())) {
+        if (null == bomMeter.getMeterGateway() || !bomMeter.getMeterGateway().getId().equals(bommdto.getMeterGateway().getId())) {
             if(null==bomMeter.getMeterGateway()){
                 bomMeter.setMeterGateway(new BOMGatewaysEst());
             }
@@ -338,6 +338,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
                     .floor(gateway.getMstFloor())
                     .room(gateway.getMstRoom())
                     .meters(gateway.getBomMeterList())
+                    .signalStrength(gateway.getSignalStrength(), gateway.getSignalStrengthIndicator())
                     .build();
             //gtwIds.add(gateway.getId());
             if (null != gateway.getMstFloor()) {
@@ -361,13 +362,13 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
             floorMap = floorMap.entrySet().stream().sorted(Map.Entry.comparingByKey((t1, t2) -> {
                 return -1;
             })).collect(Collectors.toMap(
-                Map.Entry::getKey,Map.Entry::getValue,(oldValue,newValue)-> oldValue,LinkedHashMap::new));
+                    Map.Entry::getKey,Map.Entry::getValue,(oldValue,newValue)-> oldValue,LinkedHashMap::new));
             gatewayMetersSemantics.setFloorMap(floorMap);
         }
         floorGtwMap = floorGtwMap.entrySet().stream().sorted(Map.Entry.comparingByKey((t1, t2) -> {
             return -1;
         })).collect(Collectors.toMap(
-        Map.Entry::getKey,Map.Entry::getValue,(oldValue,newValue)-> oldValue,LinkedHashMap::new));
+                Map.Entry::getKey,Map.Entry::getValue,(oldValue,newValue)-> oldValue,LinkedHashMap::new));
         gatewayMetersSemantics.setGatewayFloors(floorGtwMap);
         gatewayMetersSemantics.setGatewaySet(gatewayEstDTOSet);
         //Map gtwMeterMap = new TreeMap<BigInteger, Set<BOMMeterDTO>>();

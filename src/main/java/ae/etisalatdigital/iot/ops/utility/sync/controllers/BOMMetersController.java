@@ -34,7 +34,6 @@ import org.primefaces.event.FlowEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
-import java.io.File;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,18 +47,18 @@ import org.apache.http.HttpStatus;
 @Named(value = "bomMetersController")
 @SessionScoped
 public class BOMMetersController implements Serializable  {
-    
+
     private static final Logger LOGGER = Logger.getLogger(BOMMetersController.class);
-    
+
     @PersistenceContext(unitName = "com.mycompany_UTIL_war_1.0-SNAPSHOTPU")
     private EntityManager em;
-    
+
     private BOMMeterDTO meterRecord;
-    
+
     private Long bomId;
     private String utilityNumber;
     private String errorMessage;
-    
+
     private String meterBOMType;
     private String meterSerial;
     private String meterAmi;
@@ -68,54 +67,54 @@ public class BOMMetersController implements Serializable  {
     private Long meterProtocolId;
     private Long meterRoomTypeId;
     private Long meterFloorTypeId;
-    
-    
-    
+
+
+
     private String wmeterManufacturer;
     private String wmeterSerial;
     private String wmeterModel;
     private String wmeterType;
     private String wmeterStatus;
-    
-    
+
+
     private String emeterManufacturer;
     private String emeterSerial;
     private String emeterModel;
     private String emeterType;
     private String emeterStatus;
-    
+
     List<BOMMeterDTO> meters;
     List<BOMMeterDTO> metersElectricity;
     List<BOMMeterDTO> metersWater;
     List<BOMMeterDTO> selectedMeterForDetails;
     BOMMeterDTO selectedMeter;
-    
+
     private Long wmeterRoomTypeId;
     private Long wmeterFloorTypeId;
-    
+
     private Long emeterRoomTypeId;
     private Long emeterFloorTypeId;
-    
+
     private Long wmeterProtocolId;
     private Long emeterProtocolId;
-    
+
     private Long wmeterModelId;
     private Long emeterModelId;
     private Long wmeterManufacturerId;
     private Long emeterManufacturerId;
-    
+
     List<BOMMeterDTO> metersSource;
     List<BOMMeterDTO> metersTarget;
     private DualListModel<BOMMeterDTO> bomMeterModel;
 
     @Inject
     private BOMMeterBus bomMetersBus;
-    
+
     @Inject
     private HESClient hesClient;
-    
-    
-    
+
+
+
     public BOMMetersController() {
         metersSource = new ArrayList<>();
         metersTarget = new ArrayList<>();
@@ -126,7 +125,7 @@ public class BOMMetersController implements Serializable  {
         return LOGGER;
     }
 
-    
+
     public EntityManager getEm() {
         return em;
     }
@@ -158,9 +157,9 @@ public class BOMMetersController implements Serializable  {
     public BOMMeterDTO getSelectedMeter() {
         return selectedMeter;
     }
-    
-    
-    
+
+
+
 
     public void setEm(EntityManager em) {
         this.em = em;
@@ -170,7 +169,7 @@ public class BOMMetersController implements Serializable  {
         this.utilityNumber = utilityNumber;
     }
 
-    
+
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -195,30 +194,30 @@ public class BOMMetersController implements Serializable  {
     public void setSelectedMeter(BOMMeterDTO selectedMeter) {
         this.selectedMeter = selectedMeter;
     }
-    
-    
-    
-    
+
+
+
+
 
     public void refresh(){
-        
+
     }
-        
+
     public void initiateAll(){
         utilityNumber = null;
-        
+
     }
-   
+
     /**
-     * 
+     *
      * @param event
-     * @return 
+     * @return
      */
-    
+
     public String onFlowProcess(FlowEvent event) {
-        
+
         return event.getNewStep();
-        
+
     }
 
     public void fetchBomMeters(Long bomId){
@@ -226,7 +225,10 @@ public class BOMMetersController implements Serializable  {
         metersElectricity =  bomMetersBus.findAllByBomIdForElectricType(bomId);
         metersWater =  bomMetersBus.findAllByBomIdForWaterType(bomId);
     }
-
+    /**
+     * get all meters(electric & water) associated with a BOM id and a utility ref number
+     * @param bomId
+     */
     public void fetchBomMetersWithMeterModel(Long bomId) {
         this.bomId = bomId;
         metersElectricity = bomMetersBus.findAllByBomIdForElectricType(bomId);
@@ -234,12 +236,6 @@ public class BOMMetersController implements Serializable  {
         meters = new ArrayList<>();
         meters.addAll(metersWater);
         meters.addAll(metersElectricity);
-        //find all the meters which are not mapped to a gateway - METER_GTW_ID is null
-//        metersTarget = new ArrayList<>();
-//        metersTarget.addAll(meters.stream().filter(meter -> null == meter.getMeterGtwId()).collect(
-//                Collectors.toList()));
-        //find all the meters which are already mapped to a gateway - METER_GTW_ID is not null
-        //metersMapped = new ArrayList<>();
     }
 
     public String getTotalMeters(){
@@ -249,71 +245,71 @@ public class BOMMetersController implements Serializable  {
         }
         return totalMeters.toString();
     }
-    
+
     public void addNewMeter(){
-        
+
         String errormsg = "New Meter Added Successfully";
         FacesMessage msg = null;
-        
+
         if(meterBOMType == null || meterBOMType.isEmpty()){
-                msg = new FacesMessage("Validation","Please Serlect Meter Medium!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage("Failure", msg);
+            msg = new FacesMessage("Validation","Please Serlect Meter Medium!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage("Failure", msg);
         }else if(meterSerial == null || meterSerial.isEmpty()){
-                msg = new FacesMessage("Validation","Please Enter Meter Serial!");
-                msg.setSeverity(FacesMessage.SEVERITY_FATAL);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Enter Meter Serial!");
+            msg.setSeverity(FacesMessage.SEVERITY_FATAL);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }else if(meterAmi == null || meterAmi.isEmpty()){
-                msg = new FacesMessage("Validation","Please Select Valid AMI!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Select Valid AMI!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }else if(meterManufacturerId == null || meterManufacturerId <= 0){
-                msg = new FacesMessage("Validation","Please Select Valid Manufacturer!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Select Valid Manufacturer!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }else if(meterModelId == null || meterModelId <= 0){
-                msg = new FacesMessage("Validation","Please Select Valid Meter Model!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Select Valid Meter Model!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }else if(meterProtocolId == null || meterProtocolId <= 0){
-                msg = new FacesMessage("Validation","Please Select Valid Meter Protocol!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Select Valid Meter Protocol!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }else if(meterRoomTypeId == null || meterRoomTypeId <= 0){
-                msg = new FacesMessage("Validation","Please Select Valid Room!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Select Valid Room!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }else if(meterFloorTypeId == null || meterFloorTypeId <= 0){
-                msg = new FacesMessage("Validation","Please Select Valid Floor!");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                FacesContext.getCurrentInstance().addMessage(null, msg);
+            msg = new FacesMessage("Validation","Please Select Valid Floor!");
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         else{
-            
+
             if(meterBOMType.equals("WATER")){
                 metersWater = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
 
             }else{
                 metersElectricity = bomMetersBus.addNewMeterByBomId(bomId, meterBOMType, meterSerial, meterAmi, meterManufacturerId, meterModelId, meterProtocolId, meterRoomTypeId, meterFloorTypeId);
-                
+
             }
-            
+
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Success", errormsg);
             PrimeFaces.current().dialog().showMessageDynamic(message);
         }
-       
-        
-        
+
+
+
     }
-    
+
     public void addNewBOMWM(){
         metersWater = bomMetersBus.addNewMeterByBomId(bomId, "WATER", wmeterManufacturer, wmeterSerial, wmeterModel, wmeterType);
-        
+
     }
-    
+
     public void addNewBOMEM(){
         metersElectricity = bomMetersBus.addNewMeterByBomId(bomId, "ELECTRIC", emeterManufacturer, emeterSerial, emeterModel, emeterType);
-        
+
     }
     public void deleteBOMWM(Long meterID){
         if(meterID != null){
@@ -322,9 +318,9 @@ public class BOMMetersController implements Serializable  {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage("Failure", "New Work Order Initiated WO: "));
         }
-        
+
     }
-    
+
     public void deleteBOMEM(Long meterID){
         if(meterID != null){
             metersElectricity = bomMetersBus.deleteMeter(meterID,bomId,"ELECTRIC");
@@ -332,23 +328,23 @@ public class BOMMetersController implements Serializable  {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage("Failure", "Failed to delete requested meter: "));
         }
-        
+
     }
-    
+
     public void saveBOMEM(BOMMeterDTO emtr){
         emtr.setBomMeterType("ELECTRIC");
         bomMetersBus.updateMeterDetails(emtr);
-       
+
     }
-    
+
     public void saveBOMWM(BOMMeterDTO wmtr){
         wmtr.setBomMeterType("WATER");
         bomMetersBus.updateMeterDetails(wmtr);
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public BOMMeterDTO getMeterRecord() {
         return meterRecord;
@@ -442,9 +438,7 @@ public class BOMMetersController implements Serializable  {
     public Long getEmeterManufacturerId() {
         return emeterManufacturerId;
     }
-    
-    /******/
-    
+
     public String getMeterBOMType() {
         return meterBOMType;
     }
@@ -479,7 +473,7 @@ public class BOMMetersController implements Serializable  {
 
     /**
      *
-     * @param meterRecord 
+     * @param meterRecord
      */
     public void setMeterRecord(BOMMeterDTO meterRecord) {
         this.meterRecord = meterRecord;
@@ -604,26 +598,26 @@ public class BOMMetersController implements Serializable  {
     public void setMeterProtocolId(Long meterProtocolId) {
         this.meterProtocolId = meterProtocolId;
     }
-    
+
 
 
     public void onUtilityTypeChange(){
 
-        
+
 
         //FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "CHANGE","Selected: "+meterBOMType);
         //FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
+
     public void meterConfigurations(String medium,BOMMeterDTO selectedMeter){
         //String test = "Test";
         //hesClient.GetAllDevices();
-        
+
         selectedMeterForDetails =  new ArrayList<>();
         selectedMeterForDetails.add(selectedMeter);
         this.selectedMeter = selectedMeter;
         selectedMeter.setBomMeterType(medium);
-        
+
         Map<String, Object> options = new HashMap<>();
         options.put("modal", true);
         options.put("width", 800);
@@ -635,23 +629,23 @@ public class BOMMetersController implements Serializable  {
         options.put("headerElement", "customheader");
         PrimeFaces.current().dialog().openDynamic("viewMeterDetails", options, null);
     }
-    
+
     public void addNewMeterOnHES(BOMMeterDTO selectedMeter){
         //if(){
         //    selectedMeter.setMeterStatus("ONHES");
         //}
         hesClient.addNewMeterOnHES(selectedMeter);
     }
-    
+
     public void onHESConfirmation(SelectEvent event) {
         //Product product = (Product) event.getObject();
         //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Product Selected", "Name:" + product.getName());
 
         //FacesContext.getCurrentInstance().addMessage(null, message);
     }
-    
+
     public void onHESCancellation(SelectEvent event) {
-        
+
     }
     public void onRowEdit(RowEditEvent<BOMMeterDTO> event) {
         FacesMessage msg = new FacesMessage("Product Edited", ((BOMMeterDTO)event.getObject()).getMeterSerial());
@@ -690,10 +684,10 @@ public class BOMMetersController implements Serializable  {
         //re-initialise the source and target
         if (null != this.meters) {
             //source should be all meters with no association with any gateway
-            this.metersSource = this.meters.stream().filter(meter -> (null == meter.getMeterGtwId()))
+            this.metersSource = this.meters.stream().filter(meter -> (null == meter.getMeterGateway().getId()))
                     .collect(Collectors.toList());
             //target should be all meters with an association with the given gateway
-            this.metersTarget = this.meters.stream().filter(meter -> (gatewayId.equals(meter.getMeterGtwId())))
+            this.metersTarget = this.meters.stream().filter(meter -> (gatewayId.equals(meter.getMeterGateway().getId())))
                     .collect(Collectors.toList());
         }
         this.getBomMeterModel();
@@ -727,7 +721,7 @@ public class BOMMetersController implements Serializable  {
         msg.setDetail(builder.toString());
         FacesContext.getCurrentInstance().addMessage(null, msg);*/
     }
-    
+
     /**
      * method to map meter with a parent gateway
      */
@@ -738,7 +732,7 @@ public class BOMMetersController implements Serializable  {
             equipmentResponseModelList.forEach(eq->{
                 addMessage(null, eq, null);
             });
-            
+
         } catch (Exception e) {
             addMessage(null, null, e.getMessage());
             return HttpStatus.SC_INTERNAL_SERVER_ERROR;
@@ -750,7 +744,7 @@ public class BOMMetersController implements Serializable  {
         }
         return HttpStatus.SC_OK;
     }
-    
+
     public void updateGtwBomMeterMapping(BOMGatewayEstDTO gateway) {
         if (this.metersTarget == null && this.metersTarget == null) {
             return;
@@ -760,19 +754,22 @@ public class BOMMetersController implements Serializable  {
             saveMeterMapping(gateway);
         }
     }
-    
+
     private void saveMeterMapping(BOMGatewayEstDTO gateway){
         int i;
         for (BOMMeterDTO meterDTO : this.metersTarget) {
             i = meters.indexOf(meterDTO);
             if (i >= 0) {
-                ((BOMMeterDTO) meters.get(i)).setMeterGtwId(gateway.getId());
+                //map the parent gateway to the meter
+                meters.get(i).setMeterGateway(
+                        new BOMGatewayEstDTO.Builder(gateway.getId(),gateway.getBomId()).build());
             }
         }
         for (BOMMeterDTO meterDTO : this.metersSource) {
             i = meters.indexOf(meterDTO);
             if (i >= 0) {
-                ((BOMMeterDTO) meters.get(i)).setMeterGtwId(null);
+                //remove the parent gateway mapping for the meter
+                meters.get(i).setMeterGateway(null);
             }
         }
         FacesMessage msg;
@@ -781,13 +778,16 @@ public class BOMMetersController implements Serializable  {
             for (BOMMeterDTO meterDTO : this.metersTarget) {
                 i = meters.indexOf(meterDTO);
                 if (i >= 0) {
-                    ((BOMMeterDTO) meters.get(i)).setMeterGtwId(gateway.getId());
+                    //map the parent gateway to the meter
+                    meters.get(i).setMeterGateway(
+                            new BOMGatewayEstDTO.Builder(gateway.getId(),gateway.getBomId()).build());
                 }
             }
             for (BOMMeterDTO meterDTO : this.metersSource) {
                 i = meters.indexOf(meterDTO);
                 if (i >= 0) {
-                    ((BOMMeterDTO) meters.get(i)).setMeterGtwId(null);
+                    //remove the parent gateway mapping for the meter
+                    meters.get(i).setMeterGateway(null);
                 }
             }
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Gateway - Meter mapping completed for gateway with id -> " + gateway.getId());
@@ -816,7 +816,7 @@ public class BOMMetersController implements Serializable  {
             } else if (null != equipmentResponseModel.getErrorNumber()) {
                 facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, String.valueOf(equipmentResponseModel.getErrorNumber()),
                         Optional.ofNullable(equipmentResponseModel.getErrorCode()).orElse("").concat(
-                        equipmentResponseModel.getStackTrace()==null?"":equipmentResponseModel.getStackTrace()));
+                                equipmentResponseModel.getStackTrace()==null?"":equipmentResponseModel.getStackTrace()));
                 FacesContext.getCurrentInstance().addMessage(clientId, facesMessage);
                 return HttpStatus.SC_INTERNAL_SERVER_ERROR;
             }
