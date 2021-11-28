@@ -684,10 +684,10 @@ public class BOMMetersController implements Serializable  {
         //re-initialise the source and target
         if (null != this.meters) {
             //source should be all meters with no association with any gateway
-            this.metersSource = this.meters.stream().filter(meter -> (null == meter.getMeterGateway().getId()))
+            this.metersSource = this.meters.stream().filter(meter -> (null == meter.getMeterGateway() || null == meter.getMeterGateway().getId()))
                     .collect(Collectors.toList());
             //target should be all meters with an association with the given gateway
-            this.metersTarget = this.meters.stream().filter(meter -> (gatewayId.equals(meter.getMeterGateway().getId())))
+            this.metersTarget = this.meters.stream().filter(meter -> (null!=meter.getMeterGateway() && gatewayId.equals(meter.getMeterGateway().getId())))
                     .collect(Collectors.toList());
         }
         this.getBomMeterModel();
