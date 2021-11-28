@@ -338,6 +338,7 @@ public class BOMMeterDAOImp implements BOMMeterDAO {
                     .floor(gateway.getMstFloor())
                     .room(gateway.getMstRoom())
                     .meters(gateway.getBomMeterList())
+                    .signalStrength(gateway.getSignalStrength(), gateway.getSignalStrengthIndicator())
                     .build();
             //gtwIds.add(gateway.getId());
             if (null != gateway.getMstFloor()) {

@@ -33,15 +33,17 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.*;
 import static ae.etisalatdigital.iot.ops.utility.sync.util.UtilityConstants.*;
+import javax.enterprise.context.SessionScoped;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author appadmin
  */
 @Named
-@ViewScoped
+@SessionScoped
 public class InstallationSemanticView implements Serializable {
-
+    Logger logger = Logger.getLogger(InstallationSemanticView.class);
     //private OrganigramNode rootNode;
     private TreeNode rootNode;
     //private OrganigramNode selection;
@@ -198,6 +200,7 @@ public class InstallationSemanticView implements Serializable {
         Element element = new Element(gtw.getSerialNumber(),gxCoordinate+DIAGRAM_PXL_SIZE_UNIT,gyCoordinate+DIAGRAM_PXL_SIZE_UNIT);
         diagram.addElement(element);
         element.setDraggable(false);
+        logger.debug("Signal Strength:"+gtw.getSignalStrengthIndicator());
         element.setStyleClass("diagram-gateway-box");
         element.setTitle("Gateway "+(null==gtw.getGatewaysVendor()?"":HYPHEN_STR_SPACE+gtw.getGatewaysVendor())+(null==gtw.getGatewaysChainLabel()?"":HYPHEN_STR_SPACE+gtw.getGatewaysChainLabel()));
         gatewayMap.put(gtw.getSerialNumber(), gtw);
@@ -269,9 +272,9 @@ public class InstallationSemanticView implements Serializable {
                 p2.setAnchor(EndPointAnchor.LEFT);
                 p2.setRadius(4);
                 element.addEndPoint(p2);
-                StraightConnector ctr = new StraightConnector(4, 8);
+                StraightConnector ctr = new StraightConnector(4, 1);
                 Connection c = new Connection(p1, p2, ctr);
-                String label = null == meterDto.getMeterLabelCBL() ? (meterDto.getMeterManufacturer() == null ? "" : meterDto.getMeterManufacturer()) : meterDto.getMeterLabelCBL();
+                String label = null == meterDto.getMeterLabelCBL() ? "" : meterDto.getMeterLabelCBL();
                 c.getOverlays().add(new LabelOverlay(label));
                 c.setConnector(ctr);
                 return c;

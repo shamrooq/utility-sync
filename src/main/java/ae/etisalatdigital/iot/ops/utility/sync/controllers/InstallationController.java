@@ -167,7 +167,7 @@ public class InstallationController implements Serializable  {
     
     
     
-    List<Estimation> estimation;
+    private List<Estimation> estimation;
     private InstallationSemanticView installationSemanticView;
 
     @Inject

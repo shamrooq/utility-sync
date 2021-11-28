@@ -161,6 +161,7 @@ public class BOMMeterDTO implements Serializable,Comparable<BOMMeterDTO>{
             this.meterGateway = new BOMGatewayEstDTO.Builder(meterGateway.getId(),meterGateway.getBom().getId())
                     .type(meterGateway.getGatewaysType())
                     .model(mapper.map(meterGateway.getGatewayModel(),MSTGatewayTypeDTO.class))
+                    //.signalStrength(meterGateway.getSignalStrength(), meterGateway.getSignalStrengthIndicator())
                     .build();
         }
         this.meterFloor=mstFloor==null?"":mstFloor.getFloorCode();

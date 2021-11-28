@@ -14,11 +14,10 @@ import ae.etisalatdigital.iot.ops.utility.sync.entities.Requests;
 import ae.etisalatdigital.iot.ops.utility.sync.util.MethodUtils;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.HESClient;
 import ae.etisalatdigital.iot.ops.utility.sync.webservices.hes.models.EquipmentResponseModel;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import org.apache.http.HttpStatus;
+import org.apache.log4j.Logger;
+import org.primefaces.component.inputtext.InputText;
+import org.primefaces.event.CloseEvent;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -28,10 +27,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.apache.http.HttpStatus;
-import org.apache.log4j.Logger;
-import org.primefaces.component.inputtext.InputText;
-import org.primefaces.event.CloseEvent;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -176,31 +174,23 @@ public class BOMGatewaysController implements Serializable {
 
     public void addNewGatewayEst(){
 
-        String errormsg = "Gateway Added Successfully";
+        String detailMsg = "Gateway Added Successfully";
         FacesMessage msg;
         gatewaysRequired = 1;
 
         if(gatewaysType.isEmpty()){
-            msg = new FacesMessage("Validation","Please Serlect Gateway");
-            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-            FacesContext.getCurrentInstance().addMessage("Failure", msg);
+            MethodUtils.addMessage(FacesMessage.SEVERITY_ERROR,"Failure","Validation","Please Select Gateway");
         }else if(gatewaysTypeProposed.isEmpty()){
-            msg = new FacesMessage("Validation","Please Serlect Gateway Type");
-            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            MethodUtils.addMessage(FacesMessage.SEVERITY_ERROR,null,"Validation","Please Select Gateway Type");
         }else if(cableLength.equals(0)){
-            msg = new FacesMessage("Validation","Please Eter Cable Length");
-            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            MethodUtils.addMessage(FacesMessage.SEVERITY_ERROR,null,"Validation","Please Enter Cable Length");
         }else if(signalStrength == 0){
-            msg = new FacesMessage("Validation","Please Eter Signal strength");
-            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            MethodUtils.addMessage(FacesMessage.SEVERITY_ERROR,null,"Validation","Please Enter Signal Strength");
         }
         else{
             metersPerGateway = 0;
             estimation = gatewayEstBus.addNewGatewayEstByBomId(bomId, gatewaysType, gatewaysTypeProposed, gatewaysRequired, metersPerGateway,cableLength,gatewayRoomId,gatewayFloorId,powerIntruption,signalStrength,antenaRequired);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Success",errormsg));
+            MethodUtils.addMessage(FacesMessage.SEVERITY_ERROR,null,"Success",detailMsg);
         }
     }
 
