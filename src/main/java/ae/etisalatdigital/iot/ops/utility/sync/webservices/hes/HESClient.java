@@ -170,8 +170,8 @@ public class HESClient extends RestClient {
         else{
             request.setDescription("new sim for gateway for gateway with SN : "+gateway.getSerialNumber());
             request.setCommunicationsEquipmentType(gateway.getSimDetailsDTO().getCommunicationEquipmentType());
-            property.setIp("1.1.1.1");
-            property.setPort("8080");
+            property.setIp("2.2.2.2");
+            property.setPort("9090");
         }
         request.setProperty(property);
         //Map<String, Object> paramsMap = new HashMap<>();
