@@ -89,7 +89,7 @@ public class SimDetailsDTO implements Serializable{
 
     public String getPort() {
         if(null==port){
-            ip="9090";
+            port="9090";
         }
         return port;
     }
